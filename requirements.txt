@@ -1,0 +1,5 @@
+Django==2.1.7
+django-bootstrap4==0.0.6
+django-icons==0.1.0
+pytz==2018.4
+django-heroku

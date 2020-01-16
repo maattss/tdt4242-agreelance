@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Error{% endblock %}
+
+{% block content %}
+  <h2 class="mt-5">Woops this page doesn't exist.</h2>
+  <p>Go back to safe ground by clicking here: <a href="{% url 'home' %}">Home</a></p>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}New Project{% endblock %}
+
+
+{% block content %}
+  <h2 class="mt-3">New Project</h2>
+  <form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <div id="task_container">
+      <div class="task">
+        <h2>Task</h2>
+        <p>
+          <label class="new-task-input">Title:
+            <input
+              type="text"
+              name="task_title"
+              required
+              maxlength="200"
+              class="form-control"
+            />
+          </label>
+        </p>
+        <p>
+          <label class="new-task-input">Budget:
+            <input
+              type="number"
+              min = "0"
+              id="budget_input"
+              name="task_budget"
+              required
+              maxlength="200"
+              class="form-control"
+            ></textarea>
+          </label>
+        </p>
+        <p>
+          <label class="new-task-input">Description:
+            <textarea
+              type="text"
+              name="task_description"
+              required
+              maxlength="500"
+              class="form-control"
+            ></textarea>
+          </label>
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+        <button id="add_task" class="btn btn-outline-secondary mb-3" type="button">Add Task</button>
+        <br>
+        <button id="remove_task" class="btn btn-outline-danger" type="button">Remove Task</button>
+      </div>
+      <div class="col-sm">
+        <br>
+        <button type="submit" class="btn btn-primary float-right">Create Project</button>
+      </div>
+
+    </div>
+  </form>
+  {% load static %}
+  <script src="{% static 'js/new_project.js' %}"></script>
+{% endblock %}

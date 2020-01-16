@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+
+{% load bootstrap4 %}
+{% load static %}
+{% load project_extras %}
+{% load icons %}
+
+{% block title %}Project{% endblock %}
+
+
+{% block content %}
+  <h3 class="my-3">{{ project.title }}</h3>
+  <p>Project status: {{project.get_status_display}}</p>
+
+  <p>Project total budget: {{total_budget}}</p>
+  <h3>Description</h3>
+  <p class="project-description">{{ project.description }}</p>
+  <h4>Category: {{project.category}}</h4>
+
+
+    {% if user.is_authenticated %}
+      {% if user == project.user.user %}
+
+      {% if project.status == project.OPEN %}
+
+      <h3 class="my-3">Tasks:</h3>
+        <div id="task_container">
+          {% for task in tasks %}
+          <div class="task">
+            <h4>{{task.title}}</h4>
+            <p>Budget: {{task.budget}} </p>
+            <p>Description: <br> {{task.description}}</p>
+          </div>
+          {% endfor %}
+        </div>
+
+        {% for task in tasks %}
+        {% define task|get_all_taskoffers as task_offers %}
+
+
+        {% if task|get_accepted_task_offer %}
+        {% define task|get_accepted_task_offer as task_accepted_offer %}
+
+        <h3 class="my-3">Accepted offer for <i>{{task.title}}</i></h3>
+
+        <li class="list-group-item d-flex justify-content-between align-items-center"> Offer from {{task_accepted_offer.offerer.user.username}}
+          <p>Status: {{task_accepted_offer.get_status_display}}</p>
+          <div>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#seeOfferModal{{task_offer.id}}">View Offer</button>
+          <div>
+        </li>
+
+        <div class="modal fade" id="seeOfferModal{{task_offer.id}}" tabindex="-1" role="dialog" aria-labelledby="seeOfferModal{{task_offer.id}}Title" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="seeOfferModalTitle{{task_offer.id}}">Offer for {{task.title}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form method="post">
+                <div class="modal-body">
+                  <h3>Offer</h3>
+                    <h4 class="mt-3">{{task_accepted_offer.title}}</h4>
+                    <p>Status: {{task_accepted_offer.get_status_display}}</p>
+                    <p>Description: <br> {{task_accepted_offer.description}}</p>
+                    <p>Price offered: {{task_accepted_offer.price}} </p>
+                    <p class="mt-2">Feedback given: <br> {{task_accepted_offer.feedback}}</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {% else %}
+        <h3 class="my-3">Pending offers for <i>{{task.title}}</i></h3>
+        <p>Accepting one offer will remove all other pending offers.</p>
+
+        {% for task_offer in task_offers %}
+        {% if not task_offer.status == 'd' %}
+        <li class="list-group-item d-flex justify-content-between align-items-center"> Offer from {{task_offer.offerer.user.username}}
+          <p>Status: {{task_offer.get_status_display}}</p>
+          <div>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#seeOfferModal{{task_offer.id}}">View Offer</button>
+          </div>
+        </li>
+
+        <div class="modal fade" id="seeOfferModal{{task_offer.id}}" tabindex="-1" role="dialog" aria-labelledby="seeOfferModal{{task_offer.id}}Title" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="seeOfferModalTitle{{task_offer.id}}">Offer for {{task.title}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form method="post">
+                <div class="modal-body">
+                  <h3>Offer</h3>
+                    <h4 class="mt-3">{{task_offer.title}}</h4>
+                    <p>Status: {{task_offer.get_status_display}}</p>
+                    <p>Description: <br> {{task_offer.description}}</p>
+                    <p>Price offered: {{task_offer.price}} </p>
+
+                    <h3 class="mt-3">Response: </h3>
+                    {% csrf_token %}
+                    {% bootstrap_form offer_response_form %}
+                    <input type="hidden" name="taskofferid" value="{{task_offer.id}}">
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" name="offer_response" class="btn btn-primary">Send Response</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+
+
+        {% else %}
+
+        <p>Project participants: {{ project|get_project_participants_string}}</p>
+
+          <h3 class="mb-3 mt-5">List of Tasks</h3>
+          <div class="list-group">
+            {% for task in tasks %}
+            {% define task|get_accepted_task_offer as task_accepted_offer %}
+            <a href="{% url 'task_view' project_id=project.id task_id=task.id %}" class="list-group-item list-group-item-action flex-column align-items-start my-1">
+             <div class="d-flex w-100 justify-content-between align-items-center">
+               <h5 class="mb-1">{% icon 'tasks' %} {{task.title}}</h5>
+             </div>
+               <div class="d-flex">
+                 <div>
+                   <p class="mb-1">Task status: {{task.get_status_display}}</p>
+                 </div>
+                 <div class= "ml-5">
+                   <p class="mb-1">Solver: {{task_accepted_offer.offerer.user.username}} </p>
+                 </div>
+                 </div>
+           </a>
+            {% endfor %}
+          </div>
+
+
+      {% endif %}
+
+      <div class="mt-5">
+        <h3 class="mt-3">Change project status</h3>
+        <form method="post">
+          {% csrf_token %}
+          {% bootstrap_form status_form %}
+          <button class="btn btn-primary" name="status_change" type="submit">Change status</button>
+        </form>
+      </div>
+
+      {% else %}
+
+
+
+      {% if project.status == project.OPEN %}
+
+      <h3 class="my-3">Tasks:</h3>
+        <div id="task_container">
+          {% for task in tasks %}
+          <div class="task">
+            <h4>{{task.title}}</h4>
+            <p>Budget: {{task.budget}} </p>
+            <p>Description: <br> {{task.description}}</p>
+          </div>
+          {% endfor %}
+        </div>
+
+            <h2 class="my-3">Make an offer</h2>
+            <ul class="list-group">
+          {% for task in tasks %}
+            {% define task|check_taskoffers:user as task_user_offers %}
+            {% if task_user_offers %}
+
+            {% with offer=task_user_offers|last %}
+
+              <li class="list-group-item d-flex justify-content-between align-items-center">{{task.title}}
+                <div>
+                  <label>Status:</label>
+                  <button class="btn {% if offer.status == offer.PENDING %} btn-warning {% elif offer.status == 'a' %} btn-success {% else %} btn-danger {% endif %}" data-toggle="modal" data-target="#makeOfferModal{{task.id}}">{{offer.get_status_display}}</button>
+                <div>
+              </li>
+
+              <div class="modal fade" id="makeOfferModal{{task.id}}" tabindex="-1" role="dialog" aria-labelledby="makeOfferModal{{task.id}}Title" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="makeOfferModalTitle{{task.id}}">Make an offer for {{task.title}}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="post">
+                      <div class="modal-body">
+                        <h3>Last Offer </h3>
+                          <h4 class="mt-3">{{offer.title}}</h4>
+                          <p>Status: {{offer.get_status_display}}</p>
+                          <p>Description: <br> {{offer.description}}</p>
+                          <p>Price offered: {{offer.price}} </p>
+                          {%if offer.status == 'a' or offer.status == 'd' %}
+                          <p class="mt-2">Feedback from project owner: <br> {{offer.feedback}}</p>
+                          {% endif %}
+
+                          {% if offer.status == 'd' %}
+                          <h3 class="mt-3">Make New Offer</h3>
+                          {% csrf_token %}
+                          {% bootstrap_form task_offer_form %}
+                          <input type="hidden" name="taskvalue" value="{{task.id}}">
+                          {% endif %}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        {%if offer.status == 'd' %}
+                        <button type="submit" name="offer_submit" class="btn btn-primary">Send New Offer</button>
+                        {% endif %}
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+            {% endwith %}
+
+              {% else %}
+
+                <li class="list-group-item d-flex justify-content-between align-items-center">{{task.title}}
+                  <button class="btn btn-primary" data-toggle="modal" data-target="#makeOfferModal{{task.id}}">Make Offer</button>
+                </li>
+
+                <div class="modal fade" id="makeOfferModal{{task.id}}" tabindex="-1" role="dialog" aria-labelledby="makeOfferModal{{task.id}}Title" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="makeOfferModalTitle{{task.id}}">Make an offer for {{task.title}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <form method="post">
+                        <div class="modal-body">
+                          {% csrf_token %}
+                          {% bootstrap_form task_offer_form %}
+                          <input type="hidden" name="taskvalue" value="{{task.id}}">
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="submit" name="offer_submit" class="btn btn-primary">Send Offer</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+              {% endif %}
+            {% endfor %}
+
+          </ul>
+
+        {% else %}
+
+        <h3 class="mb-3 mt-5">Tasks you have access to</h3>
+        <div class="list-group">
+          {% for task in tasks %}
+          <a href="{% url 'task_view' project_id=project.id task_id=task.id %}" class="list-group-item list-group-item-action flex-column align-items-start my-1">
+           <div class="d-flex w-100 justify-content-between align-items-center">
+             <h5 class="mb-1">{% icon 'tasks' %} {{task.title}}</h5>
+           </div>
+             <div class="d-flex">
+               <div>
+                 <p class="mb-1">Task status: {{task.get_status_display}}</p>
+               </div>
+             </div>
+         </a>
+          {% endfor %}
+        </div>
+
+        {% endif %}
+
+      {% endif %}
+
+    {%endif%}
+{% endblock %}

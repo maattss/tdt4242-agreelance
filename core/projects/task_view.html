@@ -1,0 +1,359 @@
+{% extends 'base.html' %}
+
+{% load bootstrap4 %}
+{% load static %}
+{% load project_extras %}
+
+{% block title %}Task{% endblock %}
+
+{% block content %}
+{% define task|get_accepted_task_offer as task_accepted_offer %}
+  <h3 class="my-3">{{ task.title }}</h3>
+  <p>Task status: {{task.get_status_display}}</p>
+  <p>Solver: {{task_accepted_offer.offerer.user.username}}</p>
+
+  <p>Original task budget: {{task.budget}} </p>
+  <p>Agreed payment: {{task_accepted_offer.price}}</p>
+
+  <p class="">{{ task.description }}</p>
+
+
+  <h3 class="my-3">Accepted offer:</h3>
+
+  <h4>{{task_accepted_offer.title}}</h4>
+  <p>{{task_accepted_offer.description}}</p>
+
+
+  <div>
+    <h3>Task files</h3>
+    <div class="task_files">
+      {% if user_permissions.read %}
+        {% for file in task.files.all %}
+          <div>
+              <a
+                target="_blank" href="/{{file.file}}">
+                  {{file.name}}
+              </a>
+          </div>
+        {% endfor %}
+      {% else %}
+        {% for file in team_files %}
+          <div>
+              <a
+                target="_blank" href="/{{file.file.file}}">
+                  {{file.file.name}}
+              </a>
+              {% if file.modify %}
+              <a
+                href="{% url 'delete_file' file_id=file.file.id%}">
+                  [Delete]
+              </a>
+              {% endif %}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+
+      {% if user_permissions.owner or user_permissions.modify or user_permissions.write or user_permissions.upload %}
+        <a class="btn btn-default" role="button" href="{% url 'upload_file_to_task' project_id=project.id task_id=task.id%}">Upload file</a>
+<br/>
+      {% endif %}
+      {% if user == task_accepted_offer.offerer.user %}
+      <div>
+        <div>
+          <button class="btn btn-primary" data-toggle="modal" data-target="#seePermissionModal">Change permissions</button>
+        <div>
+        <div class="modal fade" id="seePermissionModal" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered permis" role="document">
+            <div class="modal-content ">
+              <div class="modal-header">
+                <h5 class="modal-title" id="seeTeamAddModalTitle{{team.id}}">Change permission</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form method="post">
+                <div class="modal-body">
+                  {% csrf_token %}
+                    <table class="per">
+                      <tr>
+                        <td></td>
+                        {% for team in task.teams.all %}
+                          <td>{{team.name}}</td>
+                        {% endfor %}
+                      </tr>
+                      <tr>
+                        <td>Upload acess</td>
+                        {% for team in task.teams.all %}
+                          <td>
+                            <label>
+                            <input type="checkbox" name="permission-upload-{{team.id}}" value="True"
+                            {% if team.write %}
+                            checked
+                            {% endif %}/>
+
+                            Upload</label>
+                          </td>
+                        {% endfor %}
+                      </tr>
+
+                      {% for file in task.files.all %}
+                        <tr>
+                          <td>
+                            {{file.name}}
+                          </td>
+                          {% for team in task.teams.all %}
+                            <td>
+                              <!--https://stackoverflow.com/questions/8000022/django-template-how-to-look-up-a-dictionary-value-with-a-variable-->
+                                <input type="hidden" name="permission-perobj-{{file.id}}-{{team.id}}" value="{{per|get_item:file.name|get_item:team.name|id}}"/>
+                                <label>
+                                  <input type="checkbox" name="permission-read-{{file.id}}-{{team.id}}" value="True"
+                                  {% if per|get_item:file.name|get_item:team.name|read %}
+                                  checked
+                                  {% endif %}/>
+
+                                  Read</label>
+                                <label>
+                                  <input type="checkbox" name="permission-modify-{{file.id}}-{{team.id}}" value="True"
+                                  {% if per|get_item:file.name|get_item:team.name|modify %}
+                                  checked
+                                  {% endif %}
+                                  />
+                                  Delete
+                                </label>
+
+                            </td>
+                          {% endfor %}
+                        </tr>
+                      {% endfor %}
+                    </table>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" name="permissions" class="btn btn-primary">Change permissions</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br/>
+      {% endif %}
+
+    </div>
+  </div>
+{% if user == task_accepted_offer.offerer.user or user_permissions.owner %}
+  <div>
+    <h3>Roles </h3>
+    {% for team in task.teams.all %}
+    <div style="margin-bottom:10px;">
+     <h4>{{team.name}}</h4>
+     Members:
+     <ul>
+       {% for user in team.members.all %}
+          <li>{{user.user.username}}</li>
+       {% endfor %}
+     </ul>
+     <!-- add Task team member-->
+     {% if user == task_accepted_offer.offerer.user %}
+     <div>
+       <div>
+         <button class="btn btn-primary" data-toggle="modal" data-target="#seeTeamAddModal{{team.id}}">Add User</button>
+       <div>
+       <div class="modal fade" id="seeTeamAddModal{{team.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="seeTeamAddModalTitle{{team.id}}">Add user(s) to role {{team.name}}</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <form method="post">
+               <div class="modal-body">
+                 <input type="hidden" value="{{team.id}}" name="team-id"/>
+                 {% csrf_token %}
+                 {% bootstrap_form team_add_form %}
+               </div>
+               <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                 <button type="submit" name="team-add" class="btn btn-primary">Add Members</button>
+               </div>
+             </form>
+           </div>
+         </div>
+       </div>
+     </div>
+     <br/>
+     {% endif %}
+   </div>
+    {% endfor %}
+    <!-- add Task teams-->
+    {% if user == task_accepted_offer.offerer.user %}
+    <div>
+      <div>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#seeTeamModal">Add Role</button>
+      <div>
+      <div class="modal fade" id="seeTeamModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="seeTeamModalTitle">Create role</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form method="post">
+              <div class="modal-body">
+                {% csrf_token %}
+                {% bootstrap_form team_form %}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" name="team" class="btn btn-primary">Add Role</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+    <!-- end Task teams-->
+
+
+
+  {% if user_permissions.owner or user == task_accepted_offer.offerer.user %}
+    <div>
+      <h3>Task permissions</h3>
+      <div class="task_permissions">
+        <h2>read</h2>
+        {% for user_profile in task.read.all %}
+          <div>
+                {{user_profile.user.username}}
+          </div>
+        {% endfor %}
+        <h2>write</h2>
+        {% for user_profile in task.write.all %}
+          <div>
+                {{user_profile.user.username}}
+          </div>
+        {% endfor %}
+        <h2>modify</h2>
+        {% for user_profile in task.odify.all %}
+          <div>
+                {{user_profile.user.username}}
+          </div>
+        {% endfor %}
+        <a class="btn btn-default" role="button" href="{% url 'task_permissions' project_id=project.id task_id=task.id%}">Give permission</a>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if user == task_accepted_offer.offerer.user or user_permissions.owner %}
+  <div>
+    <h3>Deliveries:</h3>
+
+    {% for delivery in deliveries %}
+      <div>
+        <div>
+          {{delivery.comment}}
+        </div>
+        <div>
+          <a
+            target="_blenk" href="/{{delivery.file}}">
+              {{delivery.file}}
+          </a>
+        </div>
+        <div>
+          <h3>Feedback: </h3>
+          {{delivery.feedback}}
+        </div>
+          <h4>  Status: {{delivery.get_status_display}}</h4>
+            {% if user_permissions.owner and delivery.status == 'p' %}
+            <div>
+              <div>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#seeAcceptDeliveryModal">Respond</button>
+              <div>
+              <div class="modal fade" id="seeAcceptDeliveryModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="seeAcceptDeliveryModal">Accept delivery</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="post">
+                      <div class="modal-body">
+                        {{delivery.comment}}
+                        {% csrf_token %}
+                        {% bootstrap_form deliver_response_form %}
+                        <input type="hidden" name="delivery-id" value="{{delivery.id}}"/>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" name="delivery-response" class="btn btn-primary">Send Response</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if user == task_accepted_offer.offerer.user %}
+  {% if task.status == 'ad' or task.status == 'dd' %}
+  <div>
+    <div>
+      <button class="btn btn-primary" data-toggle="modal" data-target="#seeDeliverModal">Deliver</button>
+    <div>
+    <div class="modal fade" id="seeDeliverModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="seeDeliverModalTitle">Make delivery for {{task.title}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form enctype="multipart/form-data" method="post">
+            <div class="modal-body">
+              <h3 class="mt-3">Response: </h3>
+              {% csrf_token %}
+              {% bootstrap_form deliver_form %}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" name="delivery" class="btn btn-primary">Deliver</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endif %}
+
+<div>
+  {% if user == project.user.user %}
+    {% if task.status == task.PAYMENT_SENT %}
+      <a class="btn btn-primary" role="button" href="{% url 'receipt' project_id=project.id task_id=task.id%}">See receipt</a>
+    {% elif task.status == task.PENDING_PAYMENT %}
+      <a class="btn btn-primary" role="button" href="{% url 'payment' project_id=project.id task_id=task.id%}">Pay</a>
+    {% endif %}
+  {% elif user == task_accepted_offer.offerer.user %}
+    {% if task.status == task.PAYMENT_SENT %}
+      <a class="btn btn-primary" role="button" href="{% url 'receipt' project_id=project.id task_id=task.id%}">See receipt</a>
+    {% endif %}
+  {% endif %}
+</div>
+
+
+{% endblock %}

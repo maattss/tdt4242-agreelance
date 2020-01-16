@@ -1,0 +1,68 @@
+.wrapping-link{
+  color: inherit;
+}
+
+.open-project-view-item:hover{
+  color: grey;
+  box-shadow: 0 0 1px gray;
+  text-decoration: none;
+}
+.open-project-view-item{
+  color: black;
+}
+
+.project-description{
+  word-break: break-all;
+}
+
+.project-image{
+  width:100px;
+  height:100px;
+}
+
+.project-box-style{
+  border: solid gray 1px;
+  min-width:300px;
+  min-height:300px;
+  max-width:300px;
+  max-height:300px;
+  overflow:hidden;
+}
+
+.projects-view{
+  margin:auto;
+}
+
+.honey{
+  height:50px;
+  width:50px;
+}
+
+.offerer-taskoffer-status{
+  list-style-type: none;
+
+}
+
+.new-task-input{
+  width: 80%;
+}
+
+.per td{
+  padding:5px;
+}
+
+.per label{
+  display: block;
+}
+
+.per table {
+    border-collapse: collapse;
+}
+
+.per table, .per th,.per td {
+    border: 1px solid black;
+}
+
+.permis{
+  max-width:1000px;
+}

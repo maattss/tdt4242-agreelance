@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% load static %}
+{% load icons %}
+{% load project_extras %}
+{% load home_extras %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+  {% if user.is_authenticated %}
+  <div class="row">
+    <div class="col-lg text-center">
+      <h2 class="mt-5">Welcome {{user.username}}! <img class="ml-1 honey" src="{% static 'img/handshake.png' %}"  alt="Logo image"/></h2>
+      <p class="mt-5">What would you like to do today?</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg text-center">
+
+      <div class="text-center d-inline-flex list-group mt-3" id="project-toggle" role="tablist">
+        <ul class="pagination">
+        <li class="page-item"><a class="list-group-item list-group-item-action active" id="own-project" data-toggle="list" role="tab" aria-controls="own" href="#own">My Projects</a></li>
+        <li class="page-item"><a class="page-item list-group-item list-group-item-action" id="costumer-project" data-toggle="list" role="tab" aria-controls="costumer" href="#costumer">Costumer Projects</a></li>
+        <li class="page-item"><a class="page-item  list-group-item list-group-item-action" id="finished-project" data-toggle="list" role="tab" aria-controls="finished" href="#finished">Finished Projects</a></li>
+        </ul>
+      </div>
+
+      <div class="tab-content"  id="nav-tabContent">
+        <!-- Own projects -->
+        <div class="tab-pane fade show active" id="own" role="tabpanel" aria-labelledby="own-project">
+          <h3 class="mb-3 mt-5">Your Open Requests</h3>
+          <div class="list-group" id="open-projects">
+            {% define "You don't have any open requests" as project_container_status %}
+            {% for project in user_projects %}
+              {% if project.status == project.OPEN %}
+              {% define "" as project_container_status %}
+
+              <a href="{% url 'project_view' project_id=project.id%}" class="list-group-item list-group-item-action flex-column align-items-start my-1">
+               <div class="d-flex w-100 justify-content-between align-items-center">
+                 <h5 class="mb-1">{% icon 'unlock-alt' %} {{project.title}}</h5>
+                 {% if not project|check_nr_pending_offers == 0 %} <span class="badge badge-warning badge-pill">{{ project|check_nr_pending_offers }}</span>{% endif %}
+               </div>
+                 <div class="d-flex">
+                   <img class="mt-1 project-image" src="{% static 'img/idea.jpg' %}" alt="Generic placeholder image." />
+
+                   <span class="mb-1 ml-5">
+                     <ul>
+                       {% for task in project|all_tasks %}
+                       {{task.title}} - {{task|offers}}
+                       {% endfor %}
+                     </ul>
+                     </span>
+                 </div>
+             </a>
+             {% else %}
+              {% if forloop.last %} <p class="mb-5">{{project_container_status}}</p> {% endif %}
+             {% endif %}
+            {% endfor %}
+          </div>
+
+          <h3 class="mb-3 mt-5">Projects in Progress</h3>
+          <div class="list-group" id="closed-projects">
+            {% define "You don't have any projects in progress" as project_container_status %}
+            {% for project in user_projects %}
+            {% if project.status == project.INPROG %}
+            {% define "" as project_container_status %}
+            <a href="{% url 'project_view' project_id=project.id%}" class="list-group-item list-group-item-action flex-column align-items-start my-1">
+             <div class="d-flex w-100 justify-content-between align-items-center">
+               <h5 class="mb-1">{% icon 'lock' %} {{project.title}}</h5>
+
+               {% define project|get_task_statuses as task_statuses %}
+
+               <div>
+                 {%if not task_statuses.pending_acceptance == 0 %}<span class="badge badge-secondary badge-pill">{{task_statuses.pending_acceptance}} </span>{%endif%}
+                 {%if not task_statuses.pending_payment == 0 %}<span class="badge badge-warning badge-pill">{{task_statuses.pending_payment}}</span> {%endif%}
+                 {%if not task_statuses.payment_sent == 0 %}<span class="badge badge-success badge-pill">{{task_statuses.payment_sent}}</span> {%endif%}
+               </div>
+
+             </div>
+             <div class="d-flex text-left">
+               <img class="mt-1 project-image" src="{% static 'img/idea.jpg' %}" alt="Generic placeholder image." />
+               <ul class="mb-1 ml-5 offerer-taskoffer-status">
+                 {% for task in project|all_tasks %}
+                 {{task.title}} - {{task|task_status}}
+                 {% endfor %}
+                
+               </ul>
+             </div>
+           </a>
+           {% else %}
+            {% if forloop.last %} <p class="mb-5">{{project_container_status}}</p> {% endif %}
+           {% endif %}
+           {% endfor %}
+          </div>
+        </div>
+
+        <!-- Costumer projects -->
+        <div class="tab-pane fade" id="costumer" role="tabpanel" aria-labelledby="costumer-project">
+          <h3 class="mb-3 mt-5">Costumer Projects</h3>
+          <div class="list-group" id="closed-projects">
+            {% define "You don't have any costumer projects in progress" as project_container_status %}
+            {% for project in customer_projects %}
+            {% if project.status == project.INPROG %}
+            {% define "" as project_container_status %}
+            <a href="{% url 'project_view' project_id=project.id%}" class="list-group-item list-group-item-action flex-column align-items-start my-1">
+             <div class="d-flex w-100 justify-content-between align-items-center">
+               <h5 class="mb-1">{% icon 'comments' %} {{project.title}}</h5>
+
+               {% define project|get_user_task_statuses:user as user_task_statuses %}
+
+               <div>
+                 {%if not user_task_statuses.pending_acceptance == 0 %}<span class="badge badge-secondary badge-pill">{{user_task_statuses.pending_acceptance}} </span>{%endif%}
+                 {%if not user_task_statuses.pending_payment == 0 %}<span class="badge badge-warning badge-pill">{{user_task_statuses.pending_payment}}</span> {%endif%}
+                 {%if not user_task_statuses.payment_sent == 0 %}<span class="badge badge-success badge-pill">{{user_task_statuses.payment_sent}}</span> {%endif%}
+               </div>
+
+             </div>
+             <div class="d-flex text-left">
+               <img class="mt-1 project-image" src="{% static 'img/idea.jpg' %}" alt="Generic placeholder image." />
+               <ul class="mb-1 ml-5 offerer-taskoffer-status">
+                {%if not user_task_statuses.awaiting_delivery == 0 %}<li>Waiting for your delivery</li>{%endif%}
+                 {% if user_task_statuses.pending_acceptance == 1 %} <li>You have one delivery waiting for acceptance</li>{%elif not user_task_statuses.pending_acceptance == 0 %}<li>You have deliveries waiting for acceptance</li>{%endif%}
+                 {% if user_task_statuses.pending_payment == 1 %} <li>You have one delivery waiting for payment</li>{%elif not user_task_statuses.pending_payment == 0 %}<li>You have deliveries waiting for payment</li>{%endif%}
+                 {% if user_task_statuses.payment_sent == 1 %} <li>You have received one payment</li> {% elif not user_task_statuses.payment_sent == 0 %}<li>You have received payments for deliveries </li>  {%endif%}
+               </ul>
+             </div>
+           </a>
+           {% else %}
+            {% if forloop.last %} <p class="mb-5">{{project_container_status}}</p> {% endif %}
+           {% endif %}
+            {% endfor %}
+          </div>
+
+          <h3 class="mb-3 mt-5">Your Offers</h3>
+          <div class="list-group" id="closed-projects">
+            {% define "You don't have any customer projects in progress" as project_container_status %}
+            {% for project in given_offers_projects %}
+            {% if project.status == project.OPEN %}
+            {% define "" as project_container_status %}
+            <a href="{% url 'project_view' project_id=project.id%}" class="list-group-item list-group-item-action flex-column align-items-start my-1">
+             <div class="d-flex w-100 justify-content-between align-items-center">
+               <h5 class="mb-1">{% icon 'comments' %} {{project.title}}</h5>
+
+               {% define project|check_nr_user_offers:user as offers %}
+               <div>
+                 {%if not offers.declined == 0 %}<span class="badge badge-danger badge-pill">{{offers.declined}} </span>{%endif%}
+                 {%if not offers.pending == 0 %}<span class="badge badge-warning badge-pill">{{offers.pending}}</span> {%endif%}
+                 {%if not offers.accepted == 0 %}<span class="badge badge-success badge-pill">{{offers.accepted}}</span> {%endif%}
+               </div>
+
+             </div>
+               <div class="d-flex text-left">
+                 <img class="mt-1 project-image" src="{% static 'img/idea.jpg' %}" alt="Generic placeholder image." />
+                 <ul class="mb-1 ml-5 offerer-taskoffer-status">
+                   {% if offers.declined == 1 %} <li>You have one declined offer</li>{%elif not offers.declined == 0 %}<li>You have declined offers</li>{%endif%}
+                   {% if offers.pending == 1 %} <li>You have one pending offer</li>{%elif not offers.pending == 0 %}<li>You have pending offers</li>{%endif%}
+                   {% if offers.accepted == 1 %} <li>You have one accepted offer</li> {% elif not offers.accepted == 0 %}<li>You have accepted offers</li>  {%endif%}
+                 </ul>
+               </div>
+
+           </a>
+           {% else %}
+            {% if forloop.last %} <p class="mb-5">{{project_container_status}}</p> {% endif %}
+           {% endif %}
+           {% endfor %}
+          </div>
+
+        </div>
+
+        <!-- Finished projects -->
+        <div class="tab-pane fade" id="finished" role="tabpanel" aria-labelledby="finished-project">
+          <h3 class="mb-3 mt-5">Finished Own Projects</h3>
+          <div class="list-group" id="finished-own-projects">
+            {% define "You don't have any finished own projects" as project_container_status %}
+            {% for project in user_projects %}
+            {% if project.status == project.FINISHED %}
+            {% define "" as project_container_status %}
+            <a href="{% url 'project_view' project_id=project.id%}" class="list-group-item list-group-item-action flex-column align-items-start my-1">
+             <div class="d-flex w-100 justify-content-between align-items-center">
+               <h5 class="mb-1">{% icon 'archive' %} {{project.title}}</h5>
+             </div>
+               <div class="d-flex">
+                 <img class="mt-1 project-image" src="{% static 'img/idea.jpg' %}" alt="Generic placeholder image." />
+                 <p class="mb-1 ml-5">Project is completed</p>
+               </div>
+           </a>
+           {% else %}
+            {% if forloop.last %} <p class="mb-5">{{project_container_status}}</p> {% endif %}
+           {% endif %}
+            {% endfor %}
+          </div>
+
+          <!-- Finished costumer projects -->
+          <h3 class="mb-3 mt-5">Finished Costumer Projects</h3>
+          <div class="list-group" id="finished-costumer-projects">
+            {% define "You don't have any finished customer projects" as project_container_status %}
+            {% for project in customer_projects %}
+            {% if project.status == project.FINISHED %}
+            {% define "" as project_container_status %}
+            <a href="{% url 'project_view' project_id=project.id%}" class="list-group-item list-group-item-action flex-column align-items-start my-1">
+             <div class="d-flex w-100 justify-content-between align-items-center">
+               <h5 class="mb-1">{% icon 'archive' %} {{project.title}}</h5>
+             </div>
+               <div class="d-flex">
+                 <img class="mt-1 project-image" src="{% static 'img/idea.jpg' %}" alt="Generic placeholder image." />
+                 <p class="mb-1 ml-5">Project is completed</p>
+               </div>
+           </a>
+           {% else %}
+            {% if forloop.last %} <p class="mb-5">{{project_container_status}}</p> {% endif %}
+           {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {% else %}
+
+
+  <div class="row">
+    <div class="col-lg text-center">
+      <h2 class="mt-5">Welcome to the wonderful world of Agreelance! </h2>
+      <p class="mt-5">
+        Here you can find different projects that needs to be done,
+        or you can post your own. <br> Get started by signing in
+         or signing up.
+      </p>
+      <img class="mt-5" src="{% static 'img/handshake.png' %}"  alt="Logo image" />
+      <div class="mt-5">
+        <a role="button" class="btn btn-outline-primary my-2 my-sm-0 ml-2" href="{% url 'login' %}">Sign in</a>
+        or
+        <a role="button" class="btn btn-outline-primary my-sm-0 mr-2" href="{% url 'signup' %}">Sign up</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+<script src="{% static 'js/tab_change.js' %}"></script>
+
+{% endblock %}

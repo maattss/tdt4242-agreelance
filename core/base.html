@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+
+        <!-- bootstrap -->
+        {% load bootstrap4 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript jquery='full' %}
+        {% bootstrap_messages %}
+
+        <!-- Icons -->
+        {% load icons %}
+
+        <!-- Font Awesome CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+      crossorigin="anonymous"
+      >
+
+        <title>{% block title %}{% endblock title %}</title>
+        <link rel="shortcut icon" href="{% static 'favicon/favicon.ico' %}"/>
+        <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+    </head>
+
+    <body>
+      <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand font-weight-bold ml-5 mr-3" href="{% url 'home' %}">Agreelance</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+    <div class="collapse navbar-collapse ml-1" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link font-weight-light" href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link font-weight-light" href="{% url 'projects' %}">Projects</a>
+        </li>
+
+
+        <!--
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+      -->
+      </ul>
+      <div class="my-2 my-lg-0 mr-5">
+        {% if user.is_authenticated %}
+        <a role="button" class="btn btn-outline-primary my-2 my-sm-0" href="{% url 'new_project' %}">New project</a>
+        <a class="btn btn-link my-2 my-sm-0" href="{% url 'logout' %}" role="button">Sign out</a>
+        {% else %}
+        <a role="button" class="btn btn-link my-sm-0 mr-2" href="{% url 'signup' %}">Sign up</a>
+        <a role="button" class="btn btn-outline-primary my-2 my-sm-0" href="{% url 'login' %}">Sign in</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+      <div class="container">
+        {% if messages %}
+          <ul class="messages">
+              {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+          </ul>
+        {% endif %}
+        {% block content %}{% endblock content %}
+      </div>
+    </body>
+</html>
