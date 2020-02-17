@@ -53,7 +53,16 @@ Naviagate into the project folder.
 
 `virtualenv env`
 
+For mac/linux:
+
 `source env/bin/activate`
+
+For windows:
+
+`env\Scripts\activate.bat`
+
+If you get an error related to charmap on Windows, run this command:
+`set PYTHONIOENCODING=UTF-8`
 
 
 #### Install python requirements
