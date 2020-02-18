@@ -114,10 +114,10 @@ To get email working on heroku you might have to visit https://accounts.google.c
 ## Continuous integration
 Continuous integration will build the code pushed to master and push it to your heroku app so you get a live version of your latest code by just pushing your code to GitLab.
 
-1. Create a heroku account and an app.
-2. Set the project in the .gitlab-cs.yml file by replacing `<Your-herokuproject-name>` with the name of the Heroku app you created
+1. Fork the project at GitLab
+2. Create a heroku account and an app.
+3. Set the project in the .gitlab-cs.yml file by replacing `<Your-herokuproject-name>` with the name of the Heroku app you created
 `- dpl --provider=heroku --app=<Your-herokuproject-name> --api-key=$HEROKU_STAGING_API_KEY`
-3. Fork the project at GitLab
 4. Set varibles at GitLab
     * settings > ci > Environment Variables
     * `HEROKU_STAGING_API_KEY` = heroku > Account Settings > API Key
