@@ -43,6 +43,7 @@ class Project(models.Model):
     description = models.TextField(max_length=500)
     participants = models.ManyToManyField(Profile, related_name='project_participants')
     category = models.ForeignKey(ProjectCategory, on_delete=models.CASCADE, related_name='project_category')
+    tags = models.CharField(max_length=200, null=True)
 
     OPEN = 'o'
     INPROG = 'i'
