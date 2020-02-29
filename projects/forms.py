@@ -7,11 +7,10 @@ class ProjectForm(forms.ModelForm):
     title = forms.CharField(max_length=200)
     description = forms.Textarea()
     category_id = forms.ModelChoiceField(queryset=ProjectCategory.objects.all())
-    tags = forms.CharField(max_length=200)
 
     class Meta:
         model = Project
-        fields = ('title', 'description', 'category_id', 'tags')
+        fields = ('title', 'description', 'category_id')
 
 class TaskFileForm(forms.ModelForm):
     file = forms.FileField()

@@ -28,6 +28,8 @@ def new_project(request):
             project.user = request.user.profile
             project.category =  get_object_or_404(ProjectCategory, id=request.POST.get('category_id'))
             project.save()
+            # Without this next line the tags won 
+            form.save_m2m()
 
             people = Profile.objects.filter(categories__id=project.category.id)
             from django.core import mail
