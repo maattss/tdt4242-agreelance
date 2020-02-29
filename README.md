@@ -2,6 +2,24 @@
 
 The best way to agree on the price of your freelancing jobs!
 
+## Git flow
+We use the following branching strategy in this project
+### Master Branch: `master`
+
+We consider `master` to be the main branch where the source code of `HEAD` **always reflects a stable application**. This is the branch from which all `feature` branches are forked, and into which all `feature` branches are merged.
+
+Changes to `master` should always come through a **pull request**!.
+
+### Feature Branches: `feature-*`
+
+Feature branches are used to develop new features. The essence of a feature branch is that it exists as long as the feature is in development, but will eventually be merged back into master (to definitely add the new feature to the upcoming release) or discarded (in case of a disappointing experiment).
+
+Feature branches should not exist in `origin` for very long. They should be merged into `master`, via pull request, as quickly as possible and then cleaned up.
+
+- Naming convention: `feature-*`
+- Branches from: `master`
+- Must merge back into: `master`
+
 ## Code and structure
 
 .gitlab-ci.yml - gitlab ci
