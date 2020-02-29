@@ -1,5 +1,6 @@
 # Agreelance group 12
-![Heroku](https://pyheroku-badge.herokuapp.com/?app=agreelance-group12&style=flat-square)
+[![Heroku](https://pyheroku-badge.herokuapp.com/?app=agreelance-group12&style=flat-square)](https://agreelance-group12.herokuapp.com/)
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 The best way to agree on the price of your freelancing jobs!
 
