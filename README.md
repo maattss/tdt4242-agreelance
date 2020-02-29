@@ -35,8 +35,6 @@ Feature branches should not exist in `origin` for very long. They should be merg
     - **tests/** - contains tests for the module. [View Testing in Django](https://docs.djangoproject.com/en/2.1/topics/testing/) for more.
     - **views.py** - Controller in MVC. Methods for rendering and accepting user data
     - **forms.py**  -  defenition of forms. Used to render html forms and verify user input
-
-
   - **payment/** - module handling payment
   - **projects/** - The largest module of the project containing code for creating project and tasks. Upload files, view files, adding roles and user to roles.
   - **agreelance/** - The projects main module contaning settings.
@@ -44,8 +42,6 @@ Feature branches should not exist in `origin` for very long. They should be merg
   - **user/** - module extending django's user model with a profile contaning more information about the user.
   - **manage.py** - entry point for running the project.
   - **seed.json** - contains seed data for the project to get it up and running quickly
-
-
 
 ## Get started
 It's reccomended to have a look at: https://www.djangoproject.com/start/
