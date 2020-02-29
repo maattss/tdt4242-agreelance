@@ -10,10 +10,7 @@
   <form method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
-    <div class="form-group">
-      <label>Tags</label>
-      <input type="text" data-role="tagsinput" class="form-control" name="tags">
-    </div>
+
     <div id="task_container">
       <div class="task">
         <h2>Task</h2>

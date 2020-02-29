@@ -10,7 +10,7 @@ class ProjectForm(forms.ModelForm):
 
     class Meta:
         model = Project
-        fields = ('title', 'description', 'category_id')
+        fields = ('title', 'description', 'category_id', 'tags')
 
 class TaskFileForm(forms.ModelForm):
     file = forms.FileField()
