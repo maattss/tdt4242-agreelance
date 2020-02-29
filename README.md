@@ -23,10 +23,6 @@ Feature branches should not exist in `origin` for very long. They should be merg
 - Must merge back into: `master`
 
 ## Code and structure
-
-.gitlab-ci.yml - gitlab ci
-Procfile - heroku kjører serveren
-
 - **agreelance/** django project folder containing the project modules
   - **core/** contains all the project templates
     - **index.html** One of the project templates that uses a template language to insert if, loops and variables into html.
