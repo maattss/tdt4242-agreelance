@@ -1,12 +1,28 @@
-# Agreelance
+# Agreelance group 12
+[![Heroku](https://pyheroku-badge.herokuapp.com/?app=agreelance-group12&style=flat-square)](https://agreelance-group12.herokuapp.com/)
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 The best way to agree on the price of your freelancing jobs!
 
+## Git flow
+We use the following branching strategy in this project
+### Master Branch: `master`
+
+We consider `master` to be the main branch where the source code of `HEAD` **always reflects a stable application**. This is the branch from which all `feature` branches are forked, and into which all `feature` branches are merged.
+
+Changes to `master` should always come through a **pull request**!.
+
+### Feature Branches: `feature-*`
+
+Feature branches are used to develop new features. The essence of a feature branch is that it exists as long as the feature is in development, but will eventually be merged back into master (to definitely add the new feature to the upcoming release) or discarded (in case of a disappointing experiment).
+
+Feature branches should not exist in `origin` for very long. They should be merged into `master`, via pull request, as quickly as possible and then cleaned up.
+
+- Naming convention: `feature-*`
+- Branches from: `master`
+- Must merge back into: `master`
+
 ## Code and structure
-
-.gitlab-ci.yml - gitlab ci
-Procfile - heroku kjører serveren
-
 - **agreelance/** django project folder containing the project modules
   - **core/** contains all the project templates
     - **index.html** One of the project templates that uses a template language to insert if, loops and variables into html.
@@ -19,8 +35,6 @@ Procfile - heroku kjører serveren
     - **tests/** - contains tests for the module. [View Testing in Django](https://docs.djangoproject.com/en/2.1/topics/testing/) for more.
     - **views.py** - Controller in MVC. Methods for rendering and accepting user data
     - **forms.py**  -  defenition of forms. Used to render html forms and verify user input
-
-
   - **payment/** - module handling payment
   - **projects/** - The largest module of the project containing code for creating project and tasks. Upload files, view files, adding roles and user to roles.
   - **agreelance/** - The projects main module contaning settings.
@@ -28,8 +42,6 @@ Procfile - heroku kjører serveren
   - **user/** - module extending django's user model with a profile contaning more information about the user.
   - **manage.py** - entry point for running the project.
   - **seed.json** - contains seed data for the project to get it up and running quickly
-
-
 
 ## Get started
 It's reccomended to have a look at: https://www.djangoproject.com/start/
