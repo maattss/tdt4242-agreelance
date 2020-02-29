@@ -1,4 +1,5 @@
-# Agreelance
+# Agreelance group 12
+![Heroku](https://pyheroku-badge.herokuapp.com/?app=agreelance-group12&style=flat-square)
 
 The best way to agree on the price of your freelancing jobs!
 
