@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class ProjectForm(forms.ModelForm):
     title = forms.CharField(max_length=200)
     description = forms.Textarea()
-    category_id = forms.ModelChoiceField(queryset=ProjectCategory.objects.all())
+    category_id = forms.ModelChoiceField(queryset=ProjectCategory.objects.all()) 
 
     class Meta:
         model = Project

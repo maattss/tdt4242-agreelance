@@ -16,7 +16,7 @@
       <div class="text-center d-inline-flex list-group mt-3" id="project-toggle" role="tablist">
         <ul class="pagination">
           {% for project_category in project_categories %}
-          <li class="page-item">
+          <li class="page-item mr-1 ml-1">
             <a
               class="list-group-item list-group-item-action"
               data-toggle="list"
@@ -31,14 +31,16 @@
 
         </ul>
       </div>
+      <div id="tags">
+        <p class="mb-1">Most common tags:</p>
+          {% for tag in common_tags_all %}
+            <a id="tag-{{tag}}" href="#{{tag}}" class="badge badge-light" data-toggle="tag"># {{tag}}</a>
+          {% endfor %} 
+      </div>
 
       <div class="tab-content"  id="nav-tabContent">
         {% for project_category in project_categories %}
           <div class="tab-pane fade show" id="{{project_category}}" role="tabpanel" aria-labelledby="category-{{project_category}}">
-            <p class="mb-1">Most common tags:</p>
-            {% for tag in common_tags %}
-              <a href="#" class="badge badge-primary"># {{tag}}</a>
-            {% endfor %} 
             <h3 class="mb-3 mt-5">{{project_category}}</h3>
             <div class="row projects-view">
                 {% for project in projects %}
@@ -72,6 +74,7 @@
   </div>
 
   <script src="{% static 'js/tab_change.js' %}"></script>
+  <script src="{% static 'js/tag_click.js' %}"></script>
   <script>
   document.getElementsByClassName('list-group-item-action')[0].click();
   setTimeout(function(){

@@ -9,13 +9,16 @@ from django.contrib.auth.models import User
 def projects(request):
     projects = Project.objects.all()
     project_categories = ProjectCategory.objects.all()
-    common_tags = Project.tags.most_common()[:12]
+    common_tags_all = Project.tags.most_common()[:6]
+    common_tags = {}
+
     return render(request,
         'projects/projects.html',
         {
             'projects': projects,
             'project_categories': project_categories,
             'common_tags': common_tags,
+            'common_tags_all': common_tags_all,
         }
     )
 
@@ -30,7 +33,7 @@ def new_project(request):
             project.user = request.user.profile
             project.category =  get_object_or_404(ProjectCategory, id=request.POST.get('category_id'))
             project.save()
-            # Without this next line the tags won 
+            # Without this next line the tags won't be saved 
             form.save_m2m()
 
             people = Profile.objects.filter(categories__id=project.category.id)
