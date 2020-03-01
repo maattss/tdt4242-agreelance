@@ -102,7 +102,7 @@ def project_view(request, project_id):
         'tasks': tasks,
         'status_form': status_form,
         'total_budget': total_budget,
-        'offer_response_form': offer_response_form
+        'offer_response_form': offer_response_form,
         })
 
 

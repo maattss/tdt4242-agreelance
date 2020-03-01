@@ -15,6 +15,10 @@
   <h3>Description</h3>
   <p class="project-description">{{ project.description }}</p>
   <h4>Category: {{project.category}}</h4>
+  {% for tag in project.tags.slugs %}
+    <a href="#" class="badge badge-primary"># {{tag}}</a>
+  {% endfor %}  
+
     {% if user.is_authenticated %}
       {% if user == project.user.user %}
 

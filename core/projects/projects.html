@@ -49,7 +49,10 @@
                       <img class="align-self-top mr-3 mt-5 project-image" src="{% static 'img/idea.jpg' %}" alt="Generic placeholder image." />
                       <div class="media-body">
                         <h5 class="mt-3"> {% icon 'tasks' %} {{project.title}}</h5>
-                        <p>Posted by: {{project.user.user.username}}</p>
+                        <p class="mb-1">Posted by: {{project.user.user.username}}</p>
+                        {% for tag in project.tags.slugs %}
+                          <a href="#" class="badge badge-primary"># {{tag}}</a>
+                        {% endfor %} 
                         <p class="project-description">{{project.description}}</p>
                     </div>
                   </div>
