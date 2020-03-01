@@ -9,11 +9,13 @@ from django.contrib.auth.models import User
 def projects(request):
     projects = Project.objects.all()
     project_categories = ProjectCategory.objects.all()
+    common_tags = Project.tags.most_common()[:12]
     return render(request,
         'projects/projects.html',
         {
             'projects': projects,
             'project_categories': project_categories,
+            'common_tags': common_tags,
         }
     )
 
@@ -100,7 +102,7 @@ def project_view(request, project_id):
         'tasks': tasks,
         'status_form': status_form,
         'total_budget': total_budget,
-        'offer_response_form': offer_response_form,
+        'offer_response_form': offer_response_form
         })
 
 

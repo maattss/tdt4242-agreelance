@@ -171,12 +171,10 @@
           "user":1,
           "title":"Fixing the outside of my house",
           "description":"Need painting and landscaping",
-          "tags":"painting,landscaping,house,fixing",
           "category":3,
           "status":"o",
           "participants":[
-             3,
-             4
+             3
           ]
        }
     },

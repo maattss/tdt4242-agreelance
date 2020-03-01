@@ -11,16 +11,10 @@
 {% block content %}
   <h3 class="my-3">{{ project.title }}</h3>
   <p>Project status: {{project.get_status_display}}</p>
-
   <p>Project total budget: {{total_budget}}</p>
   <h3>Description</h3>
   <p class="project-description">{{ project.description }}</p>
   <h4>Category: {{project.category}}</h4>
-  <h4>Tags:</h4>
-  {% for tag in project.tags.names %}
-    <a href="#" class="badge badge-primary">{{tag}}</a>
-  {% endfor %}
-
     {% if user.is_authenticated %}
       {% if user == project.user.user %}
 

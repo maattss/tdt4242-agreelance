@@ -35,6 +35,10 @@
       <div class="tab-content"  id="nav-tabContent">
         {% for project_category in project_categories %}
           <div class="tab-pane fade show" id="{{project_category}}" role="tabpanel" aria-labelledby="category-{{project_category}}">
+            <p class="mb-1">Most common tags:</p>
+            {% for tag in common_tags %}
+              <a href="#" class="badge badge-primary"># {{tag}}</a>
+            {% endfor %} 
             <h3 class="mb-3 mt-5">{{project_category}}</h3>
             <div class="row projects-view">
                 {% for project in projects %}
@@ -58,6 +62,7 @@
 
           </div>
         {% endfor %}
+        
       </div>
 
     </div>
