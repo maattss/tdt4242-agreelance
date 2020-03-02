@@ -11,57 +11,52 @@
 
   <div class="row">
     <div class="col-lg text-center">
-
       <div class="mt-2 mb-2" id="project-toggle" role="tablist">
           {% for project_category in project_categories %}
-            {% if current_project_category|slugify == project_category|slugify %}
-              <a href= "{% url 'projects' project_category %}" class="btn btn-primary">{{project_category}}</a>
+            {% if current_project_category.id == project_category.id %}
+              <a href= "{% url 'projects' project_category.id %}" class="btn btn-primary">{{project_category}}</a>
             {% else %}
-              <a href="{% url 'projects' project_category %}" class="btn btn-light">{{project_category}}</a>
+              <a href="{% url 'projects' project_category.id %}" class="btn btn-light">{{project_category}}</a>
             {% endif %}
           {% endfor %}
       </div>
 
       <div id="tags">
-          {% for tag in common_tags_all %}
-            <a id="tag-{{tag}}" href="#{{tag}}" class="badge badge-light" data-toggle="tag"># {{tag}}</a>
-          {% endfor %} 
-      </div>
-
-      <div id="nav-tabContent">
-
-          <div class="tab-pane fade show" id="{{project_category}}" role="tabpanel" aria-labelledby="category-{{project_category}}">
-            <h3 class="mb-3 mt-5">{{current_project_category}}</h3>
-            <div class="row projects-view">
-                {% for project in projects %}
-                  {% if project.status == project.OPEN and project.category|slugify == current_project_category|slugify %}
-                  <a class="open-project-view-item" href="{% url 'project_view' project_id=project.id%}">
-                  <div class="col-md mb-3 ml-3 mr-3 mt-3 project-box-style">
-                    <div class="media">
-                      <img class="align-self-top mr-3 mt-5 project-image" src="{% static 'img/idea.jpg' %}" alt="Generic placeholder image." />
-                      <div class="media-body">
-                        <h5 class="mt-3"> {% icon 'tasks' %} {{project.title}}</h5>
-                        <p class="mb-1">Posted by: {{project.user.user.username}}</p>
-                        {% for tag in project.tags.slugs %}
-                          <a href="#" class="badge badge-primary"># {{tag}}</a>
-                        {% endfor %} 
-                        <p class="project-description">{{project.description}}</p>
-                    </div>
-                  </div>
-                  </div>
-                  </a>
-                  {% endif %}
-                {% endfor %}
-
-            </div>
-
-          </div>
-
+        <p class="mb-0 mt-4">Most common tags:</p>
         
+        {% for tag in common_tags %}
+          {% if tag|slugify == searched_tag|slugify %}
+            <a id="tag-{{tag}}" href="{% url 'projects_tags' current_project_category.id tag %}" class="badge badge-primary" data-toggle="tag"># {{tag}}</a>
+          {% else %}
+            <a id="tag-{{tag}}" href="{% url 'projects_tags' current_project_category.id tag %}" class="badge badge-light" data-toggle="tag"># {{tag}}</a>
+          {% endif %}
+        {% endfor %} 
       </div>
 
+      <div class="row projects-view mt-2">
+          {% for project in projects %}
+            {% if project.status == project.OPEN and project.category|slugify == current_project_category|slugify %}
+            <a class="open-project-view-item" href="{% url 'project_view' project_id=project.id%}">
+            <div class="col-md mb-3 ml-3 mr-3 mt-3 project-box-style">
+              <div class="media">
+                <img class="align-self-top mr-3 mt-5 project-image" src="{% static 'img/idea.jpg' %}" alt="Generic placeholder image." />
+                <div class="media-body">
+                  <h5 class="mt-3"> {% icon 'tasks' %} {{project.title}}</h5>
+                  <p class="mb-1">Posted by: {{project.user.user.username}}</p>
+                  {% for tag in project.tags.slugs %}
+                    <a href="#" class="badge badge-primary"># {{tag}}</a>
+                  {% endfor %} 
+                  <p class="project-description">{{project.description}}</p>
+              </div>
+            </div>
+            </div>
+            </a>
+            {% endif %}
+          {% endfor %}
+      </div>
     </div>
   </div>
+</div>
 
   <script src="{% static 'js/tab_change.js' %}"></script>
   <script src="{% static 'js/tag_click.js' %}"></script>
