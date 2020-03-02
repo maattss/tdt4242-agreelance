@@ -6,9 +6,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
-def projects(request):
+def projects_all(request):
     projects = Project.objects.all()
     project_categories = ProjectCategory.objects.all()
+   
+    category_name = project_categories[0]
     common_tags_all = Project.tags.most_common()[:6]
     common_tags = {}
 
@@ -17,6 +19,50 @@ def projects(request):
         {
             'projects': projects,
             'project_categories': project_categories,
+            'current_project_category': category_name,
+            'common_tags': common_tags,
+            'common_tags_all': common_tags_all,
+        }
+    )
+
+def projects(request, category_name):
+    all_projects = Project.objects.all()
+    relevant_projects = []
+    for project in all_projects:
+        if str(project.category) == str(category_name):
+            relevant_projects.append(project)
+    project_categories = ProjectCategory.objects.all()
+    common_tags_all = Project.tags.most_common()[:6]
+    common_tags = {}
+
+    return render(request,
+        'projects/projects.html',
+        {
+            'projects': relevant_projects,
+            'project_categories': project_categories,
+            'current_project_category': category_name.title(),
+            'common_tags': common_tags,
+            'common_tags_all': common_tags_all,
+        }
+    )
+
+def projects_tags(request, category_name, tag_name):
+    # TODO: Filter projedct based on tags
+    projects = Project.objects.all()
+    project_categories = ProjectCategory.objects.all()
+
+    category_name = project_categories[0]
+    common_tags_all = Project.tags.most_common()[:6]
+    common_tags = {}
+    print(category_name)
+    print(project_categories[0])
+
+    return render(request,
+        'projects/projects.html',
+        {
+            'projects': projects,
+            'project_categories': project_categories,
+            'current_project_category': category_name,
             'common_tags': common_tags,
             'common_tags_all': common_tags_all,
         }
@@ -114,7 +160,7 @@ def project_view(request, project_id):
             task_offer_form = TaskOfferForm(request.POST)
             if task_offer_form.is_valid():
                 task_offer = task_offer_form.save(commit=False)
-                task_offer.task =  Task.objects.get(pk=request.POST.get('taskvalue'))
+                task_offer.task = Task.objects.get(pk=request.POST.get('taskvalue'))
                 task_offer.offerer = request.user.profile
                 task_offer.save()
         task_offer_form = TaskOfferForm()

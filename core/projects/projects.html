@@ -9,42 +9,32 @@
 {% block content %}
   <h2 class="mt-3 text-center" >Open Projects</h2>
 
-
   <div class="row">
     <div class="col-lg text-center">
 
-      <div class="text-center d-inline-flex list-group mt-3" id="project-toggle" role="tablist">
-        <ul class="pagination">
+      <div class="mt-2 mb-2" id="project-toggle" role="tablist">
           {% for project_category in project_categories %}
-          <li class="page-item mr-1 ml-1">
-            <a
-              class="list-group-item list-group-item-action"
-              data-toggle="list"
-              role="tab"
-              id="category-{{project_category}}"
-              aria-controls="{{project_category}}"
-              href="#{{project_category}}">
-                {{project_category}}
-            </a>
-          </li>
+            {% if current_project_category|slugify == project_category|slugify %}
+              <a href= "{% url 'projects' project_category %}" class="btn btn-primary">{{project_category}}</a>
+            {% else %}
+              <a href="{% url 'projects' project_category %}" class="btn btn-light">{{project_category}}</a>
+            {% endif %}
           {% endfor %}
-
-        </ul>
       </div>
+
       <div id="tags">
-        <p class="mb-1">Most common tags:</p>
           {% for tag in common_tags_all %}
             <a id="tag-{{tag}}" href="#{{tag}}" class="badge badge-light" data-toggle="tag"># {{tag}}</a>
           {% endfor %} 
       </div>
 
-      <div class="tab-content"  id="nav-tabContent">
-        {% for project_category in project_categories %}
+      <div id="nav-tabContent">
+
           <div class="tab-pane fade show" id="{{project_category}}" role="tabpanel" aria-labelledby="category-{{project_category}}">
-            <h3 class="mb-3 mt-5">{{project_category}}</h3>
+            <h3 class="mb-3 mt-5">{{current_project_category}}</h3>
             <div class="row projects-view">
                 {% for project in projects %}
-                  {% if project.status == project.OPEN and project.category.id == project_category.id %}
+                  {% if project.status == project.OPEN and project.category|slugify == current_project_category|slugify %}
                   <a class="open-project-view-item" href="{% url 'project_view' project_id=project.id%}">
                   <div class="col-md mb-3 ml-3 mr-3 mt-3 project-box-style">
                     <div class="media">
@@ -66,7 +56,7 @@
             </div>
 
           </div>
-        {% endfor %}
+
         
       </div>
 
