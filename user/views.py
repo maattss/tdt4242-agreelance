@@ -41,7 +41,7 @@ def review(request):
             review_rating = request.POST.getlist('review_rating')
             review_comment = request.POST.getlist('review_comment')
 
-            return redirect('home')
+            return redirect('/admin')
     else:
         form = ReviewForm()
     return render(request, 'user/review.html', {'form': form})
