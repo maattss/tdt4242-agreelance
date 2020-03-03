@@ -84,7 +84,9 @@ def new_project(request):
             project.user = request.user.profile
             category = get_object_or_404(ProjectCategory, id=request.POST.get('category_id'))
             project.category = category
-            category.tags.add(request.POST.get('tags'))
+            tags = request.POST.get('tags').split(",") # TODO: Fix this. Tags are not saved correctly to category 
+            for tag in tags:
+               category.tags.add(tag.replace(" ", ""))
             project.save()
             # Without this next line the tags won't be saved 
             form.save_m2m()
