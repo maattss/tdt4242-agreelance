@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from projects.models import ProjectCategory
+from .models import Review
 from django.contrib.auth.forms import UserCreationForm
 
 class SignUpForm(UserCreationForm):
@@ -24,3 +25,12 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'categories', 'company' , 'email', 'email_confirmation', 'password1', 'password2', 'phone_number', 'country', 'state', 'city', 'postal_code', 'street_address')
+
+
+class ReviewForm(forms.ModelForm):
+    rating = forms.ChoiceField(choices=Review.CHOICES)
+    comment = forms.CharField(max_length=200)
+
+    class Meta:
+        model = Review
+        fields = ('rating', 'comment')

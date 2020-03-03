@@ -4,7 +4,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import SignUpForm
+from .forms import SignUpForm, ReviewForm
 
 def index(request):
     return render(request, 'base.html')
@@ -29,3 +29,22 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'user/signup.html', {'form': form})
+
+def review(request):
+    if request.method== 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user.profile
+            review.save()
+
+            review_rating = request.POST.getlist('review_rating')
+            review_comment = request.POST.getlist('review_comment')
+
+            return redirect('home')
+    else:
+        form = ReviewForm()
+    return render(request, 'user/review.html', {'form': form})
+            
+
+            

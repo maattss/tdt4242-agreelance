@@ -13,10 +13,30 @@ class Profile(models.Model):
     postal_code = models.TextField(max_length=50, blank=True)
     street_address = models.TextField(max_length=50, blank=True)
     categories = models.ManyToManyField('projects.ProjectCategory', related_name='competance_categories')
+    #rating_avg
 
 
     def __str__(self):
         return self.user.username
+
+class Review(models.Model):
+    CHOICES=[
+        (1, '1 - Very bad'),
+        (2, '2 - Bad'),
+        (3, '3 - Okay'),
+        (4, '4 - Good'),
+        (5, '5 - Very Good')
+        ]
+    #user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    #reviewer = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=CHOICES, default=1)
+    comment = models.TextField(max_length=200, blank=True)
+
+    def __str__(self):
+        return  str(self.rating) + " " + self.comment
+    
+    def choices():
+        return CHOICES
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):

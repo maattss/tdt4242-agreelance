@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Review{% endblock %}
+
+{% block content %}
+    <h2 class="mt-3">Review</h2>
+    <form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <br>
+        <button type="submit" class="btn btn-primary float-right">Submit Review</button>
+{% endblock %}
