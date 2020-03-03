@@ -213,6 +213,66 @@
        }
     },
     {
+      "model":"projects.project",
+      "pk":2,
+      "fields":{
+         "user":2,
+         "title": "Please clean my house",
+         "description": "Whole house needs cleaning",
+         "category":1,
+         "status":"o",
+         "participants":[]
+      }
+    },
+    {
+      "model":"projects.project",
+      "pk":3,
+      "fields":{
+         "user":2,
+         "title": "Old basement need cleaning",
+         "description": "Clean my basement",
+         "category":1,
+         "status":"o",
+         "participants":[]
+      }
+    },
+    {
+      "model":"projects.project",
+      "pk":4,
+      "fields":{
+         "user":2,
+         "title": "Paint the door",
+         "description": "Change color of door from red to bluePaint the door",
+         "category":2,
+         "status":"o",
+         "participants":[]
+      }
+    },
+    {
+      "model":"projects.project",
+      "pk":5,
+      "fields":{
+         "user":3,
+         "title": "Paint the garage",
+         "description": "Should be red",
+         "category":2,
+         "status":"o",
+         "participants":[]
+      }
+    },
+    {
+      "model":"projects.project",
+      "pk":6,
+      "fields":{
+         "user":3,
+         "title": "Plant a tree",
+         "description": "Need an apple tree in my garden",
+         "category":3,
+         "status":"o",
+         "participants":[]
+      }
+    },
+    {
        "model":"auth.permission",
        "pk":1,
        "fields":{
