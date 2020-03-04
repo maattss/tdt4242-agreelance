@@ -33,7 +33,7 @@ class OverwriteStorage(FileSystemStorage):
 
 class ProjectCategory(models.Model):
     name = models.CharField(max_length=200)
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     def __str__(self):
         return self.name
@@ -44,7 +44,7 @@ class Project(models.Model):
     description = models.TextField(max_length=500)
     participants = models.ManyToManyField(Profile, related_name='project_participants')
     category = models.ForeignKey(ProjectCategory, on_delete=models.CASCADE, related_name='project_category')
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     OPEN = 'o'
     INPROG = 'i'
