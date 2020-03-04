@@ -200,6 +200,21 @@
        }
     },
     {
+       "model":"projects.task",
+       "pk":2,
+       "fields":{
+          "project":1,
+          "title":"Gardering",
+          "description":"Gardering",
+          "budget":200,
+          "status":"ad",
+          "feedback":"",
+          "read":[],
+          "write":[],
+          "modify":[]
+       }
+    },
+    {
        "model":"projects.taskoffer",
        "pk":1,
        "fields":{
@@ -223,6 +238,36 @@
          "status":"o",
          "participants":[]
       }
+    },
+    {
+       "model":"projects.task",
+       "pk":3,
+       "fields":{
+          "project":2,
+          "title":"Clean the bath room",
+          "description":"Small bathroom",
+          "budget":100,
+          "status":"ad",
+          "feedback":"",
+          "read":[],
+          "write":[],
+          "modify":[]
+       }
+    },
+    {
+       "model":"projects.task",
+       "pk":4,
+       "fields":{
+          "project":2,
+          "title":"Clean the first floor",
+          "description":"Clean the first floor except the bathroom",
+          "budget":250,
+          "status":"ad",
+          "feedback":"",
+          "read":[],
+          "write":[],
+          "modify":[]
+       }
     },
     {
       "model":"projects.project",
@@ -1068,5 +1113,5 @@
           "action_flag":2,
           "change_message":"[{\"changed\": {\"fields\": [\"is_staff\", \"is_superuser\"]}}]"
        }
-    }
+    }  
  ]
