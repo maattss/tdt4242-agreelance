@@ -7,10 +7,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 def projects_all(request):
+    print("Projects_all")
     projects = Project.objects.all()
     project_categories = ProjectCategory.objects.all()
     current_category = project_categories[0]
     common_tags = current_category.tags.most_common()[:6]
+    print("Projects_all vars", projects, project_categories, current_category, common_tags)
 
     return render(request,
         'projects/projects.html',
