@@ -6,14 +6,70 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
-def projects(request):
+def projects_all(request):
     projects = Project.objects.all()
     project_categories = ProjectCategory.objects.all()
+    current_category = project_categories[0]
+    common_tags = current_category.tags.most_common()[:6]
+
     return render(request,
         'projects/projects.html',
         {
             'projects': projects,
             'project_categories': project_categories,
+            'current_project_category': current_category,
+            'common_tags': common_tags,
+        }
+    )
+
+def projects(request, category_id):
+    all_projects = Project.objects.all()
+    relevant_projects = []
+
+    for project in all_projects: # Find relevant project for this category
+        if str(project.category.id) == str(category_id):
+            relevant_projects.append(project)
+    
+    project_categories = ProjectCategory.objects.all()
+    current_category = project_categories[int(category_id)-1]
+    common_tags = current_category.tags.most_common()[:6]
+
+    return render(request,
+        'projects/projects.html',
+        {
+            'projects': relevant_projects,
+            'project_categories': project_categories,
+            'current_project_category': current_category,
+            'common_tags': common_tags,
+        }
+    )
+
+def projects_tags(request, category_id, tag_name):
+    all_projects = Project.objects.all()
+    relevant_projects = []
+
+    for project in all_projects: # Filter project that does is not in chosen category
+        if str(project.category.id) == str(category_id):
+            tag_included = False
+            for tag in project.tags.all(): # Filter projects that does not include relevant tag
+                if str(tag_name) == str(tag):
+                    tag_included = True
+                    break
+            if tag_included:
+                relevant_projects.append(project)
+
+    project_categories = ProjectCategory.objects.all()
+    current_category = project_categories[int(category_id)-1]
+    common_tags = current_category.tags.most_common()[:6]
+
+    return render(request,
+        'projects/projects.html',
+        {
+            'projects': relevant_projects,
+            'project_categories': project_categories,
+            'current_project_category': current_category,
+            'common_tags': common_tags,
+            'searched_tag': tag_name,
         }
     )
 
@@ -26,8 +82,14 @@ def new_project(request):
         if form.is_valid():
             project = form.save(commit=False)
             project.user = request.user.profile
-            project.category =  get_object_or_404(ProjectCategory, id=request.POST.get('category_id'))
+            category = get_object_or_404(ProjectCategory, id=request.POST.get('category_id'))
+            project.category = category
+            tags = request.POST.get('tags').split(",")
+            for tag in tags:
+               category.tags.add(tag.replace(" ", ""))
             project.save()
+            # Without this next line the tags won't be saved 
+            form.save_m2m()
 
             people = Profile.objects.filter(categories__id=project.category.id)
             from django.core import mail
@@ -107,7 +169,7 @@ def project_view(request, project_id):
             task_offer_form = TaskOfferForm(request.POST)
             if task_offer_form.is_valid():
                 task_offer = task_offer_form.save(commit=False)
-                task_offer.task =  Task.objects.get(pk=request.POST.get('taskvalue'))
+                task_offer.task = Task.objects.get(pk=request.POST.get('taskvalue'))
                 task_offer.offerer = request.user.profile
                 task_offer.save()
         task_offer_form = TaskOfferForm()
@@ -142,7 +204,6 @@ def upload_file_to_task(request, project_id, task_id):
                 access_to_file = False # Initialize access_to_file to false
                 for team in request.user.profile.teams.all():
                     file_modify_access  = TaskFileTeam.objects.filter(team=team, file=existing_file, modify=True).exists()
-                    print(file_modify_access)
                     access = access or file_modify_access
                 access = access or user_permissions['modify']
                 if (access):

@@ -38,23 +38,9 @@
           <a class="nav-link font-weight-light" href="{% url 'home' %}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link font-weight-light" href="{% url 'projects' %}">Projects</a>
+          <a class="nav-link font-weight-light" href="{% url 'projects_all' %}">Projects</a>
         </li>
 
-
-        <!--
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </li>
-      -->
       </ul>
       <div class="my-2 my-lg-0 mr-5">
         {% if user.is_authenticated %}
