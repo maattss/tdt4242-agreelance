@@ -26,7 +26,7 @@ SECRET_KEY = '$n%^#g%qx#82w6t^dvjqwv)q*1cy+fwh1ohku7-rbjqcei2^jr'
 
 ADMINS = [('APU', 'tdt4242apu@gmail.com')]
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','0.0.0.0', 'agreelance-group12.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','0.0.0.0', '.herokuapp.com']
 
 
 # Application definition
