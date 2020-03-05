@@ -158,7 +158,7 @@ if not TEST and not is_prod:
         print("#########")
 
 if is_prod:
-    DEBUG = False
+    DEBUG = True
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_USE_TLS = True
