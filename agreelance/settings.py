@@ -26,7 +26,7 @@ SECRET_KEY = '$n%^#g%qx#82w6t^dvjqwv)q*1cy+fwh1ohku7-rbjqcei2^jr'
 
 ADMINS = [('APU', 'tdt4242apu@gmail.com')]
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','0.0.0.0', 'agreelance-group12.herokuapp.com']
 
 
 # Application definition
@@ -158,7 +158,7 @@ if not TEST and not is_prod:
         print("#########")
 
 if is_prod:
-    DEBUG = True
+    DEBUG = False
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_USE_TLS = True
