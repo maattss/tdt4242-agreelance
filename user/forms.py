@@ -28,7 +28,6 @@ class SignUpForm(UserCreationForm):
 
 
 class ReviewForm(forms.ModelForm):
-    #user = Profile.__str__
     rating = forms.ChoiceField(choices=Review.CHOICES)
     comment = forms.CharField(max_length=200)
 

@@ -27,13 +27,24 @@ class Review(models.Model):
         (4, '4 - Good'),
         (5, '5 - Very Good')
         ]
-    #user = models.ForeignKey(Profile, on_delete=models.CASCADE, default=None)
-    #reviewer = models.ManyToManyField(Profile, related_name='user_reviewer')
-    rating = models.IntegerField(choices=CHOICES, default=1)
+    reviewer = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    reviewed = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_reviewer', default=1)
+    rating = models.IntegerField(choices=CHOICES, default=3)
     comment = models.TextField(max_length=200, blank=True)
 
     def __str__(self):
         return  str(self.rating) + " " + self.comment
+
+def getReviews(reviewed_id):
+    return Review.objects.filter(
+        reviewed = User.objects.get(id=reviewed_id))
+
+def averageRating(user_id):
+    sum = 0
+    reviews = getReviews(user_id)
+    for review in reviews:
+        sum += review.rating
+    return round(sum/len(reviews), 2)
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):

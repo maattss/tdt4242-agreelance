@@ -3,8 +3,10 @@ from projects.models import ProjectCategory
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User
 
 from .forms import SignUpForm, ReviewForm
+from .models import getReviews, averageRating
 
 def index(request):
     return render(request, 'base.html')
@@ -30,20 +32,27 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'user/signup.html', {'form': form})
 
-def review(request):
+def review(request, reviewed_id):
     if request.method== 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
-            review.user = request.user.profile
+            review.reviewer = request.user.profile
+            review.reviewed = User.objects.get(id=reviewed_id)
             review.save()
 
             review_rating = request.POST.getlist('review_rating')
             review_comment = request.POST.getlist('review_comment')
-
+            
+            print(getReviews(reviewed_id))
+            print(averageRating(reviewed_id))
             return redirect('/admin')
     else:
-        form = ReviewForm()
+        try:
+            User.objects.get(id=reviewed_id)
+            form = ReviewForm()
+        except:
+            return redirect('/')
     return render(request, 'user/review.html', {'form': form})
             
 
