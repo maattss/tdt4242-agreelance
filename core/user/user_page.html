@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Review{% endblock %}
+
+{% block content %}
+    <h2 class="mt-3">Review</h2>
+    <form method="post">
+    {% csrf_token %}
+    User: {{username}}
+    <br>
+    Rating: {{rating}}
+    <br> 
+    <br>
+    <table class="table">
+        <thead class=thead-dark">
+            <th scope="col">Reviews</th>
+        </thead>
+        <tbody>
+        {% for review in reviews %}
+            <tr><td>{{review}}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

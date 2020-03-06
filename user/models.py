@@ -44,7 +44,11 @@ def averageRating(user_id):
     reviews = getReviews(user_id)
     for review in reviews:
         sum += review.rating
-    return round(sum/len(reviews), 2)
+    if(len(reviews) > 0):
+        return round(sum/len(reviews), 2)
+    else:
+        return 0
+
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):

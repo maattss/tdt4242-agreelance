@@ -33,7 +33,7 @@ def signup(request):
     return render(request, 'user/signup.html', {'form': form})
 
 def review(request, reviewed_id):
-    if request.method== 'POST':
+    if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
@@ -46,7 +46,7 @@ def review(request, reviewed_id):
             
             print(getReviews(reviewed_id))
             print(averageRating(reviewed_id))
-            return redirect('/admin')
+            return redirect('/')
     else:
         try:
             User.objects.get(id=reviewed_id)
@@ -54,6 +54,18 @@ def review(request, reviewed_id):
         except:
             return redirect('/')
     return render(request, 'user/review.html', {'form': form})
+
+
+def user_page(request, user_id):
+    if (request.user.is_authenticated):
+        user = User.objects.get(id=user_id)
+        username = user.username
+        rating = averageRating(user_id)
+        reviews = getReviews(user_id)
+        return render(request, 'user/user_page.html', {'username': username, 'rating': rating, 'reviews': reviews})
+    else:
+        return redirect('projects')
+
             
 
             
