@@ -25,7 +25,7 @@ def home(request):
             'given_offers_projects': given_offers_projects, 
         })
     else:
-        return redirect('projects')
+        return redirect('projects_all')
 
 def get_given_offer_projects(user):
     project_ids = set()

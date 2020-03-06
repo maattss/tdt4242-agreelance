@@ -14,12 +14,13 @@
   <p>Rating: {{publisher_rating}}</p>
   <a class="btn btn-large btn-success" href="/user/{{publisher_id}}">See {{publisher}}'s profile</a>
   <p>Project status: {{project.get_status_display}}</p>
-
   <p>Project total budget: {{total_budget}}</p>
   <h3>Description</h3>
   <p class="project-description">{{ project.description }}</p>
   <h4>Category: {{project.category}}</h4>
-
+  {% for tag in project.tags.slugs %}
+    <a href="{% url 'projects_tags' project.category.id tag %}" class="badge badge-primary"># {{tag}}</a>
+  {% endfor %}  
 
     {% if user.is_authenticated %}
       {% if user == project.user.user %}
