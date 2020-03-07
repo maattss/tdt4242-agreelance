@@ -5,6 +5,7 @@ from .forms import ProjectForm, TaskFileForm, ProjectStatusForm, TaskOfferForm, 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from user.models import averageRating
 
 def projects_all(request):
     projects = Project.objects.all()
@@ -125,6 +126,10 @@ def project_view(request, project_id):
     project = Project.objects.get(pk=project_id)
     tasks = project.tasks.all()
     total_budget = 0 # Initializes the total budget to 0
+    
+    publisher = project.user.user.username
+    publisher_id = project.user.user.id
+    publisher_rating = averageRating(publisher_id)
 
     for item in tasks:
         total_budget += item.budget
@@ -161,6 +166,9 @@ def project_view(request, project_id):
         'status_form': status_form,
         'total_budget': total_budget,
         'offer_response_form': offer_response_form,
+        'publisher': publisher,
+        'publisher_id': publisher_id,
+        'publisher_rating': publisher_rating
         })
 
 
@@ -179,6 +187,9 @@ def project_view(request, project_id):
         'tasks': tasks,
         'task_offer_form': task_offer_form,
         'total_budget': total_budget,
+        'publisher': publisher,
+        'publisher_id': publisher_id,
+        'publisher_rating': publisher_rating
         })
 
 

@@ -10,6 +10,9 @@
 
 {% block content %}
   <h3 class="my-3">{{ project.title }}</h3>
+  <p>Publisher: {{publisher}}</p>
+  <p>Rating: {{publisher_rating}}</p>
+  <a class="btn btn-large btn-success" href="/user/{{publisher_id}}">See {{publisher}}'s profile</a>
   <p>Project status: {{project.get_status_display}}</p>
   <p>Project total budget: {{total_budget}}</p>
   <h3>Description</h3>
