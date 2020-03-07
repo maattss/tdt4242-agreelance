@@ -136,6 +136,22 @@
       }
     },
     {
+      "model":"contenttypes.contenttype",
+      "pk":18,
+      "fields":{
+        "app_label":"taggit",
+        "model":"tag"
+      }
+    },
+    {
+      "model":"contenttypes.contenttype",
+      "pk":19,
+      "fields":{
+        "app_label":"taggit",
+        "model":"taggeditem"
+      }
+    },
+    {
       "model":"sessions.session",
       "pk":"270fpdm1vhh4yrh6tawnjl7tnb6w34tq",
       "fields":{
@@ -144,33 +160,148 @@
       }
     },
     {
+      "model":"sessions.session",
+      "pk":"2eadq6ny1qra0oni0xmbqgy4300snmx4",
+      "fields":{
+        "session_data":"NzQ2Yzg4MDU5YjM1M2VjNWY5YmFkYWNjM2U2MDQ2NGY3MzkzZjNiYTp7Il9hdXRoX3VzZXJfaWQiOiI1IiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI0NTRmZDMzZTRhYjgwMmI2OWU0YTQ2MzY2MzM3YzM3MzgzYWRmNzVjIn0=",
+        "expire_date":"2020-03-21T15:50:52.649Z"
+      }
+    },
+    {
       "model":"projects.projectcategory",
       "pk":1,
       "fields":{
-        "name":"cat"
+        "name":"Cleaning"
+      }
+    },
+    {
+      "model":"projects.projectcategory",
+      "pk":2,
+      "fields":{
+        "name":"Painting"
+      }
+    },
+    {
+      "model":"projects.projectcategory",
+      "pk":3,
+      "fields":{
+        "name":"Gardening"
       }
     },
     {
       "model":"projects.project",
-      "pk":1,
+      "pk":21,
       "fields":{
-        "user":4,
-        "title":"test",
-        "description":"test",
+        "user":5,
+        "title":"Please clean my house",
+        "description":"First floor needs cleaning",
         "category":1,
         "status":"o",
         "participants":[
-  
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    {
+      "model":"projects.project",
+      "pk":22,
+      "fields":{
+        "user":5,
+        "title":"Clean my basement",
+        "description":"My old basement needs cleaning",
+        "category":1,
+        "status":"f",
+        "participants":[
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    },
+    {
+      "model":"projects.project",
+      "pk":23,
+      "fields":{
+        "user":5,
+        "title":"Paint the garage",
+        "description":"The garage needs painting",
+        "category":2,
+        "status":"i",
+        "participants":[
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    {
+      "model":"projects.project",
+      "pk":24,
+      "fields":{
+        "user":2,
+        "title":"Various painting",
+        "description":"Paint some small parts of my house for a decent amount of money.",
+        "category":2,
+        "status":"o",
+        "participants":[
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    {
+      "model":"projects.project",
+      "pk":25,
+      "fields":{
+        "user":3,
+        "title":"Gardening",
+        "description":"Small easy gardening task in my garden",
+        "category":3,
+        "status":"o",
+        "participants":[
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    {
+      "model":"projects.project",
+      "pk":26,
+      "fields":{
+        "user":4,
+        "title":"Landscaping",
+        "description":"Create a landscaping plan for my driveway!",
+        "category":3,
+        "status":"o",
+        "participants":[
+          1,
+          2,
+          3,
+          4,
+          5
         ]
       }
     },
     {
       "model":"projects.task",
-      "pk":1,
+      "pk":24,
       "fields":{
-        "project":1,
-        "title":"test",
-        "description":"test",
+        "project":21,
+        "title":"Clean the bath room",
+        "description":"The bathroom on the first floor needs cleaning",
         "budget":100,
         "status":"ad",
         "feedback":"",
@@ -183,6 +314,537 @@
         "modify":[
   
         ]
+      }
+    },
+    {
+      "model":"projects.task",
+      "pk":25,
+      "fields":{
+        "project":21,
+        "title":"First floor cleaning",
+        "description":"Clean everything except the bathroom",
+        "budget":400,
+        "status":"ad",
+        "feedback":"",
+        "read":[
+  
+        ],
+        "write":[
+  
+        ],
+        "modify":[
+  
+        ]
+      }
+    },
+    {
+      "model":"projects.task",
+      "pk":26,
+      "fields":{
+        "project":22,
+        "title":"Clean the hallway",
+        "description":"Hallway is big and has a lot of dust",
+        "budget":400,
+        "status":"ad",
+        "feedback":"",
+        "read":[
+  
+        ],
+        "write":[
+  
+        ],
+        "modify":[
+  
+        ]
+      }
+    },
+    {
+      "model":"projects.task",
+      "pk":27,
+      "fields":{
+        "project":22,
+        "title":"Clean the bedroom",
+        "description":"Small bedroom",
+        "budget":200,
+        "status":"ad",
+        "feedback":"",
+        "read":[
+  
+        ],
+        "write":[
+  
+        ],
+        "modify":[
+  
+        ]
+      }
+    },
+    {
+      "model":"projects.task",
+      "pk":28,
+      "fields":{
+        "project":23,
+        "title":"Paint the garage door white",
+        "description":"Change the color of the garage door from red to white",
+        "budget":500,
+        "status":"ad",
+        "feedback":"",
+        "read":[
+  
+        ],
+        "write":[
+  
+        ],
+        "modify":[
+  
+        ]
+      }
+    },
+    {
+      "model":"projects.task",
+      "pk":29,
+      "fields":{
+        "project":23,
+        "title":"Paint the rest of the garage",
+        "description":"Rest of the garage should be black",
+        "budget":1000,
+        "status":"ad",
+        "feedback":"",
+        "read":[
+  
+        ],
+        "write":[
+  
+        ],
+        "modify":[
+  
+        ]
+      }
+    },
+    {
+      "model":"projects.task",
+      "pk":30,
+      "fields":{
+        "project":24,
+        "title":"Paint the door",
+        "description":"Paint the door red (currently, it is blue)",
+        "budget":200,
+        "status":"ad",
+        "feedback":"",
+        "read":[
+  
+        ],
+        "write":[
+  
+        ],
+        "modify":[
+  
+        ]
+      }
+    },
+    {
+      "model":"projects.task",
+      "pk":31,
+      "fields":{
+        "project":24,
+        "title":"Paint the railings ",
+        "description":"The railing should be blue. Blue is my favorite color",
+        "budget":500,
+        "status":"ad",
+        "feedback":"",
+        "read":[
+  
+        ],
+        "write":[
+  
+        ],
+        "modify":[
+  
+        ]
+      }
+    },
+    {
+      "model":"projects.task",
+      "pk":32,
+      "fields":{
+        "project":25,
+        "title":"Pick garbage",
+        "description":"Pick garbage around the house",
+        "budget":50,
+        "status":"ad",
+        "feedback":"",
+        "read":[
+  
+        ],
+        "write":[
+  
+        ],
+        "modify":[
+  
+        ]
+      }
+    },
+    {
+      "model":"projects.task",
+      "pk":33,
+      "fields":{
+        "project":25,
+        "title":"Mow the lawn",
+        "description":"Mow the lawn",
+        "budget":100,
+        "status":"ad",
+        "feedback":"",
+        "read":[
+  
+        ],
+        "write":[
+  
+        ],
+        "modify":[
+  
+        ]
+      }
+    },
+    {
+      "model":"projects.task",
+      "pk":34,
+      "fields":{
+        "project":26,
+        "title":"Create a architectural drawing for a new driveway",
+        "description":"Create a proposal architectural drawing for a new driveway",
+        "budget":10000,
+        "status":"ad",
+        "feedback":"",
+        "read":[
+  
+        ],
+        "write":[
+  
+        ],
+        "modify":[
+  
+        ]
+      }
+    },
+    {
+      "model":"projects.task",
+      "pk":35,
+      "fields":{
+        "project":26,
+        "title":"Do the landscaping for my driveway",
+        "description":"Big task = a lot of money",
+        "budget":100000,
+        "status":"ad",
+        "feedback":"",
+        "read":[
+  
+        ],
+        "write":[
+  
+        ],
+        "modify":[
+  
+        ]
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":35,
+      "fields":{
+        "name":"cleaning",
+        "slug":"cleaning"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":36,
+      "fields":{
+        "name":"house",
+        "slug":"house"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":37,
+      "fields":{
+        "name":"landscaping",
+        "slug":"landscaping"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":38,
+      "fields":{
+        "name":"big-task",
+        "slug":"big-task"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":39,
+      "fields":{
+        "name":"outside",
+        "slug":"outside"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":40,
+      "fields":{
+        "name":"easy-money",
+        "slug":"easy-money"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":41,
+      "fields":{
+        "name":"gardening",
+        "slug":"gardening"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":42,
+      "fields":{
+        "name":"painting",
+        "slug":"painting"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":43,
+      "fields":{
+        "name":"easy-task",
+        "slug":"easy-task"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":44,
+      "fields":{
+        "name":"garage",
+        "slug":"garage"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":45,
+      "fields":{
+        "name":"basement",
+        "slug":"basement"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":46,
+      "fields":{
+        "name":"washing",
+        "slug":"washing"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":47,
+      "fields":{
+        "name":"first-floor",
+        "slug":"first-floor"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":48,
+      "fields":{
+        "name":"easy",
+        "slug":"easy"
+      }
+    },
+    {
+      "model":"taggit.tag",
+      "pk":49,
+      "fields":{
+        "name":"small-task",
+        "slug":"small-task"
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":1,
+      "fields":{
+        "tag":37,
+        "content_type":8,
+        "object_id":26
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":2,
+      "fields":{
+        "tag":38,
+        "content_type":8,
+        "object_id":26
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":3,
+      "fields":{
+        "tag":39,
+        "content_type":8,
+        "object_id":26
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":4,
+      "fields":{
+        "tag":40,
+        "content_type":8,
+        "object_id":25
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":5,
+      "fields":{
+        "tag":41,
+        "content_type":8,
+        "object_id":25
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":6,
+      "fields":{
+        "tag":39,
+        "content_type":8,
+        "object_id":25
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":7,
+      "fields":{
+        "tag":42,
+        "content_type":8,
+        "object_id":24
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":8,
+      "fields":{
+        "tag":43,
+        "content_type":8,
+        "object_id":24
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":9,
+      "fields":{
+        "tag":36,
+        "content_type":8,
+        "object_id":24
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":10,
+      "fields":{
+        "tag":42,
+        "content_type":8,
+        "object_id":23
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":11,
+      "fields":{
+        "tag":44,
+        "content_type":8,
+        "object_id":23
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":12,
+      "fields":{
+        "tag":39,
+        "content_type":8,
+        "object_id":23
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":13,
+      "fields":{
+        "tag":35,
+        "content_type":8,
+        "object_id":22
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":14,
+      "fields":{
+        "tag":45,
+        "content_type":8,
+        "object_id":22
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":15,
+      "fields":{
+        "tag":46,
+        "content_type":8,
+        "object_id":22
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":16,
+      "fields":{
+        "tag":48,
+        "content_type":8,
+        "object_id":21
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":17,
+      "fields":{
+        "tag":35,
+        "content_type":8,
+        "object_id":21
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":18,
+      "fields":{
+        "tag":46,
+        "content_type":8,
+        "object_id":21
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":19,
+      "fields":{
+        "tag":47,
+        "content_type":8,
+        "object_id":21
+      }
+    },
+    {
+      "model":"taggit.taggeditem",
+      "pk":20,
+      "fields":{
+        "tag":49,
+        "content_type":8,
+        "object_id":22
       }
     },
     {
@@ -798,19 +1460,91 @@
       }
     },
     {
+      "model":"auth.permission",
+      "pk":69,
+      "fields":{
+        "name":"Can add Tag",
+        "content_type":18,
+        "codename":"add_tag"
+      }
+    },
+    {
+      "model":"auth.permission",
+      "pk":70,
+      "fields":{
+        "name":"Can change Tag",
+        "content_type":18,
+        "codename":"change_tag"
+      }
+    },
+    {
+      "model":"auth.permission",
+      "pk":71,
+      "fields":{
+        "name":"Can delete Tag",
+        "content_type":18,
+        "codename":"delete_tag"
+      }
+    },
+    {
+      "model":"auth.permission",
+      "pk":72,
+      "fields":{
+        "name":"Can view Tag",
+        "content_type":18,
+        "codename":"view_tag"
+      }
+    },
+    {
+      "model":"auth.permission",
+      "pk":73,
+      "fields":{
+        "name":"Can add Tagged Item",
+        "content_type":19,
+        "codename":"add_taggeditem"
+      }
+    },
+    {
+      "model":"auth.permission",
+      "pk":74,
+      "fields":{
+        "name":"Can change Tagged Item",
+        "content_type":19,
+        "codename":"change_taggeditem"
+      }
+    },
+    {
+      "model":"auth.permission",
+      "pk":75,
+      "fields":{
+        "name":"Can delete Tagged Item",
+        "content_type":19,
+        "codename":"delete_taggeditem"
+      }
+    },
+    {
+      "model":"auth.permission",
+      "pk":76,
+      "fields":{
+        "name":"Can view Tagged Item",
+        "content_type":19,
+        "codename":"view_taggeditem"
+      }
+    },
+    {
       "model":"auth.user",
       "pk":1,
       "fields":{
         "password":"pbkdf2_sha256$120000$4rnsjoKOMtp2$SCwjx3FNyRpk6mILcMSIKWvhYOuv3ROjz3jRuYQdELI=",
-        "last_login":"2020-03-06T13:51:16.745Z",
+        "last_login":"2020-03-06T13:51:16Z",
         "is_superuser":true,
-        "username":"tien",
-        "first_name":"",
+        "username":"Tien",
+        "first_name":"Tien",
         "last_name":"",
         "email":"",
         "is_staff":true,
         "is_active":true,
-        "date_joined":"2020-03-06T10:14:50.787Z",
+        "date_joined":"2020-03-06T10:14:50Z",
         "groups":[
   
         ],
@@ -827,12 +1561,12 @@
         "last_login":null,
         "is_superuser":false,
         "username":"Bjarte",
-        "first_name":"",
+        "first_name":"Bjarte",
         "last_name":"",
         "email":"",
         "is_staff":false,
         "is_active":true,
-        "date_joined":"2020-03-06T10:17:46.083Z",
+        "date_joined":"2020-03-06T10:17:46Z",
         "groups":[
   
         ],
@@ -854,7 +1588,7 @@
         "email":"",
         "is_staff":false,
         "is_active":true,
-        "date_joined":"2020-03-06T10:18:12.919Z",
+        "date_joined":"2020-03-06T10:18:12Z",
         "groups":[
   
         ],
@@ -868,15 +1602,37 @@
       "pk":4,
       "fields":{
         "password":"pbkdf2_sha256$120000$YgHjIQm9sAlW$pGfXaYh5f7/TfRbC2+T9LCPHehovqfsH7zbiOSqO+Iw=",
-        "last_login":"2020-03-06T11:18:40.542Z",
+        "last_login":"2020-03-06T11:18:40Z",
         "is_superuser":true,
-        "username":"seb",
+        "username":"Seb",
         "first_name":"",
         "last_name":"",
         "email":"",
         "is_staff":true,
         "is_active":true,
-        "date_joined":"2020-03-06T11:18:27.130Z",
+        "date_joined":"2020-03-06T11:18:27Z",
+        "groups":[
+  
+        ],
+        "user_permissions":[
+  
+        ]
+      }
+    },
+    {
+      "model":"auth.user",
+      "pk":5,
+      "fields":{
+        "password":"pbkdf2_sha256$120000$GF0jrErTBly3$s5PQ+G4IkWiWTIkNxFVW6mLL6W/5D3aDAomY/UouVjI=",
+        "last_login":"2020-03-07T15:50:52Z",
+        "is_superuser":true,
+        "username":"Mats",
+        "first_name":"Mats",
+        "last_name":"",
+        "email":"",
+        "is_staff":true,
+        "is_active":true,
+        "date_joined":"2020-03-07T15:50:16Z",
         "groups":[
   
         ],
@@ -898,7 +1654,9 @@
         "postal_code":"",
         "street_address":"",
         "categories":[
-  
+          1,
+          2,
+          3
         ]
       }
     },
@@ -915,7 +1673,7 @@
         "postal_code":"",
         "street_address":"",
         "categories":[
-  
+          2
         ]
       }
     },
@@ -932,7 +1690,7 @@
         "postal_code":"",
         "street_address":"",
         "categories":[
-  
+          3
         ]
       }
     },
@@ -949,7 +1707,26 @@
         "postal_code":"",
         "street_address":"",
         "categories":[
-  
+          1
+        ]
+      }
+    },
+    {
+      "model":"user.profile",
+      "pk":5,
+      "fields":{
+        "user":5,
+        "company":"",
+        "phone_number":"",
+        "country":"",
+        "state":"",
+        "city":"",
+        "postal_code":"",
+        "street_address":"",
+        "categories":[
+          1,
+          2,
+          3
         ]
       }
     },
@@ -959,8 +1736,8 @@
       "fields":{
         "reviewer":1,
         "reviewed":1,
-        "rating":2,
-        "comment":"fuck u man"
+        "rating":5,
+        "comment":"Tien delivers as promised. Easy communcation. Can recommend!"
       }
     },
     {
@@ -970,7 +1747,7 @@
         "reviewer":1,
         "reviewed":2,
         "rating":1,
-        "comment":"shit"
+        "comment":"Do not trust this guy!"
       }
     },
     {
@@ -979,18 +1756,8 @@
       "fields":{
         "reviewer":4,
         "reviewed":1,
-        "rating":1,
-        "comment":"aaa"
-      }
-    },
-    {
-      "model":"user.review",
-      "pk":8,
-      "fields":{
-        "reviewer":4,
-        "reviewed":1,
-        "rating":4,
-        "comment":"nice"
+        "rating":3,
+        "comment":"Ok experience. Some misunderstandings"
       }
     },
     {
@@ -1000,7 +1767,7 @@
         "reviewer":4,
         "reviewed":2,
         "rating":1,
-        "comment":"trash"
+        "comment":"Scam!!!"
       }
     },
     {
@@ -1010,7 +1777,7 @@
         "reviewer":4,
         "reviewed":3,
         "rating":1,
-        "comment":"u r trash"
+        "comment":"No good experience!!"
       }
     },
     {
@@ -1020,7 +1787,7 @@
         "reviewer":4,
         "reviewed":3,
         "rating":5,
-        "comment":"t1 alpha af"
+        "comment":":)"
       }
     },
     {
@@ -1029,8 +1796,8 @@
       "fields":{
         "reviewer":4,
         "reviewed":3,
-        "rating":1,
-        "comment":"cool"
+        "rating":4,
+        "comment":"Cool guy"
       }
     },
     {
@@ -1039,8 +1806,8 @@
       "fields":{
         "reviewer":4,
         "reviewed":3,
-        "rating":1,
-        "comment":"cool man"
+        "rating":3,
+        "comment":"Cool man"
       }
     },
     {
@@ -1050,37 +1817,7 @@
         "reviewer":4,
         "reviewed":3,
         "rating":4,
-        "comment":"good"
-      }
-    },
-    {
-      "model":"user.review",
-      "pk":15,
-      "fields":{
-        "reviewer":4,
-        "reviewed":3,
-        "rating":4,
-        "comment":"goodi"
-      }
-    },
-    {
-      "model":"user.review",
-      "pk":16,
-      "fields":{
-        "reviewer":4,
-        "reviewed":3,
-        "rating":4,
-        "comment":"goodi"
-      }
-    },
-    {
-      "model":"user.review",
-      "pk":17,
-      "fields":{
-        "reviewer":4,
-        "reviewed":3,
-        "rating":4,
-        "comment":"goodi"
+        "comment":"Good"
       }
     },
     {
@@ -1090,7 +1827,7 @@
         "reviewer":4,
         "reviewed":1,
         "rating":1,
-        "comment":"k"
+        "comment":"..."
       }
     },
     {
@@ -1110,17 +1847,7 @@
         "reviewer":4,
         "reviewed":1,
         "rating":3,
-        "comment":"okay"
-      }
-    },
-    {
-      "model":"user.review",
-      "pk":21,
-      "fields":{
-        "reviewer":4,
-        "reviewed":1,
-        "rating":3,
-        "comment":"oka"
+        "comment":"Okay experience"
       }
     },
     {
@@ -1130,27 +1857,7 @@
         "reviewer":4,
         "reviewed":1,
         "rating":5,
-        "comment":"nice"
-      }
-    },
-    {
-      "model":"user.review",
-      "pk":23,
-      "fields":{
-        "reviewer":1,
-        "reviewed":4,
-        "rating":1,
-        "comment":"u suck"
-      }
-    },
-    {
-      "model":"user.review",
-      "pk":24,
-      "fields":{
-        "reviewer":1,
-        "reviewed":4,
-        "rating":3,
-        "comment":"kk"
+        "comment":"Nice!!"
       }
     },
     {
@@ -1281,6 +1988,214 @@
         "object_repr":"cat",
         "action_flag":1,
         "change_message":"[{\"added\": {}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":11,
+      "fields":{
+        "action_time":"2020-03-07T15:51:28.239Z",
+        "user":5,
+        "content_type":4,
+        "object_id":"5",
+        "object_repr":"Mats",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"username\", \"first_name\"]}}, {\"changed\": {\"name\": \"profile\", \"object\": \"Mats\", \"fields\": [\"categories\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":12,
+      "fields":{
+        "action_time":"2020-03-07T15:51:42.233Z",
+        "user":5,
+        "content_type":4,
+        "object_id":"1",
+        "object_repr":"Tien",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"username\", \"first_name\"]}}, {\"changed\": {\"name\": \"profile\", \"object\": \"Tien\", \"fields\": [\"categories\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":13,
+      "fields":{
+        "action_time":"2020-03-07T15:52:09.036Z",
+        "user":5,
+        "content_type":4,
+        "object_id":"4",
+        "object_repr":"Seb",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"username\"]}}, {\"changed\": {\"name\": \"profile\", \"object\": \"Seb\", \"fields\": [\"categories\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":14,
+      "fields":{
+        "action_time":"2020-03-07T15:52:16.763Z",
+        "user":5,
+        "content_type":4,
+        "object_id":"2",
+        "object_repr":"Bjarte",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"first_name\"]}}, {\"changed\": {\"name\": \"profile\", \"object\": \"Bjarte\", \"fields\": [\"categories\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":15,
+      "fields":{
+        "action_time":"2020-03-07T15:52:22.230Z",
+        "user":5,
+        "content_type":4,
+        "object_id":"3",
+        "object_repr":"Eirik",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"name\": \"profile\", \"object\": \"Eirik\", \"fields\": [\"categories\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":16,
+      "fields":{
+        "action_time":"2020-03-07T15:52:32.507Z",
+        "user":5,
+        "content_type":8,
+        "object_id":"1",
+        "object_repr":"test",
+        "action_flag":3,
+        "change_message":""
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":17,
+      "fields":{
+        "action_time":"2020-03-07T15:54:11.903Z",
+        "user":5,
+        "content_type":8,
+        "object_id":"26",
+        "object_repr":"Landscaping",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"participants\", \"tags\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":18,
+      "fields":{
+        "action_time":"2020-03-07T15:54:46.420Z",
+        "user":5,
+        "content_type":8,
+        "object_id":"25",
+        "object_repr":"Gardening",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"participants\", \"tags\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":19,
+      "fields":{
+        "action_time":"2020-03-07T15:55:17.769Z",
+        "user":5,
+        "content_type":8,
+        "object_id":"24",
+        "object_repr":"Various painting",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"participants\", \"tags\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":20,
+      "fields":{
+        "action_time":"2020-03-07T15:58:01.758Z",
+        "user":5,
+        "content_type":8,
+        "object_id":"23",
+        "object_repr":"Paint the garage",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"participants\", \"status\", \"tags\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":21,
+      "fields":{
+        "action_time":"2020-03-07T15:58:35.333Z",
+        "user":5,
+        "content_type":8,
+        "object_id":"22",
+        "object_repr":"Clean my basement",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"user\", \"participants\", \"status\", \"tags\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":22,
+      "fields":{
+        "action_time":"2020-03-07T15:58:43.012Z",
+        "user":5,
+        "content_type":8,
+        "object_id":"23",
+        "object_repr":"Paint the garage",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"user\", \"tags\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":23,
+      "fields":{
+        "action_time":"2020-03-07T15:59:19.430Z",
+        "user":5,
+        "content_type":8,
+        "object_id":"21",
+        "object_repr":"Please clean my house",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"user\", \"participants\", \"tags\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":24,
+      "fields":{
+        "action_time":"2020-03-07T15:59:31.674Z",
+        "user":5,
+        "content_type":8,
+        "object_id":"22",
+        "object_repr":"Clean my basement",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"tags\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":25,
+      "fields":{
+        "action_time":"2020-03-07T16:00:15.209Z",
+        "user":5,
+        "content_type":8,
+        "object_id":"22",
+        "object_repr":"Clean my basement",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"participants\", \"tags\"]}}]"
+      }
+    },
+    {
+      "model":"admin.logentry",
+      "pk":26,
+      "fields":{
+        "action_time":"2020-03-07T16:01:19.447Z",
+        "user":5,
+        "content_type":8,
+        "object_id":"26",
+        "object_repr":"Landscaping",
+        "action_flag":2,
+        "change_message":"[{\"changed\": {\"fields\": [\"user\", \"tags\"]}}]"
       }
     }
   ]

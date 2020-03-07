@@ -13,11 +13,9 @@ class Profile(models.Model):
     postal_code = models.TextField(max_length=50, blank=True)
     street_address = models.TextField(max_length=50, blank=True)
     categories = models.ManyToManyField('projects.ProjectCategory', related_name='competance_categories')
-    #rating_avg
-
 
     def __str__(self):
-        return self.user.username
+        return self.user
 
 class Review(models.Model):
     CHOICES=[

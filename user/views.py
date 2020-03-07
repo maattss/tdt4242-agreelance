@@ -61,6 +61,8 @@ def user_page(request, user_id):
         user = User.objects.get(id=user_id)
         username = user.username
         rating = averageRating(user_id)
+        if (rating == 0):
+            rating = "-"
         reviews = getReviews(user_id)
         return render(request, 'user/user_page.html', {'username': username, 'rating': rating, 'reviews': reviews})
     else:

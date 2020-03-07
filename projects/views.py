@@ -130,6 +130,8 @@ def project_view(request, project_id):
     publisher = project.user.user.username
     publisher_id = project.user.user.id
     publisher_rating = averageRating(publisher_id)
+    if (publisher_rating == 0):
+        publisher_rating = "No reviews"
 
     for item in tasks:
         total_budget += item.budget
