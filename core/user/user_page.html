@@ -13,18 +13,12 @@
             <th scope="col">Comment</th>
         </thead>
         <tbody>
-            {% if reviews|length > 0 %}
-                {% for review in reviews %}
-                <tr scope="row">
-                    <td>1</td>
-                    <td>{{review}}</td>
-                </tr>
-                {% endfor %}
-            {% else %}
-                <tr scope="row">
-                    <td>No one has left a review for this user :(</td>
-                </tr>
-            {% endif %}
+            {% for rating, review in reviews %}
+            <tr scope="row">
+                <td>{{rating}}</td>
+                <td>{{review}}</td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
     

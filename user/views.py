@@ -60,11 +60,21 @@ def user_page(request, user_id):
     if (request.user.is_authenticated):
         user = User.objects.get(id=user_id)
         username = user.username
-        rating = averageRating(user_id)
-        if (rating == 0):
-            rating = "-"
-        reviews = getReviews(user_id)
-        return render(request, 'user/user_page.html', {'username': username, 'rating': rating, 'reviews': reviews})
+        avg_rating = averageRating(user_id)
+        if (avg_rating == 0):
+            avg_rating = "-"
+        
+        reviews = []
+        ratings = []
+        for review in getReviews(user_id): 
+            splitted = str(review).split("-")
+            ratings.append(splitted[0])
+            reviews.append(splitted[1])
+        test = zip(ratings, reviews)
+        for a, b in test:
+            print(a,":",b)
+
+        return render(request, 'user/user_page.html', {'username': username, 'rating': avg_rating, 'reviews': zip(ratings, reviews)})
     else:
         return redirect('projects')
 
