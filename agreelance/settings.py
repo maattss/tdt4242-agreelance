@@ -142,23 +142,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 TEST = 'test' in sys.argv
 is_prod = os.environ.get('IS_HEROKU', None)
 
-# Add logger
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
-        },
-    },
-}
-
 if not TEST and not is_prod:
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
