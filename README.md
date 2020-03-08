@@ -1,6 +1,6 @@
 # Agreelance group 12
 [![Heroku](https://pyheroku-badge.herokuapp.com/?app=agreelance-group12&style=flat-square)](https://agreelance-group12.herokuapp.com/)
-[![pipeline status](https://gitlab.com/tdt4242-project/agreelance/badges/master/pipeline.svg)](https://gitlab.com/tdt4242-project/agreelance/-/commits/master)
+[![pipeline status](https://gitlab.com/tdt4242-project/agreelance/badges/master/pipeline.svg?style=flat-square)](https://gitlab.com/tdt4242-project/agreelance/-/commits/master)
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 The best way to agree on the price of your freelancing jobs!
@@ -159,6 +159,6 @@ The data seed provided contains 3 users:
 
 Username | Password | Description
 ---|---|---
-admin|qwerty123|Admin user that owns one project
-harrypotter|qwerty123|
-joe|qwerty123|
+Bjarte|guAXb81#cAFV|
+Eirik|SwokT2!5LoSf|
+Seb|las^n8Tpz9yi|
