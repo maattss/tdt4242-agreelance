@@ -5,16 +5,18 @@
 
 {% block content %}
     <h2 class="mt-3">{{username}}</h2>
-    <h5 class="mb-3">Rating: {{rating}}</h5>
+    <h5 class="mb-3">Average rating: {{rating}}</h5>
     
     <table class="table">
         <thead class="thead">
-            <th scope="col">Reviews</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Comment</th>
         </thead>
         <tbody>
             {% if reviews|length > 0 %}
                 {% for review in reviews %}
                 <tr scope="row">
+                    <td>1</td>
                     <td>{{review}}</td>
                 </tr>
                 {% endfor %}

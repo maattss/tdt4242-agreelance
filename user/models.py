@@ -31,7 +31,7 @@ class Review(models.Model):
     comment = models.TextField(max_length=200, blank=True)
 
     def __str__(self):
-        return  str(self.rating) + " " + self.comment
+        return  str(self.rating) + "-" + self.comment
 
 def getReviews(reviewed_id):
     return Review.objects.filter(
