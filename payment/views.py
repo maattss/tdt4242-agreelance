@@ -19,6 +19,38 @@ def payment(request, project_id, task_id):
         payment.save()
         task.status = Task.PAYMENT_SENT # Set task status to payment sent
         task.save()
+        
+        from django.core import mail
+        from django.contrib.sites.shortcuts import get_current_site
+        current_site = get_current_site(request)
+        
+        # Send mail to both users for leaving review for each other when payment is completed
+        if receiver.user.email:
+            try:
+                with mail.get_connection() as connection:
+                    mail.EmailMessage(
+                        "Leave a review",
+                        "Congratulation on finishing a task!\nLeave a review for how it was working for " + sender.user.username + " here:\n" + "https://" + current_site.domain + "/user/set_review/" + str(sender.user_id), 
+                        "Agreelancer", 
+                        [receiver.user.email],
+                        connection=connection,
+                    ).send()
+            except Exception as e:
+                from django.contrib import messages
+                messages.success(request, 'Sending of email to ' + receiver.user.email + " failed: " + str(e))
+        if sender.user.email:
+            try:
+                with mail.get_connection() as connection:
+                    mail.EmailMessage(
+                        "Leave a review",
+                        "Congratulation, your task has been finished!\nLeave a review for how it was working with " + receiver.user.username + " here:\n" + "https://" + current_site.domain + "/user/set_review/" + str(receiver.user_id), 
+                        "Agreelancer", 
+                        [sender.user.email],
+                        connection=connection,
+                    ).send()
+            except Exception as e:
+                from django.contrib import messages
+                messages.success(request, 'Sending of email to ' + sender.user.email + " failed: " + str(e))
 
         return redirect('receipt', project_id=project_id, task_id=task_id)
 

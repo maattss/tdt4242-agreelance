@@ -137,19 +137,17 @@ def project_view(request, project_id):
         total_budget += item.budget
 
     if request.user == project.user.user:
-
         if request.method == 'POST' and 'offer_response' in request.POST:
             instance = get_object_or_404(TaskOffer, id=request.POST.get('taskofferid'))
             offer_response_form = TaskOfferResponseForm(request.POST, instance=instance)
             if offer_response_form.is_valid():
                 offer_response = offer_response_form.save(commit=False)
 
-                if offer_response.status == 'a':
+                if offer_response.status == 'a': 
                     offer_response.task.read.add(offer_response.offerer)
                     offer_response.task.write.add(offer_response.offerer)
                     project = offer_response.task.project
                     project.participants.add(offer_response.offerer)
-
 
                 offer_response.save()
         offer_response_form = TaskOfferResponseForm()
@@ -320,7 +318,7 @@ def task_view(request, project_id, task_id):
             delivery.responding_user = user.profile
             delivery.save()
 
-            if delivery.status == 'a':
+            if delivery.status == 'a': # Accepted
                 task.status = "pp"
                 task.save()
             elif delivery.status == 'd':

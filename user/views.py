@@ -40,12 +40,6 @@ def review(request, reviewed_id):
             review.reviewer = request.user.profile
             review.reviewed = User.objects.get(id=reviewed_id)
             review.save()
-
-            review_rating = request.POST.getlist('review_rating')
-            review_comment = request.POST.getlist('review_comment')
-            
-            print(getReviews(reviewed_id))
-            print(averageRating(reviewed_id))
             return redirect('/')
     else:
         try:
@@ -70,9 +64,6 @@ def user_page(request, user_id):
             splitted = str(review).split("-")
             ratings.append(splitted[0])
             reviews.append(splitted[1])
-        test = zip(ratings, reviews)
-        for a, b in test:
-            print(a,":",b)
 
         return render(request, 'user/user_page.html', {'username': username, 'rating': avg_rating, 'reviews': zip(ratings, reviews)})
     else:
