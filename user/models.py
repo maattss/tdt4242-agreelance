@@ -15,7 +15,7 @@ class Profile(models.Model):
     categories = models.ManyToManyField('projects.ProjectCategory', related_name='competance_categories')
 
     def __str__(self):
-        return self.user
+        return self.user.username
 
 class Review(models.Model):
     CHOICES=[
