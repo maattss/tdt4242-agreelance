@@ -159,6 +159,6 @@ The data seed provided contains 3 users:
 
 Username | Password | Description
 ---|---|---
-admin|qwerty123|Admin user that owns one project
-harrypotter|qwerty123|
-joe|qwerty123|
+Bjarte|guAXb81#cAFV|
+Eirik|SwokT2!5LoSf|
+Seb|las^n8Tpz9yi|
