@@ -40,8 +40,7 @@ def review(request, reviewed_id):
             review = form.save(commit=False)
             review.reviewer = request.user.profile
             review.reviewed = User.objects.get(id=reviewed_id)
-            wr = confirm_work_relationship(review.reviewer, review.reviewed)
-            if(wr):
+            if(confirm_work_relationship(review.reviewer, review.reviewed)):
                 review.save()
                 print("Yes")
                 #Mats
