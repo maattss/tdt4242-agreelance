@@ -9,8 +9,11 @@
 {% block content %}
 
   {% if user.is_authenticated %}
+
+  <div class="alert alert-{{ user.alert }}" role="alert">{{ user.message }}</div>
   <div class="row">
     <div class="col-lg text-center">
+      <p>{{ user.message }}</p>
       <h2 class="mt-5">Welcome {{user.username}}! <img class="ml-1 honey" src="{% static 'img/handshake.png' %}"  alt="Logo image"/></h2>
       <p class="mt-5">What would you like to do today?</p>
     </div>

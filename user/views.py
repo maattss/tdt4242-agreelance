@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 
 from .forms import SignUpForm, ReviewForm
 from .models import getReviews, averageRating
+from projects.models import confirm_work_relationship
 
 def index(request):
     return render(request, 'base.html')
@@ -39,8 +40,16 @@ def review(request, reviewed_id):
             review = form.save(commit=False)
             review.reviewer = request.user.profile
             review.reviewed = User.objects.get(id=reviewed_id)
-            review.save()
-            return redirect('/')
+            wr = confirm_work_relationship(review.reviewer, review.reviewed)
+            if(wr):
+                review.save()
+                print("Yes")
+                #Mats
+                return redirect('/', {'message': 'Review has been stored!', 'status': 'success'})
+            else:
+                print("No")
+                #Mats
+                return redirect('/', {'message': 'Cannot review the user. Have you worked with eachother?', 'status': 'danger'})
     else:
         try:
             User.objects.get(id=reviewed_id)
