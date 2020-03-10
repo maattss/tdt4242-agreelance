@@ -40,15 +40,14 @@ def review(request, reviewed_id):
             review = form.save(commit=False)
             review.reviewer = request.user.profile
             review.reviewed = User.objects.get(id=reviewed_id)
+            review_success = "False"
             if(confirm_work_relationship(review.reviewer, review.reviewed)):
                 review.save()
+                review_success = "True"
                 print("Yes")
-                #Mats
-                return redirect('/', {'message': 'Review has been stored!', 'status': 'success'})
             else:
                 print("No")
-                #Mats
-                return redirect('/', {'message': 'Cannot review the user. Have you worked with eachother?', 'status': 'danger'})
+            return redirect('/?review_success=' + review_success)
     else:
         try:
             User.objects.get(id=reviewed_id)

@@ -5,6 +5,17 @@ from projects.models import Project
 
 def home(request):
     if (request.user.is_authenticated):
+        review_success = request.GET.get("review_success", "")
+        print(review_success)
+        message = ""
+        status = ""
+        if review_success == "True":
+            message = "Review has been stored!"
+            status = "success"
+        elif review_success == "False":
+            message = "Cannot review the user. Have you worked with eachother?"
+            status = "danger"
+        
         user = request.user
         user_projects = Project.objects.filter(user = user.profile)
         customer_projects = list(Project.objects.filter(participants__id=user.id).order_by().distinct())
@@ -22,7 +33,9 @@ def home(request):
         {
             'user_projects': user_projects,
             'customer_projects': customer_projects,
-            'given_offers_projects': given_offers_projects, 
+            'given_offers_projects': given_offers_projects,
+            'message': message,
+            'status': status
         })
     else:
         return redirect('projects_all')

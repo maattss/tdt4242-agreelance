@@ -9,7 +9,7 @@
 {% block content %}
 
   {% if user.is_authenticated %}
-
+  <div>Insert alert here! {{ message }}, {{ status }} </div>
   <div class="alert alert-{{ user.alert }}" role="alert">{{ user.message }}</div>
   <div class="row">
     <div class="col-lg text-center">
