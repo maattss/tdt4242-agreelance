@@ -47,7 +47,6 @@ def averageRating(user_id):
     else:
         return 0
 
-
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
     if created:

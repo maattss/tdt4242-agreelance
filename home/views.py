@@ -5,6 +5,7 @@ from projects.models import Project
 
 def home(request):
     if (request.user.is_authenticated):
+        review_success = request.GET.get("review_success", "")
         user = request.user
         user_projects = Project.objects.filter(user = user.profile)
         customer_projects = list(Project.objects.filter(participants__id=user.id).order_by().distinct())
@@ -22,7 +23,8 @@ def home(request):
         {
             'user_projects': user_projects,
             'customer_projects': customer_projects,
-            'given_offers_projects': given_offers_projects, 
+            'given_offers_projects': given_offers_projects,
+            'review_success': review_success
         })
     else:
         return redirect('projects_all')
