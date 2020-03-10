@@ -44,9 +44,6 @@ def review(request, reviewed_id):
             if(confirm_work_relationship(review.reviewer, review.reviewed)):
                 review.save()
                 review_success = "True"
-                print("Yes")
-            else:
-                print("No")
             return redirect('/?review_success=' + review_success)
     else:
         try:
