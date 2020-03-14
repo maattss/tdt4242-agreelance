@@ -4,7 +4,7 @@
 {% block title %}Review{% endblock %}
 
 {% block content %}
-    <h2 class="mt-3">Review</h2>
+    <h2 class="mt-3">Review {{user}}</h2>
     <form method="post">
     {% csrf_token %}
     {% bootstrap_form form %}

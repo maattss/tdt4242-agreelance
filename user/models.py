@@ -34,20 +34,6 @@ class Review(models.Model):
     def __str__(self):
         return  str(self.rating) + "-" + self.comment
 
-def getReviews(reviewed_id):
-    return Review.objects.filter(
-        reviewed = User.objects.get(id=reviewed_id))
-
-def averageRating(user_id):
-    sum = 0
-    reviews = getReviews(user_id)
-    for review in reviews:
-        sum += review.rating
-    if(len(reviews) > 0):
-        return round(sum/len(reviews), 2)
-    else:
-        return 0
-
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):

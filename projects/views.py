@@ -5,7 +5,8 @@ from .forms import ProjectForm, TaskFileForm, ProjectStatusForm, TaskOfferForm, 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from user.models import averageRating
+from user.review_functions import averageRating
+from projects.models import Task
 
 def projects_all(request):
     projects = Project.objects.all()

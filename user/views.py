@@ -6,8 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 
 from .forms import SignUpForm, ReviewForm
-from .models import getReviews, averageRating
-from projects.models import confirm_work_relationship
+from .review_functions import getReviews, averageRating, confirm_work_relationship
 
 def index(request):
     return render(request, 'base.html')
@@ -40,22 +39,19 @@ def review(request, reviewed_id):
             review = form.save(commit=False)
             review.reviewer = request.user.profile
             review.reviewed = User.objects.get(id=reviewed_id)
+            review_success = "False"
             if(confirm_work_relationship(review.reviewer, review.reviewed)):
                 review.save()
-                print("Yes")
-                #Mats
-                return redirect('/', {'message': 'Review has been stored!', 'status': 'success'})
-            else:
-                print("No")
-                #Mats
-                return redirect('/', {'message': 'Cannot review the user. Have you worked with eachother?', 'status': 'danger'})
+                review_success = "True"
+            return redirect('/?review_success=' + review_success)
     else:
         try:
             User.objects.get(id=reviewed_id)
             form = ReviewForm()
         except:
             return redirect('/')
-    return render(request, 'user/review.html', {'form': form})
+    user = User.objects.get(id=reviewed_id)
+    return render(request, 'user/review.html', {'form': form, 'user': user})
 
 
 def user_page(request, user_id):
