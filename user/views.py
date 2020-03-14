@@ -6,8 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 
 from .forms import SignUpForm, ReviewForm
-from .models import getReviews, averageRating
-from projects.models import confirm_work_relationship
+from .models import getReviews, averageRating, confirm_work_relationship
+#from projects.models import confirm_work_relationship
 
 def index(request):
     return render(request, 'base.html')
