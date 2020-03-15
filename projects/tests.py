@@ -76,6 +76,9 @@ class TestGetUserTaskPermissions(TestCase):
 # Full statement coverage test of the project_view() function
 class TestProjectView(TestCase):
     def setUp(self):
+        # Create and initialize a faker generator, which can generate different types of fake data
+        fake = Faker()
+
         self.factory = RequestFactory()
         self.project_category = ProjectCategory.objects.create(pk=1)
 
@@ -135,6 +138,6 @@ class TestProjectView(TestCase):
         self.assertEqual(response.status_code, 200)
 
 # Boundary value test for giving project offers
-class TestGiveProjectOffers(TestCase):
+# class TestGiveProjectOffers(TestCase):
     # TODO: Implement this boundary test
     # def setUp(self):
