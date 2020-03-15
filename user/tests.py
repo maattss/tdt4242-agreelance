@@ -1,3 +1,5 @@
 from django.test import TestCase
 
-# Create your tests here.
+# Boundary value tests on sign-up page
+#class TestSignupPage(TestCase):
+    #def setUp(self):

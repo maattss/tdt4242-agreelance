@@ -35,6 +35,7 @@ class TestGetUserTaskPermissions(TestCase):
             offerer=self.second_profile,
             status='a')
 
+    # Test owner permissions - All permissions
     def test_user_owner(self):
         self.assertEquals(get_user_task_permissions(self.first_user, self.first_task),
             {
@@ -45,6 +46,18 @@ class TestGetUserTaskPermissions(TestCase):
                 'upload': True,
             })
 
+    # Test accepted offer permissions - Some permissions
+    def test_user_accepted(self):
+        self.assertEquals(get_user_task_permissions(self.second_user, self.second_task),
+            {
+                'write': True,
+                'read': True,
+                'modify': True,
+                'owner': False,
+                'upload': True,
+            })
+
+    # Test regular user permissions - No permissions
     def test_no_owner(self):
         self.assertEquals(get_user_task_permissions(self.second_user, self.first_task),
             {
@@ -56,18 +69,8 @@ class TestGetUserTaskPermissions(TestCase):
                 'upload': False,
             })
 
-    def test_user_accepted(self):
-        
-        self.assertEquals(get_user_task_permissions(self.second_user, self.second_task),
-            {
-                'write': True,
-                'read': True,
-                'modify': True,
-                'owner': False,
-                'upload': True,
-            })
 
-class Test_project_view(TestCase):
+class TestProjectView(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.pCategory = ProjectCategory.objects.create(pk=1)
