@@ -126,8 +126,8 @@ class Test_project_view(TestCase):
         request.user = self.second_user
         response = project_view(request, 1)
         self.assertEqual(response.status_code, 200)
-
-class TestAcceptingOffers(TestCase):
+'''
+class TestAcceptingOffersBugs(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.pCategory = ProjectCategory.objects.create(pk=1)
@@ -156,4 +156,5 @@ class TestAcceptingOffers(TestCase):
             status='p')
         self.task_offer.save()
 
-    def test_
+    def test_bugs(self):
+        '''

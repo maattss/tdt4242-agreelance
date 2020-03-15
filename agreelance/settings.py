@@ -45,6 +45,15 @@ INSTALLED_APPS = [
     'django_icons',
     'payment.apps.PaymentConfig',
     'taggit',
+    'django_nose',
+]
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+#Code coverage
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=projects.views',
+    '--cover-erase',
 ]
 
 MIDDLEWARE = [
