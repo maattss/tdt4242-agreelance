@@ -2,22 +2,26 @@ from django.test import TestCase, Client
 from projects.views import project_view, get_user_task_permissions
 from projects.models import ProjectCategory, Project, Task, TaskOffer
 from user.models import Profile
-
+from faker import Faker
 from django.contrib.auth.models import AnonymousUser, User
 from django.test import RequestFactory, TestCase
 
+# Full statement coverage test of the get_user_task_permission() function
 class TestGetUserTaskPermissions(TestCase):
     def setUp(self):
-        self.pCategory = ProjectCategory.objects.create(pk=1)
+        # Create and initialize a faker generator, which can generate different types of fake data
+        fake = Faker()
+
+        self.project_category = ProjectCategory.objects.create(pk=1)
         
         self.first_user = User.objects.create_user(
             pk=1,
-            username='User1',
-            password='guAXb81#cAFV')
+            username=fake.user_name(),
+            password=fake.password())
         self.second_user = User.objects.create_user(
             pk=2,
-            username="User2",
-            password="SwokT2!5LoSf")
+            username=fake.user_name(),
+            password=fake.password())
         
         self.first_profile = Profile.objects.get(user=self.first_user)
         self.second_profile = Profile.objects.get(user=self.second_user)
@@ -25,7 +29,7 @@ class TestGetUserTaskPermissions(TestCase):
         self.project = Project.objects.create(
             pk=1,
             user=self.first_profile,
-            category=self.pCategory)
+            category=self.project_category)
         
         self.first_task = Task.objects.create(project=self.project)
         self.second_task = Task.objects.create(project=self.project)
@@ -69,27 +73,27 @@ class TestGetUserTaskPermissions(TestCase):
                 'upload': False,
             })
 
-
+# Full statement coverage test of the project_view() function
 class TestProjectView(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
-        self.pCategory = ProjectCategory.objects.create(pk=1)
+        self.project_category = ProjectCategory.objects.create(pk=1)
 
         self.first_user = User.objects.create_user(
             pk=1,
-            username='User1',
-            password='guAXb81#cAFV')
+            username=fake.user_name(),
+            password=fake.password())
         self.second_user = User.objects.create_user(
             pk=2,
-            username="User2",
-            password="SwokT2!5LoSf")
+            username=fake.user_name(),
+            password=fake.password())
         
         self.profile = Profile.objects.get(user=self.first_user)
 
         self.project = Project.objects.create(
             pk=1,
             user=self.profile,
-            category=self.pCategory)
+            category=self.project_category)
 
         self.task = Task.objects.create(project=self.project)
 
@@ -129,3 +133,8 @@ class TestProjectView(TestCase):
         request.user = self.second_user
         response = project_view(request, 1)
         self.assertEqual(response.status_code, 200)
+
+# Boundary value test for giving project offers
+class TestGiveProjectOffers(TestCase):
+    # TODO: Implement this boundary test
+    # def setUp(self):
