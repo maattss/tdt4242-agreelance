@@ -374,7 +374,7 @@ def task_view(request, project_id, task_id):
     if user_permissions['read'] or user_permissions['write'] or user_permissions['modify'] or user_permissions['owner'] or user_permissions['view_task']:
         deliveries = task.delivery.all()
         team_files = []
-        teams = user.profile.teams.filter(task__id=task.id).all()
+        avg_rating = averageRating(accepted_task_offer.offerer.user_id)
         per = {}
         for f in task.files.all():
             per[f.name()] = {}
@@ -392,7 +392,8 @@ def task_view(request, project_id, task_id):
                 'team_form': team_form,
                 'team_add_form': team_add_form,
                 'team_files': team_files,
-                'per': per
+                'per': per,
+                'avg_rating': avg_rating
                 })
 
     return redirect('/user/login')
