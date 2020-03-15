@@ -172,20 +172,5 @@ class TaskOffer(models.Model):
     def calculate_average_task_offer(self):
         pass
 
-def confirm_work_relationship(reviewer, reviewed):
-    reviewer_profile = reviewer
-    #Convert from User to profile, Reviewed is stored as a User
-    reviewed_profile = Profile.objects.get(user=reviewed)
-    relationship = False
-    finished_statuses= ['ps', 'dd']
-
-    for offer in TaskOffer.objects.filter(offerer=reviewed_profile):
-        if((offer.task.project.user == reviewer_profile) and offer.task.status in finished_statuses):
-            relationship = True
-
-    for offer in TaskOffer.objects.filter(offerer=reviewer_profile):
-        if((offer.task.project.user == reviewed_profile) and (offer.task.status in finished_statuses)):
-            relationship = True
-            
-
-    return relationship
+def get_taskOffer(profile):
+    return TaskOffer.objects.filter(offerer = profile)

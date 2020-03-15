@@ -10,9 +10,11 @@
 {% define task|get_accepted_task_offer as task_accepted_offer %}
   <h3 class="my-3">{{ task.title }}</h3>
   <p>Task status: {{task.get_status_display}}</p>
-  <p>Solver: {{task_accepted_offer.offerer.user.username}}</p>
+  <p class="my-1">Solver: {{task_accepted_offer.offerer.user.username}}</p>
+  <p class="my-1">Rating: {{avg_rating}}</p>
+  <a class="btn btn-sm btn-primary" href="/user/{{task_accepted_offer.offerer.user_id}}">See {{task_accepted_offer.offerer.user.username}}'s profile</a>
 
-  <p>Original task budget: {{task.budget}} </p>
+  <p class="mt-3">Original task budget: {{task.budget}} </p>
   <p>Agreed payment: {{task_accepted_offer.price}}</p>
 
   <p class="">{{ task.description }}</p>

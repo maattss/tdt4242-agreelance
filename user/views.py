@@ -6,8 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 
 from .forms import SignUpForm, ReviewForm
-from .models import getReviews, averageRating, confirm_work_relationship
-#from projects.models import confirm_work_relationship
+from .review_functions import getReviews, averageRating, confirm_work_relationship
 
 def index(request):
     return render(request, 'base.html')
@@ -51,28 +50,26 @@ def review(request, reviewed_id):
             form = ReviewForm()
         except:
             return redirect('/')
-    return render(request, 'user/review.html', {'form': form})
+    user = User.objects.get(id=reviewed_id)
+    return render(request, 'user/review.html', {'form': form, 'user': user})
 
 
 def user_page(request, user_id):
-    if (request.user.is_authenticated):
-        user = User.objects.get(id=user_id)
-        username = user.username
-        avg_rating = averageRating(user_id)
-        if (avg_rating == 0):
-            avg_rating = "-"
+    user = User.objects.get(id=user_id)
+    username = user.username
+    avg_rating = averageRating(user_id)
+    if (avg_rating == 0):
+        avg_rating = "-"
+    
+    reviews = []
+    ratings = []
+    for review in getReviews(user_id): 
+        splitted = str(review).split("-")
+        ratings.append(splitted[0])
+        reviews.append(splitted[1])
+
+    return render(request, 'user/user_page.html', {'username': username, 'rating': avg_rating, 'reviews': zip(ratings, reviews)})
+
         
-        reviews = []
-        ratings = []
-        for review in getReviews(user_id): 
-            splitted = str(review).split("-")
-            ratings.append(splitted[0])
-            reviews.append(splitted[1])
-
-        return render(request, 'user/user_page.html', {'username': username, 'rating': avg_rating, 'reviews': zip(ratings, reviews)})
-    else:
-        return redirect('projects')
-
-            
 
             

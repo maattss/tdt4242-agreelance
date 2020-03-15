@@ -5,7 +5,8 @@ from .forms import ProjectForm, TaskFileForm, ProjectStatusForm, TaskOfferForm, 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from user.models import averageRating
+from user.review_functions import averageRating
+from projects.models import Task
 
 def projects_all(request):
     projects = Project.objects.all()
@@ -373,7 +374,7 @@ def task_view(request, project_id, task_id):
     if user_permissions['read'] or user_permissions['write'] or user_permissions['modify'] or user_permissions['owner'] or user_permissions['view_task']:
         deliveries = task.delivery.all()
         team_files = []
-        teams = user.profile.teams.filter(task__id=task.id).all()
+        avg_rating = averageRating(accepted_task_offer.offerer.user_id)
         per = {}
         for f in task.files.all():
             per[f.name()] = {}
@@ -391,7 +392,8 @@ def task_view(request, project_id, task_id):
                 'team_form': team_form,
                 'team_add_form': team_add_form,
                 'team_files': team_files,
-                'per': per
+                'per': per,
+                'avg_rating': avg_rating
                 })
 
     return redirect('/user/login')
