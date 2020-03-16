@@ -3,8 +3,10 @@ from projects.views import project_view, get_user_task_permissions
 from projects.models import ProjectCategory, Project, Task, TaskOffer
 from user.models import Profile
 from faker import Faker
+from factory.fuzzy import FuzzyText, FuzzyInteger
 from django.contrib.auth.models import AnonymousUser, User
 from django.test import RequestFactory, TestCase
+from .forms import TaskOfferForm
 
 # Full statement coverage test of the get_user_task_permission() function
 class TestGetUserTaskPermissions(TestCase):
@@ -136,6 +138,32 @@ class TestProjectView(TestCase):
         self.assertEqual(response.status_code, 200)
 
 # Boundary value test for giving project offers
-# class TestGiveProjectOffers(TestCase):
-    # TODO: Implement this boundary test
-    # def setUp(self):
+class TestGiveProjectOffers(TestCase):
+    def setUp(self):
+         # Boundary values for number of characters in fields
+        self.max_title = FuzzyText(length=200)
+        self.max_description = FuzzyText(length=500)
+        self.min = FuzzyText(length=1)
+        
+        # Choosing max and min as above and below zero. 
+        # Price input does not specify any boundaries. 
+        self.max_price = FuzzyInteger(0, 9999)
+        self.min_price = FuzzyInteger(-9999, -1)
+    
+    def test_max_values(self):
+        data = {
+            'title': self.max_title.fuzz(),
+            'description': self.max_description.fuzz(),
+            'price': self.max_price.fuzz()
+        }
+        form = TaskOfferForm(data)
+        self.assertTrue(form.is_valid())
+
+    def test_min_values(self):
+        data = {
+            'title': self.min.fuzz(),
+            'description': self.min.fuzz(),
+            'price': self.min_price.fuzz()
+        }
+        form = TaskOfferForm(data)
+        self.assertTrue(form.is_valid())

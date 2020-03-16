@@ -1,7 +1,7 @@
 from django.test import TestCase
 from projects.models import ProjectCategory
 from faker import Faker
-from factory.fuzzy import FuzzyText, FuzzyChoice
+from factory.fuzzy import FuzzyText
 from .forms import SignUpForm
 
 # Boundary value tests for sign-up page
@@ -16,8 +16,9 @@ class TestSignupPageBoundary(TestCase):
         self.max_50 = FuzzyText(length=50)
         self.max_30 = FuzzyText(length=30)
         self.min = FuzzyText(length=1)
-        self.categories = [ProjectCategory.objects.create(pk=1), 
-            ProjectCategory.objects.create(pk=2), ProjectCategory.objects.create(pk=3)]
+        self.min_categories = [ProjectCategory.objects.create(pk=1)]
+        self.categories = [ProjectCategory.objects.create(pk=2), 
+            ProjectCategory.objects.create(pk=3), ProjectCategory.objects.create(pk=4)]
     
     def test_max_values(self):
         email = self.max_email.fuzz()
@@ -51,7 +52,7 @@ class TestSignupPageBoundary(TestCase):
             'username': self.min.fuzz(),
             'first_name': self.min.fuzz(),
             'last_name': self.min.fuzz(),
-            'categories': self.categories,
+            'categories': self.min_categories,
             'company': self.min.fuzz(),
             'email': email,
             'email_confirmation': email,
