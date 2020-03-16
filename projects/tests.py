@@ -137,10 +137,10 @@ class TestProjectView(TestCase):
         response = project_view(request, 1)
         self.assertEqual(response.status_code, 200)
 
-# Boundary value test for giving project offers
+# Boundary value test for giving task offers
 class TestGiveProjectOffers(TestCase):
     def setUp(self):
-         # Boundary values for number of characters in fields
+        # Boundary values for number of characters in fields
         self.max_title = FuzzyText(length=200)
         self.max_description = FuzzyText(length=500)
         self.min = FuzzyText(length=1)

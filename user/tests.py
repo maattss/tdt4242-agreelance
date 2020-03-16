@@ -17,8 +17,8 @@ class TestSignupPageBoundary(TestCase):
         self.max_30 = FuzzyText(length=30)
         self.min = FuzzyText(length=1)
         self.min_categories = [ProjectCategory.objects.create(pk=1)]
-        self.categories = [ProjectCategory.objects.create(pk=2), 
-            ProjectCategory.objects.create(pk=3), ProjectCategory.objects.create(pk=4)]
+        self.max_categories = [ProjectCategory.objects.create(pk=2), 
+            ProjectCategory.objects.create(pk=3)]
     
     def test_max_values(self):
         email = self.max_email.fuzz()
@@ -28,7 +28,7 @@ class TestSignupPageBoundary(TestCase):
             'username': self.max_username.fuzz(),
             'first_name': self.max_30.fuzz(),
             'last_name': self.max_30.fuzz(),
-            'categories': self.categories,
+            'categories': self.max_categories,
             'company': self.max_30.fuzz(),
             'email': email,
             'email_confirmation': email,
