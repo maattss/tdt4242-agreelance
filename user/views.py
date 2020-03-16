@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 
 from .forms import SignUpForm, ReviewForm
-from .review_functions import getReviews, averageRating, confirm_work_relationship, confirm_no_duplicate_review
+from .review_functions import getReviews, averageRating, confirm_work_relationship, confirm_duplicate_review
 
 def index(request):
     return render(request, 'base.html')
@@ -41,7 +41,7 @@ def review(request, reviewed_id):
             review.reviewer = request.user.profile
             review.reviewed = User.objects.get(id=reviewed_id)
             review_success = "False"
-            if(not confirm_no_duplicate_review(review.reviewer, review.reviewed)):
+            if(confirm_duplicate_review(review.reviewer, review.reviewed)):
                 review_success = "Duplicate"
                 return redirect('/?review_success=' + review_success)
             if(confirm_work_relationship(review.reviewer, review.reviewed)):

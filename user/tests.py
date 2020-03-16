@@ -6,6 +6,7 @@ from .forms import SignUpForm
 from .models import Profile, Review
 from django.contrib.auth.models import AnonymousUser, User
 from projects.models import ProjectCategory, Project, Task, TaskOffer
+from .review_functions import confirm_duplicate_review, confirm_work_relationship
 
 # Boundary value tests for sign-up page
 class TestSignupPageBoundary(TestCase):
@@ -85,17 +86,17 @@ class TestReviewImplementation(TestCase):
         
         self.first_user = User.objects.create_user(
             pk=1,
-            username=fake.user_name(),
-            password=fake.password())
+            username='fasafasgfa213',
+            password='fakepassword1')
         self.second_user = User.objects.create_user(
             pk=2,
-            username=fake.user_name(),
-            password=fake.password())
+            username='fakeuser2',
+            password='fakepassword2')
 
         self.third_user = User.objects.create_user(
             pk=3,
-            username=fake.user_name(),
-            password=fake.password())
+            username='fakeuser3',
+            password='fakepassword3')
         
         self.first_profile = Profile.objects.get(user=self.first_user)
         self.second_profile = Profile.objects.get(user=self.second_user)
@@ -108,32 +109,35 @@ class TestReviewImplementation(TestCase):
             category=self.project_category)
         
         
-        self.first_task = Task.objects.create(project=self.project)
+        self.first_task = Task.objects.create(project=self.project, status='ps')
 
         self.task_offer = TaskOffer.objects.create(
             task=self.first_task,
             offerer=self.second_profile,
             status='a')
-        
-        self.first_task.status = 'ps'
 
-        self.review = Review.objects.create(
-            pk=1,
-            reviewer=self.first_profile,
-            reviewed=self.second_user,
-            rating=3,
-            comment='It was okay',
-        )
+        if(confirm_work_relationship(self.first_profile, self.second_user) and not confirm_duplicate_review(self.first_profile, self.second_user)):
+            self.first_review = Review.objects.create(
+                pk=1,
+                reviewer=self.first_profile,
+                reviewed=self.second_user,
+                rating=3,
+                comment='It was okay',
+            )
 
-        self.review = Review.objects.create(
-            pk=2,
-            reviewer=self.first_profile,
-            reviewed=self.second_user,
-            rating=5,
-            comment='I reviewed you again!',
-        )
+        if(confirm_work_relationship(self.first_profile, self.second_user) and not confirm_duplicate_review(self.first_profile, self.second_user)):
+            self.second_review = Review.objects.create(
+                pk=2,
+                reviewer=self.first_profile,
+                reviewed=self.second_user,
+                rating=5,
+                comment='I reviewed you again!',
+            )
+        else:
+            self.second_review = None
         
     def test_valid_review(self):
+#Checking for a review with the values entered earlier should be found in the database. Test passes if the data in the database equals what is entered in setUp
         db_review = None
         try:
             db_review = Review.objects.get(pk=1, reviewer=self.first_profile,
@@ -142,30 +146,24 @@ class TestReviewImplementation(TestCase):
                 comment='It was okay')
         except:
             pass
-        self.assertEqual(self.review, db_review)
-    
+        self.assertEqual(self.first_review, db_review)
+
+#db_review should be None since confirm_working_relationship returns false.
     def test_no_relationship_review(self):
         db_review = None
         try:
-            db_review = Review.objects.get(pk=1, reviewer=self.first_profile,
-                reviewed=self.third_user,
-                rating=3,
-                comment='It was okay')
+            db_review = Review.objects.get(
+                reviewer=self.first_profile,
+                reviewed=self.third_user)
         except:
             pass
-        self.assertNotEqual(self.review, db_review)
-    
+        self.assertFalse(db_review)
+
+#Second_review should be None since confirm_duplicate_review returns true.
     def test_duplicate_review(self):
-        db_review = None
-        try:
-            db_review = Review.objects.get(pk=2, reviewer=self.first_profile,
-                reviewed=self.second_user,
-                rating=5,
-                comment='I reviewed you again!')
-        except:
-            pass
-        self.assertNotEqual(self.review, db_review)
-    
+        self.assertFalse(self.second_review)
+
+
 
 
 
