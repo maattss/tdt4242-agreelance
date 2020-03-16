@@ -17,10 +17,11 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             user.refresh_from_db()
-
+            print(form)
             user.profile.company = form.cleaned_data.get('company')
 
             user.is_active = False
+            print(*form.cleaned_data['categories'])
             user.profile.categories.add(*form.cleaned_data['categories'])
             user.save()
             raw_password = form.cleaned_data.get('password1')
