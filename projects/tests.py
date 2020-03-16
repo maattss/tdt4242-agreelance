@@ -9,8 +9,7 @@ from django.test import RequestFactory, TestCase
 # Full statement coverage test of the get_user_task_permission() function
 class TestGetUserTaskPermissions(TestCase):
     def setUp(self):
-        # Create and initialize a faker generator, which can generate different types of fake data
-        fake = Faker()
+        fake = Faker() # Generate fake data using a faker generator
 
         self.project_category = ProjectCategory.objects.create(pk=1)
         
@@ -76,8 +75,7 @@ class TestGetUserTaskPermissions(TestCase):
 # Full statement coverage test of the project_view() function
 class TestProjectView(TestCase):
     def setUp(self):
-        # Create and initialize a faker generator, which can generate different types of fake data
-        fake = Faker()
+        fake = Faker() # Generate fake data using a faker generator
 
         self.factory = RequestFactory()
         self.project_category = ProjectCategory.objects.create(pk=1)

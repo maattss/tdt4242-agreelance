@@ -1,50 +1,73 @@
 from django.test import TestCase
+from projects.models import ProjectCategory
 from faker import Faker
+from factory.fuzzy import FuzzyText, FuzzyChoice
+from .forms import SignUpForm
 
 # Boundary value tests for sign-up page
 class TestSignupPageBoundary(TestCase):
     def setUp(self):
-        # Create and initialize a faker generator, which can generate different types of fake data
-        self.fake = Faker()
-        self.fake.seed_instance(123456)
-
         # Boundary values for number of characters in fields
-        self.max_name = 150
-        self.min_name = 1
-        self.max_password = 4096
-        self.min_password = 8
-        self.max_other_50 = 50
-        self.max_other_30 = 30
-        self.min_other = 1
-    
-    def test_min_values(self):
-        
-        # All data not related to user profile can be empty?
-        data = {
-            'username': self.fake.user_name(),
-            'first_name': self.fake.first_name(),
-            'last_name': self.fake.last_name(),
-            'categories': 1, # TODO: Random generate?
-            'company': self.fake.company(),
-            'email': self.fake.ascii_free_email(),
-            'email_confirmation': self.fake.ascii_free_email(),
-            'password1': self.fake.password(),
-            'password2': self.fake.password(),
-            'phone_number': self.fake.phone_number(),
-            'country': self.fake.country(),
-            'state': self.fake.state(),
-            'city': self.fake.city(),
-            'postal_code': self.fake.postalcode(),
-            'street_adress': self.fake.address(),
-            
-        }
-        print("Data", data)
+        self.max_username = FuzzyText(length=150)
+        self.max_email = FuzzyText(length=244, suffix="@gmail.com")
+        self.min_email = FuzzyText(length=1, suffix="@gmail.com")
+        self.max_password = FuzzyText(length=4096)
+        self.min_password = FuzzyText(length=8)
+        self.max_50 = FuzzyText(length=50)
+        self.max_30 = FuzzyText(length=30)
+        self.min = FuzzyText(length=1)
+        self.categories = [ProjectCategory.objects.create(pk=1), 
+            ProjectCategory.objects.create(pk=2), ProjectCategory.objects.create(pk=3)]
     
     def test_max_values(self):
-        print("heyhey")
+        email = self.max_email.fuzz()
+        password = self.max_password.fuzz()
+        
+        data = {
+            'username': self.max_username.fuzz(),
+            'first_name': self.max_30.fuzz(),
+            'last_name': self.max_30.fuzz(),
+            'categories': self.categories,
+            'company': self.max_30.fuzz(),
+            'email': email,
+            'email_confirmation': email,
+            'password1': password,
+            'password2': password,
+            'phone_number': self.max_50.fuzz(),
+            'country': self.max_50.fuzz(),
+            'state': self.max_50.fuzz(),
+            'city': self.max_50.fuzz(),
+            'postal_code': self.max_50.fuzz(),
+            'street_address': self.max_50.fuzz(),   
+        }
+        form = SignUpForm(data)
+        self.assertTrue(form.is_valid())
+    
+    def test_min_values(self):
+        email = self.min_email.fuzz()
+        password = self.min_password.fuzz()
+        
+        data = {
+            'username': self.min.fuzz(),
+            'first_name': self.min.fuzz(),
+            'last_name': self.min.fuzz(),
+            'categories': self.categories,
+            'company': self.min.fuzz(),
+            'email': email,
+            'email_confirmation': email,
+            'password1': password,
+            'password2': password,
+            'phone_number': self.min.fuzz(),
+            'country': self.min.fuzz(),
+            'state': self.min.fuzz(),
+            'city': self.min.fuzz(),
+            'postal_code': self.min.fuzz(),
+            'street_address': self.min.fuzz(),   
+        }
+        form = SignUpForm(data)
+        self.assertTrue(form.is_valid())
 
-
-# 2-way domain tests of the sugn-up page
+# 2-way domain tests of the sign-up page
 class TestSignupPageDomain(TestCase):
     # TODO: Implement test
     def setUp(self):
