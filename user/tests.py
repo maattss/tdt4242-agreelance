@@ -177,7 +177,7 @@ class TestSignupPageDomain(TestCase):
         self.declined_password = FuzzyText(length=4097)
 
         self.approved_categories = [ProjectCategory.objects.create(pk=1)]
-        self.declined_categories = [ProjectCategory.objects.create(pk=1)]
+        self.declined_categories = []
 
     def test_first_case(self):
         data = {
@@ -188,8 +188,8 @@ class TestSignupPageDomain(TestCase):
             'company': self.declined_textfield,
             'email': self.approved_email_1,
             'email_confirmation': self.approved_email_2,
-            'password1': self.declined_password,
-            'password2': self.declined_password,
+            'password1': self.declined_password.fuzz(),
+            'password2': self.declined_password.fuzz(),
             'phone_number': self.declined_textfield,
             'country': self.declined_textfield,
             'state': self.declined_textfield,
@@ -201,43 +201,43 @@ class TestSignupPageDomain(TestCase):
         self.assertFalse(form.is_valid())
     
     def test_second_case(self):
-         data = {
-            'username': self.approved_textfield,
-            'first_name': self.approved_textfield,
-            'last_name': self.approved_textfield,
+        data = {
+            'username': self.approved_textfield.fuzz(),
+            'first_name': self.approved_textfield.fuzz(),
+            'last_name': self.approved_textfield.fuzz(),
             'categories': self.approved_categories,
-            'company': self.approved_textfield,
+            'company': self.approved_textfield.fuzz(),
             'email': self.declined_email,
             'email_confirmation': self.declined_email,
             'password1': self.approved_password_1,
             'password2': self.approved_password_2,
-            'phone_number': self.approved_textfield,
-            'country': self.approved_textfield,
-            'state': self.approved_textfield,
-            'city': self.approved_textfield,
-            'postal_code': self.approved_textfield,
-            'street_address': self.approved_textfield,   
+            'phone_number': self.approved_textfield.fuzz(),
+            'country': self.approved_textfield.fuzz(),
+            'state': self.approved_textfield.fuzz(),
+            'city': self.approved_textfield.fuzz(),
+            'postal_code': self.approved_textfield.fuzz(),
+            'street_address': self.approved_textfield.fuzz(),   
         }
         form = SignUpForm(data)
         self.assertFalse(form.is_valid())
 
     def test_third_case(self):
-         data = {
-            'username': self.approved_textfield,
-            'first_name': self.approved_textfield,
-            'last_name': self.approved_textfield,
+        data = {
+            'username': self.approved_textfield.fuzz(),
+            'first_name': self.approved_textfield.fuzz(),
+            'last_name': self.approved_textfield.fuzz(),
             'categories': self.approved_categories,
-            'company': self.approved_textfield,
+            'company': self.approved_textfield.fuzz(),
             'email': self.approved_email_1,
             'email_confirmation': self.approved_email_1,
             'password1': self.approved_password_1,
             'password2': self.approved_password_1,
-            'phone_number': self.approved_textfield,
-            'country': self.approved_textfield,
-            'state': self.approved_textfield,
-            'city': self.approved_textfield,
-            'postal_code': self.approved_textfield,
-            'street_address': self.approved_textfield,   
+            'phone_number': self.approved_textfield.fuzz(),
+            'country': self.approved_textfield.fuzz(),
+            'state': self.approved_textfield.fuzz(),
+            'city': self.approved_textfield.fuzz(),
+            'postal_code': self.approved_textfield.fuzz(),
+            'street_address': self.approved_textfield.fuzz(),   
         }
         form = SignUpForm(data)
         self.assertTrue(form.is_valid())
