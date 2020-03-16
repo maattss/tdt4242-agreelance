@@ -161,7 +161,83 @@ class TestSignupPageBoundary(TestCase):
 
 # 2-way domain tests of the sign-up page
 class TestSignupPageDomain(TestCase):
-    # TODO: Implement test
     def setUp(self):
-        self.name = "tests"
-        
+        fake = Faker() # Generate fake data using a faker generator
+
+        # Configure values used in the test cases
+        self.approved_textfield = FuzzyText(length=20)
+        self.declined_textfield = ""
+
+        self.approved_email_1 = fake.email()
+        self.approved_email_2 = fake.email()
+        self.declined_email = FuzzyText(length=245, suffix="@gmail.com")
+
+        self.approved_password_1 = fake.password()
+        self.approved_password_2 = fake.password()
+        self.declined_password = FuzzyText(length=4097)
+
+        self.approved_categories = [ProjectCategory.objects.create(pk=1)]
+        self.declined_categories = [ProjectCategory.objects.create(pk=1)]
+
+    def test_first_case(self):
+        data = {
+            'username': self.declined_textfield,
+            'first_name': self.declined_textfield,
+            'last_name': self.declined_textfield,
+            'categories': self.approved_categories,
+            'company': self.declined_textfield,
+            'email': self.approved_email_1,
+            'email_confirmation': self.approved_email_2,
+            'password1': self.declined_password,
+            'password2': self.declined_password,
+            'phone_number': self.declined_textfield,
+            'country': self.declined_textfield,
+            'state': self.declined_textfield,
+            'city': self.declined_textfield,
+            'postal_code': self.declined_textfield,
+            'street_address': self.declined_textfield,   
+        }
+        form = SignUpForm(data)
+        self.assertFalse(form.is_valid())
+    
+    def test_second_case(self):
+         data = {
+            'username': self.approved_textfield,
+            'first_name': self.approved_textfield,
+            'last_name': self.approved_textfield,
+            'categories': self.approved_categories,
+            'company': self.approved_textfield,
+            'email': self.declined_email,
+            'email_confirmation': self.declined_email,
+            'password1': self.approved_password_1,
+            'password2': self.approved_password_2,
+            'phone_number': self.approved_textfield,
+            'country': self.approved_textfield,
+            'state': self.approved_textfield,
+            'city': self.approved_textfield,
+            'postal_code': self.approved_textfield,
+            'street_address': self.approved_textfield,   
+        }
+        form = SignUpForm(data)
+        self.assertFalse(form.is_valid())
+
+    def test_third_case(self):
+         data = {
+            'username': self.approved_textfield,
+            'first_name': self.approved_textfield,
+            'last_name': self.approved_textfield,
+            'categories': self.approved_categories,
+            'company': self.approved_textfield,
+            'email': self.approved_email_1,
+            'email_confirmation': self.approved_email_1,
+            'password1': self.approved_password_1,
+            'password2': self.approved_password_1,
+            'phone_number': self.approved_textfield,
+            'country': self.approved_textfield,
+            'state': self.approved_textfield,
+            'city': self.approved_textfield,
+            'postal_code': self.approved_textfield,
+            'street_address': self.approved_textfield,   
+        }
+        form = SignUpForm(data)
+        self.assertTrue(form.is_valid())
