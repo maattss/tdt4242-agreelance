@@ -1,73 +1,11 @@
-<<<<<<< HEAD
-from django.test import TestCase, Client
-from projects.views import project_view, get_user_task_permissions
-from projects.models import ProjectCategory, Project, Task, TaskOffer
-from .views import review
-from user.models import Profile, Review
-
-from django.contrib.auth.models import AnonymousUser, User
-from django.test import RequestFactory, TestCase
-
-class Test_review_view(TestCase):
-    def setUp(self):
-        self.factory = RequestFactory()
-        self.pCategory = ProjectCategory.objects.create(pk=1)
-
-        self.first_user = User.objects.create_user(
-            pk=1,
-            username='User1',
-            password='guAXb81#cAFV')
-        self.second_user = User.objects.create_user(
-            pk=2,
-            username="User2",
-            password="SwokT2!5LoSf")
-        
-        self.profile = Profile.objects.get(user=self.first_user)
-        self.profile2 = Profile.objects.get(user=self.second_user)
-
-        self.project = Project.objects.create(
-            pk=1,
-            user=self.profile,
-            category=self.pCategory)
-
-        self.task = Task.objects.create(project=self.project, status = 'ps')
-
-        self.task_offer = TaskOffer(
-            task=self.task,
-            offerer=self.profile2)
-        self.task_offer.save()
-
-        self.review = Review.objects.create(
-            reviewer = self.profile,
-            reviewed = self.second_user
-            )
-        
-    def test_review_response(self):
-        #Trying to test posting a review. Doesn't work properly
-        request = self.factory.post('/user/set_review/'+ str(self.second_user.id), {
-            'rating': '3 - Okay',
-            'comment': 'Not bad',
-        })
-        request.user = self.first_user
-        response = review(request, 1)
-        self.assertEqual(response.status_code, 200)
-    '''
-    #Tests if /user/set_review/<user.id>/ works
-    def test_review_view_url_exists(self):
-        response = self.client.get('/user/set_review/'+ str(self.second_user.id)+ '/')
-        self.assertEqual(response.status_code, 200)
-    
-    #Tests if /user/<user.id>/ works
-    def test_userpage_view_url_exists(self):
-        response = self.client.get('/user/'+ str(self.second_user.id)+ '/')
-        self.assertEqual(response.status_code, 200)
-    '''
-=======
 from django.test import TestCase
 from projects.models import ProjectCategory
 from faker import Faker
 from factory.fuzzy import FuzzyText
 from .forms import SignUpForm
+from .models import Profile, Review
+from django.contrib.auth.models import AnonymousUser, User
+from projects.models import ProjectCategory, Project, Task, TaskOffer
 
 # Boundary value tests for sign-up page
 class TestSignupPageBoundary(TestCase):
@@ -139,4 +77,99 @@ class TestSignupPageDomain(TestCase):
     def setUp(self):
         self.name = "tests"
         
->>>>>>> master
+class TestReviewImplementation(TestCase):
+    def setUp(self):
+        fake = Faker() # Generate fake data using a faker generator
+
+        self.project_category = ProjectCategory.objects.create(pk=1)
+        
+        self.first_user = User.objects.create_user(
+            pk=1,
+            username=fake.user_name(),
+            password=fake.password())
+        self.second_user = User.objects.create_user(
+            pk=2,
+            username=fake.user_name(),
+            password=fake.password())
+
+        self.third_user = User.objects.create_user(
+            pk=3,
+            username=fake.user_name(),
+            password=fake.password())
+        
+        self.first_profile = Profile.objects.get(user=self.first_user)
+        self.second_profile = Profile.objects.get(user=self.second_user)
+        self.third_profile = Profile.objects.get(user=self.third_user)
+
+
+        self.project = Project.objects.create(
+            pk=1,
+            user=self.first_profile,
+            category=self.project_category)
+        
+        
+        self.first_task = Task.objects.create(project=self.project)
+
+        self.task_offer = TaskOffer.objects.create(
+            task=self.first_task,
+            offerer=self.second_profile,
+            status='a')
+        
+        self.first_task.status = 'ps'
+
+        self.review = Review.objects.create(
+            pk=1,
+            reviewer=self.first_profile,
+            reviewed=self.second_user,
+            rating=3,
+            comment='It was okay',
+        )
+
+        self.review = Review.objects.create(
+            pk=2,
+            reviewer=self.first_profile,
+            reviewed=self.second_user,
+            rating=5,
+            comment='I reviewed you again!',
+        )
+        
+    def test_valid_review(self):
+        db_review = None
+        try:
+            db_review = Review.objects.get(pk=1, reviewer=self.first_profile,
+                reviewed=self.second_user,
+                rating=3,
+                comment='It was okay')
+        except:
+            pass
+        self.assertEqual(self.review, db_review)
+    
+    def test_no_relationship_review(self):
+        db_review = None
+        try:
+            db_review = Review.objects.get(pk=1, reviewer=self.first_profile,
+                reviewed=self.third_user,
+                rating=3,
+                comment='It was okay')
+        except:
+            pass
+        self.assertNotEqual(self.review, db_review)
+    
+    def test_duplicate_review(self):
+        db_review = None
+        try:
+            db_review = Review.objects.get(pk=2, reviewer=self.first_profile,
+                reviewed=self.second_user,
+                rating=5,
+                comment='I reviewed you again!')
+        except:
+            pass
+        self.assertNotEqual(self.review, db_review)
+    
+
+
+
+
+
+
+        
