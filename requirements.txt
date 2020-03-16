@@ -5,3 +5,4 @@ pytz==2018.4
 django-heroku
 django-taggit
 Faker
+factory-boy
