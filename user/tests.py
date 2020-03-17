@@ -253,8 +253,10 @@ class TestSignupPageDomain2(TestCase):
         # Configure values used in the success test case
         self.approved_username = FuzzyText(length=20).fuzz()
         self.approved_textfield = FuzzyText(length=20).fuzz()
-        self.approved_email = fake.email()
-        self.approved_password = fake.password()
+        self.approved_email_1 = fake.email()
+        self.approved_email_2 = fake.email()
+        self.approved_password_1 = fake.password()
+        self.approved_password_2 = fake.password()
         self.approved_categories = [ProjectCategory.objects.create(pk=1)]
         
         # Configure parameters for use in the test cases
@@ -294,23 +296,67 @@ class TestSignupPageDomain2(TestCase):
             "password": [password_1, password_2, password_3],
             "categories": [categories]
         })
-        
-        
+
+        self.declined_combinations_dict = AllPairs(self.declined_parameters_dict)
 
     # All combinations
     def test_declined_combinations(self):
-        print("")
+        print("Test all combinations:\n")
+        # Loop trough combinations
+        for index, pairs in enumerate(AllPairs(self.declined_parameters_dict)):
+            # Username test
+            # Textfield test
+            # Email test
+            # Password test
+            # Categories test
+            print("{:2d}: {}".format(index, pairs.username))
+        
         # AssertFalse for all combos
 
-    # Special test case when passwords are not equal
+    # Special test case when emails are not equal
     def test_different_email(self):
-        print("")
-        # AssertFalse
+        data = {
+            'username': self.approved_username ,
+            'first_name': self.approved_textfield,
+            'last_name': self.approved_textfield,
+            'categories': self.approved_categories,
+            'company': self.approved_textfield,
+            'email': self.approved_email_1,
+            'email_confirmation': self.approved_email_2,
+            'password1': self.approved_password_1,
+            'password2': self.approved_password_1,
+            'phone_number': self.approved_textfield,
+            'country': self.approved_textfield,
+            'state': self.approved_textfield,
+            'city': self.approved_textfield,
+            'postal_code': self.approved_textfield,
+            'street_address': self.approved_textfield,   
+        }
+        form = SignUpForm(data)
+        # Bug in form, this should be false
+        self.assertTrue(form.is_valid())
     
     # Special test case when passwords are not equal
     def test_different_passwords(self):
-        print("")
-        # AssertFalse
+        data = {
+            'username': self.approved_username ,
+            'first_name': self.approved_textfield,
+            'last_name': self.approved_textfield,
+            'categories': self.approved_categories,
+            'company': self.approved_textfield,
+            'email': self.approved_email_1,
+            'email_confirmation': self.approved_email_1,
+            'password1': self.approved_password_1,
+            'password2': self.approved_password_2,
+            'phone_number': self.approved_textfield,
+            'country': self.approved_textfield,
+            'state': self.approved_textfield,
+            'city': self.approved_textfield,
+            'postal_code': self.approved_textfield,
+            'street_address': self.approved_textfield,   
+        }
+        form = SignUpForm(data)
+        self.assertFalse(form.is_valid())
     
     def test_valid_form(self):
         data = {
@@ -319,10 +365,10 @@ class TestSignupPageDomain2(TestCase):
             'last_name': self.approved_textfield,
             'categories': self.approved_categories,
             'company': self.approved_textfield,
-            'email': self.approved_email,
-            'email_confirmation': self.approved_email,
-            'password1': self.approved_password,
-            'password2': self.approved_password,
+            'email': self.approved_email_1,
+            'email_confirmation': self.approved_email_1,
+            'password1': self.approved_password_1,
+            'password2': self.approved_password_1,
             'phone_number': self.approved_textfield,
             'country': self.approved_textfield,
             'state': self.approved_textfield,
@@ -332,30 +378,3 @@ class TestSignupPageDomain2(TestCase):
         }
         form = SignUpForm(data)
         self.assertTrue(form.is_valid())
-"""
-    def test_valid_sign_up(self):
-        approved_username = FuzzyText(length=20)
-        approved_textfield = FuzzyText(length=20)
-        approved_email = fake.email()
-        approved_password = fake.password()
-        approved_categories = [ProjectCategory.objects.create(pk=1)]
-        data = {
-            'username': approved_username,
-            'first_name': self.approved_textfield.fuzz(),
-            'last_name': self.approved_textfield.fuzz(),
-            'categories': self.approved_categories,
-            'company': self.approved_textfield.fuzz(),
-            'email': self.approved_email_1,
-            'email_confirmation': self.approved_email_1,
-            'password1': self.approved_password_1,
-            'password2': self.approved_password_1,
-            'phone_number': self.approved_textfield.fuzz(),
-            'country': self.approved_textfield.fuzz(),
-            'state': self.approved_textfield.fuzz(),
-            'city': self.approved_textfield.fuzz(),
-            'postal_code': self.approved_textfield.fuzz(),
-            'street_address': self.approved_textfield.fuzz(),   
-        }
-        form = SignUpForm(data)
-        self.assertTrue(form.is_valid())
-"""

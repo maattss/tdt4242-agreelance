@@ -184,7 +184,6 @@ class TestGiveProjectOffers(TestCase):
         form = TaskOfferForm(data)
         self.assertTrue(form.is_valid())
 
-
     def test_above_min_values(self):
         data = {
             'title': self.above_min.fuzz(),
