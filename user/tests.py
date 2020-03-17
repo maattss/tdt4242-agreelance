@@ -86,17 +86,17 @@ class TestReviewImplementation(TestCase):
         
         self.first_user = User.objects.create_user(
             pk=1,
-            username='fasafasgfa213',
-            password='fakepassword1')
+            username=fake.user_name(),
+            password=fake.password())
         self.second_user = User.objects.create_user(
             pk=2,
-            username='fakeuser2',
-            password='fakepassword2')
+            username=fake.user_name(),
+            password=fake.password())
 
         self.third_user = User.objects.create_user(
             pk=3,
-            username='fakeuser3',
-            password='fakepassword3')
+            username=fake.user_name(),
+            password=fake.password())
         
         self.first_profile = Profile.objects.get(user=self.first_user)
         self.second_profile = Profile.objects.get(user=self.second_user)
