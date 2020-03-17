@@ -28,7 +28,7 @@ class ProjectStatusForm(forms.ModelForm):
 class TaskOfferForm(forms.ModelForm):
     title = forms.CharField(max_length=200)
     description = forms.Textarea()
-    price = forms.NumberInput()
+    price = forms.IntegerField(min_value=1)
 
     class Meta:
         model = TaskOffer
