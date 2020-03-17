@@ -7,6 +7,8 @@ from .models import Profile, Review
 from django.contrib.auth.models import AnonymousUser, User
 from projects.models import ProjectCategory, Project, Task, TaskOffer
 from .review_functions import confirm_duplicate_review, confirm_work_relationship
+from django.test import RequestFactory, TestCase
+from .views import review
 
 # Boundary value tests for sign-up page
 class TestSignupPageBoundary(TestCase):
@@ -82,6 +84,7 @@ class TestReviewImplementation(TestCase):
     def setUp(self):
         fake = Faker() # Generate fake data using a faker generator
 
+        self.factory = RequestFactory()
         self.project_category = ProjectCategory.objects.create(pk=1)
         
         self.first_user = User.objects.create_user(
@@ -98,6 +101,11 @@ class TestReviewImplementation(TestCase):
             username=fake.user_name(),
             password=fake.password())
         
+        self.fourth_user = User.objects.create_user(
+            pk=4,
+            username=fake.user_name(),
+            password=fake.password())
+        
         self.first_profile = Profile.objects.get(user=self.first_user)
         self.second_profile = Profile.objects.get(user=self.second_user)
         self.third_profile = Profile.objects.get(user=self.third_user)
@@ -110,64 +118,78 @@ class TestReviewImplementation(TestCase):
         
         
         self.first_task = Task.objects.create(project=self.project, status='ps')
-
-        self.task_offer = TaskOffer.objects.create(
+        self.second_task = Task.objects.create(project=self.project, status='dd')
+        
+        self.first_task_offer = TaskOffer.objects.create(
             task=self.first_task,
             offerer=self.second_profile,
             status='a')
-
-        if(confirm_work_relationship(self.first_profile, self.second_user) and not confirm_duplicate_review(self.first_profile, self.second_user)):
-            self.first_review = Review.objects.create(
+        
+        self.second_task_offer = TaskOffer.objects.create(
+            task=self.first_task,
+            offerer=self.third_profile,
+            status='a')
+        
+        self.first_review = Review.objects.create(
                 pk=1,
                 reviewer=self.first_profile,
                 reviewed=self.second_user,
                 rating=3,
-                comment='It was okay',
-            )
-
-        if(confirm_work_relationship(self.first_profile, self.second_user) and not confirm_duplicate_review(self.first_profile, self.second_user)):
-            self.second_review = Review.objects.create(
-                pk=2,
-                reviewer=self.first_profile,
-                reviewed=self.second_user,
-                rating=5,
-                comment='I reviewed you again!',
-            )
-        else:
-            self.second_review = None
-        
+                comment='It was okay')
+#first_user and third user have worked together and no review exists in the database. The request should be stored in database.
     def test_valid_review(self):
-#Checking for a review with the values entered earlier should be found in the database. Test passes if the data in the database equals what is entered in setUp
+        request = self.factory.post('/user/set_review/', {
+            'rating': 5,
+            'comment': 'Very good review!'
+        })
+        request.user = self.first_user
+        response = review(request, self.third_user.id)
         db_review = None
         try:
-            db_review = Review.objects.get(pk=1, reviewer=self.first_profile,
-                reviewed=self.second_user,
-                rating=3,
-                comment='It was okay')
+            db_review = Review.objects.get(reviewer=self.first_profile,
+                reviewed=self.third_user,
+                rating=5,
+                comment='Very good review!')
         except:
             pass
-        self.assertEqual(self.first_review, db_review)
+        self.assertTrue(db_review)
 
-#db_review should be None since confirm_working_relationship returns false.
+#first_user and fourth_user haven't worked together. The request should not be stored since confirm_work_relationship returns False
     def test_no_relationship_review(self):
+        request = self.factory.post('/user/set_review/', {
+            'rating': 1,
+            'comment': 'This shouldnt be possible'
+        })
+        request.user = self.first_user
+        response = review(request, self.fourth_user.id)
         db_review = None
         try:
-            db_review = Review.objects.get(
-                reviewer=self.first_profile,
-                reviewed=self.third_user)
+            db_review = Review.objects.get(reviewer=self.first_profile,
+                reviewed=self.fourth_user,
+                rating=1,
+                comment='This shouldnt be possible')
         except:
             pass
         self.assertFalse(db_review)
 
-#Second_review should be None since confirm_duplicate_review returns true.
+
+#There is already a review from first_user on second_user from setUp. The request should not be stored since confirm_duplicate_review returns True
     def test_duplicate_review(self):
-        self.assertFalse(self.second_review)
-
-
-
-
-
-
+        request = self.factory.post('/user/set_review/', {
+            'rating': 2,
+            'comment': 'This shouldnt be possible either'
+        })
+        request.user = self.first_user
+        response = review(request, self.second_user.id)
+        db_review = None
+        try:
+            db_review = Review.objects.get(reviewer=self.first_profile,
+                reviewed=self.second_user,
+                rating=2,
+                comment='This shouldnt be possible either')
+        except:
+            pass
+        self.assertFalse(db_review)
 
 
         
