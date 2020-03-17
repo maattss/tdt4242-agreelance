@@ -3,6 +3,9 @@ from projects.models import ProjectCategory
 from faker import Faker
 from factory.fuzzy import FuzzyText
 from .forms import SignUpForm
+import string
+from allpairspy import AllPairs
+from collections import OrderedDict
 
 # Boundary value tests for sign-up page
 class TestSignupPageBoundary(TestCase):
@@ -241,3 +244,118 @@ class TestSignupPageDomain(TestCase):
         }
         form = SignUpForm(data)
         self.assertTrue(form.is_valid())
+
+# 2-way domain tests of the sign-up page **USING ALLPAIRSPY**
+class TestSignupPageDomain2(TestCase):
+    def setUp(self):
+        fake = Faker() # Generate fake data using a faker generator
+
+        # Configure values used in the success test case
+        self.approved_username = FuzzyText(length=20).fuzz()
+        self.approved_textfield = FuzzyText(length=20).fuzz()
+        self.approved_email = fake.email()
+        self.approved_password = fake.password()
+        self.approved_categories = [ProjectCategory.objects.create(pk=1)]
+        
+        # Configure parameters for use in the test cases
+        username_1 = ""
+        username_2 = FuzzyText(length=50, chars=string.punctuation).fuzz() # Special charaters
+        username_3 = FuzzyText(length=151).fuzz()
+
+        textfield_1 = ""
+        textfield_2 = FuzzyText(length=100).fuzz()
+    
+        email_1 = FuzzyText(length=245, suffix="@gmail.com").fuzz()
+        email_2 = FuzzyText(length=20).fuzz()
+
+        password_1 = FuzzyText(length=4097).fuzz()
+        password_2 = FuzzyText(length=4).fuzz()
+        password_3 = FuzzyText(length=16, chars=string.digits).fuzz()
+
+        categories = []
+
+        declined_parameters = [
+            [username_1, username_2, username_3],
+            [textfield_1, textfield_2],
+            [email_1, email_2],
+            [email_1, email_2],
+            [password_1, password_2, password_3],
+            [password_1, password_2, password_3],
+            [categories]
+        ]
+        # Generate all possible combinations
+        self.declined_combinations = list(AllPairs(declined_parameters))
+
+        # TODO: Remove if not used
+        self.declined_parameters_dict = OrderedDict({
+            "username": [username_1, username_2, username_3],
+            "textfield": [textfield_1, textfield_2],
+            "email": [email_1, email_2],
+            "password": [password_1, password_2, password_3],
+            "categories": [categories]
+        })
+        
+        
+
+    # All combinations
+    def test_declined_combinations(self):
+        print("")
+        # AssertFalse for all combos
+
+    # Special test case when passwords are not equal
+    def test_different_email(self):
+        print("")
+        # AssertFalse
+    
+    # Special test case when passwords are not equal
+    def test_different_passwords(self):
+        print("")
+        # AssertFalse
+    
+    def test_valid_form(self):
+        data = {
+            'username': self.approved_username ,
+            'first_name': self.approved_textfield,
+            'last_name': self.approved_textfield,
+            'categories': self.approved_categories,
+            'company': self.approved_textfield,
+            'email': self.approved_email,
+            'email_confirmation': self.approved_email,
+            'password1': self.approved_password,
+            'password2': self.approved_password,
+            'phone_number': self.approved_textfield,
+            'country': self.approved_textfield,
+            'state': self.approved_textfield,
+            'city': self.approved_textfield,
+            'postal_code': self.approved_textfield,
+            'street_address': self.approved_textfield,   
+        }
+        form = SignUpForm(data)
+        self.assertTrue(form.is_valid())
+"""
+    def test_valid_sign_up(self):
+        approved_username = FuzzyText(length=20)
+        approved_textfield = FuzzyText(length=20)
+        approved_email = fake.email()
+        approved_password = fake.password()
+        approved_categories = [ProjectCategory.objects.create(pk=1)]
+        data = {
+            'username': approved_username,
+            'first_name': self.approved_textfield.fuzz(),
+            'last_name': self.approved_textfield.fuzz(),
+            'categories': self.approved_categories,
+            'company': self.approved_textfield.fuzz(),
+            'email': self.approved_email_1,
+            'email_confirmation': self.approved_email_1,
+            'password1': self.approved_password_1,
+            'password2': self.approved_password_1,
+            'phone_number': self.approved_textfield.fuzz(),
+            'country': self.approved_textfield.fuzz(),
+            'state': self.approved_textfield.fuzz(),
+            'city': self.approved_textfield.fuzz(),
+            'postal_code': self.approved_textfield.fuzz(),
+            'street_address': self.approved_textfield.fuzz(),   
+        }
+        form = SignUpForm(data)
+        self.assertTrue(form.is_valid())
+"""

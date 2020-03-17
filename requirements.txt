@@ -6,3 +6,4 @@ django-heroku
 django-taggit
 Faker
 factory-boy
+allpairspy
