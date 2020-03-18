@@ -5,7 +5,7 @@ test:
   - apt-get update -qy
   - pip install -r requirements.txt
   - python manage.py test
-  coverage: '/Code coverage: \d+\.\d+/'
+  coverage: '/TOTAL.*\s(\d+)%/'
 
 staging:
   type: deploy
