@@ -170,7 +170,7 @@ class TestGiveProjectOffers(TestCase):
 
 
 '''
-class TestAcceptingOffersBugs(TestCase):
+class TestAcceptingOffers(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.pCategory = ProjectCategory.objects.create(pk=1)

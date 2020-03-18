@@ -44,8 +44,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'django_icons',
     'payment.apps.PaymentConfig',
-    'taggit',
-    'django_nose',
+    'taggit'
 ]
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
