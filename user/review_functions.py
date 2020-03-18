@@ -33,3 +33,11 @@ def confirm_work_relationship(reviewer, reviewed):
             
 
     return relationship
+
+def confirm_no_duplicate_review(reviewer, reviewed):
+    no_duplicate = True
+    for review in Review.objects.filter(reviewer = reviewer):
+        if review.reviewed == reviewed:
+            no_duplicate = False
+    
+    return no_duplicate
