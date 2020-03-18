@@ -181,20 +181,15 @@ class TestSignupPageDomain(TestCase):
         username_1 = ""
         username_2 = FuzzyText(length=50, chars=string.punctuation).fuzz() # Special charaters
         username_3 = FuzzyText(length=151).fuzz()
-
         textfield_30_1 = ""
         textfield_30_2 = FuzzyText(length=40).fuzz()
-
         textfield_50_1 = ""
         textfield_50_2 = FuzzyText(length=60).fuzz()
-    
         email_1 = FuzzyText(length=245, suffix="@gmail.com").fuzz()
         email_2 = FuzzyText(length=20).fuzz()
-
-        password_1 = FuzzyText(length=4097).fuzz()
+        password_1 = FuzzyText(length=5000).fuzz()
         password_2 = FuzzyText(length=4).fuzz()
         password_3 = FuzzyText(length=16, chars=string.digits).fuzz()
-
         categories = []
 
         declined_parameters = [
