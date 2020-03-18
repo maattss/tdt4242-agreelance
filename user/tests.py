@@ -169,7 +169,8 @@ class TestSignupPageDomain(TestCase):
 
         # Configure values used in the success test case
         self.approved_username = FuzzyText(length=20).fuzz()
-        self.approved_textfield = FuzzyText(length=20).fuzz()
+        self.approved_textfield_30 = FuzzyText(length=20).fuzz()
+        self.approved_textfield_50 = FuzzyText(length=40).fuzz()
         self.approved_email_1 = fake.email()
         self.approved_email_2 = fake.email()
         self.approved_password_1 = fake.password()
@@ -237,7 +238,7 @@ class TestSignupPageDomain(TestCase):
                 'state': pairs.textfield_50,
                 'city': pairs.textfield_50,
                 'postal_code': pairs.textfield_50,
-                'street_address': pairs.textfield_50,
+                'street_address': pairs.textfield_50
             }
             form = SignUpForm(data)
 
@@ -250,20 +251,20 @@ class TestSignupPageDomain(TestCase):
     def test_different_email(self):
         data = {
             'username': self.approved_username ,
-            'first_name': self.approved_textfield,
-            'last_name': self.approved_textfield,
+            'first_name': self.approved_textfield_30,
+            'last_name': self.approved_textfield_30,
             'categories': self.approved_categories,
-            'company': self.approved_textfield,
+            'company': self.approved_textfield_30,
             'email': self.approved_email_1,
             'email_confirmation': self.approved_email_2,
             'password1': self.approved_password_1,
             'password2': self.approved_password_1,
-            'phone_number': self.approved_textfield,
-            'country': self.approved_textfield,
-            'state': self.approved_textfield,
-            'city': self.approved_textfield,
-            'postal_code': self.approved_textfield,
-            'street_address': self.approved_textfield,   
+            'phone_number': self.approved_textfield_50,
+            'country': self.approved_textfield_50,
+            'state': self.approved_textfield_50,
+            'city': self.approved_textfield_50,
+            'postal_code': self.approved_textfield_50,
+            'street_address': self.approved_textfield_50   
         }
         form = SignUpForm(data)
         self.assertTrue(form.is_valid()) # Bug in form, this should be false
@@ -272,20 +273,20 @@ class TestSignupPageDomain(TestCase):
     def test_different_passwords(self):
         data = {
             'username': self.approved_username ,
-            'first_name': self.approved_textfield,
-            'last_name': self.approved_textfield,
+            'first_name': self.approved_textfield_30,
+            'last_name': self.approved_textfield_30,
             'categories': self.approved_categories,
-            'company': self.approved_textfield,
+            'company': self.approved_textfield_30,
             'email': self.approved_email_1,
             'email_confirmation': self.approved_email_1,
             'password1': self.approved_password_1,
             'password2': self.approved_password_2,
-            'phone_number': self.approved_textfield,
-            'country': self.approved_textfield,
-            'state': self.approved_textfield,
-            'city': self.approved_textfield,
-            'postal_code': self.approved_textfield,
-            'street_address': self.approved_textfield,   
+            'phone_number': self.approved_textfield_50,
+            'country': self.approved_textfield_50,
+            'state': self.approved_textfield_50,
+            'city': self.approved_textfield_50,
+            'postal_code': self.approved_textfield_50,
+            'street_address': self.approved_textfield_50    
         }
         form = SignUpForm(data)
         self.assertFalse(form.is_valid())
@@ -294,20 +295,20 @@ class TestSignupPageDomain(TestCase):
     def test_valid_form(self):
         data = {
             'username': self.approved_username ,
-            'first_name': self.approved_textfield,
-            'last_name': self.approved_textfield,
+            'first_name': self.approved_textfield_30,
+            'last_name': self.approved_textfield_30,
             'categories': self.approved_categories,
-            'company': self.approved_textfield,
+            'company': self.approved_textfield_30,
             'email': self.approved_email_1,
             'email_confirmation': self.approved_email_1,
             'password1': self.approved_password_1,
             'password2': self.approved_password_1,
-            'phone_number': self.approved_textfield,
-            'country': self.approved_textfield,
-            'state': self.approved_textfield,
-            'city': self.approved_textfield,
-            'postal_code': self.approved_textfield,
-            'street_address': self.approved_textfield,   
+            'phone_number': self.approved_textfield_50,
+            'country': self.approved_textfield_50,
+            'state': self.approved_textfield_50,
+            'city': self.approved_textfield_50,
+            'postal_code': self.approved_textfield_50,
+            'street_address': self.approved_textfield_50  
         }
         form = SignUpForm(data)
         self.assertTrue(form.is_valid())
