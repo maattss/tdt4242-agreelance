@@ -136,38 +136,6 @@ class TestProjectView(TestCase):
         request.user = self.second_user
         response = project_view(request, 1)
         self.assertEqual(response.status_code, 200)
-'''
-class TestAcceptingOffersBugs(TestCase):
-    def setUp(self):
-        self.factory = RequestFactory()
-        self.pCategory = ProjectCategory.objects.create(pk=1)
-
-        self.first_user = User.objects.create_user(
-            pk=1,
-            username='User1',
-            password='guAXb81#cAFV')
-        self.second_user = User.objects.create_user(
-            pk=2,
-            username="User2",
-            password="SwokT2!5LoSf")
-        
-        self.profile = Profile.objects.get(user=self.first_user)
-
-        self.project = Project.objects.create(
-            pk=1,
-            user=self.profile,
-            category=self.pCategory)
-
-        self.task = Task.objects.create(project=self.project)
-
-        self.task_offer = TaskOffer(
-            task=self.task,
-            offerer=self.profile,
-            status='p')
-        self.task_offer.save()
-
-    def test_bugs(self):
-        '''
 
 # Boundary value test for giving project offers
 class TestGiveProjectOffers(TestCase):
@@ -199,3 +167,37 @@ class TestGiveProjectOffers(TestCase):
         }
         form = TaskOfferForm(data)
         self.assertTrue(form.is_valid())
+
+
+'''
+class TestAcceptingOffersBugs(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.pCategory = ProjectCategory.objects.create(pk=1)
+
+        self.first_user = User.objects.create_user(
+            pk=1,
+            username='User1',
+            password='guAXb81#cAFV')
+        self.second_user = User.objects.create_user(
+            pk=2,
+            username="User2",
+            password="SwokT2!5LoSf")
+        
+        self.profile = Profile.objects.get(user=self.first_user)
+
+        self.project = Project.objects.create(
+            pk=1,
+            user=self.profile,
+            category=self.pCategory)
+
+        self.task = Task.objects.create(project=self.project)
+
+        self.task_offer = TaskOffer(
+            task=self.task,
+            offerer=self.profile,
+            status='p')
+        self.task_offer.save()
+
+    def test_bugs(self):
+'''
