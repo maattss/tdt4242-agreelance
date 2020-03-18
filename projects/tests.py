@@ -137,33 +137,67 @@ class TestProjectView(TestCase):
         response = project_view(request, 1)
         self.assertEqual(response.status_code, 200)
 
-# Boundary value test for giving project offers
+# Boundary value test for giving task offers
 class TestGiveProjectOffers(TestCase):
     def setUp(self):
-         # Boundary values for number of characters in fields
-        self.max_title = FuzzyText(length=200)
-        self.max_description = FuzzyText(length=500)
-        self.min = FuzzyText(length=1)
-        
-        # Choosing max and min as above and below zero. 
-        # Price input does not specify any boundaries. 
-        self.max_price = FuzzyInteger(0, 9999)
-        self.min_price = FuzzyInteger(-9999, -1)
+        # Boundary values for number of characters in fields
+        self.normal_title = FuzzyText(length=30)
+        self.above_max_title = FuzzyText(length=201)
+        self.below_max_title = FuzzyText(length=200)
+
+        # Description does not specify any upper boundary
+        self.normal_description = FuzzyText(length=300)
+
+        self.above_min = FuzzyText(length=1)
+        self.below_min = ""
+
+        self.above_max_price = 1000000
+        self.below_max_price = 999999
+        self.normal_price = FuzzyInteger(2, 999998)
+        self.above_min_price = 1
+        self.below_min_price = 0
     
-    def test_max_values(self):
+    def test_above_max_values(self):
         data = {
-            'title': self.max_title.fuzz(),
-            'description': self.max_description.fuzz(),
-            'price': self.max_price.fuzz()
+            'title': self.above_max_title.fuzz(),
+            'description': self.normal_description.fuzz(),
+            'price': self.above_max_price
+        }
+        form = TaskOfferForm(data)
+        self.assertFalse(form.is_valid())
+
+    def test_below_max_values(self):
+        data = {
+            'title': self.below_max_title.fuzz(),
+            'description': self.normal_description.fuzz(),
+            'price': self.below_max_price
+        }
+        form = TaskOfferForm(data)
+        self.assertTrue(form.is_valid())
+    
+    def normal_values(self):
+        data = {
+            'title': self.normal_title.fuzz(),
+            'description': self.normal_description.fuzz(),
+            'price': self.normal_price.fuzz()
         }
         form = TaskOfferForm(data)
         self.assertTrue(form.is_valid())
 
-    def test_min_values(self):
+    def test_above_min_values(self):
         data = {
-            'title': self.min.fuzz(),
-            'description': self.min.fuzz(),
-            'price': self.min_price.fuzz()
+            'title': self.above_min.fuzz(),
+            'description': self.above_min.fuzz(),
+            'price': self.above_min_price
         }
         form = TaskOfferForm(data)
         self.assertTrue(form.is_valid())
+    
+    def test_below_min_values(self):
+        data = {
+            'title': self.below_min,
+            'description': self.below_min,
+            'price': self.below_min_price
+        }
+        form = TaskOfferForm(data)
+        self.assertFalse(form.is_valid())

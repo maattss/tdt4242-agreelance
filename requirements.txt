@@ -6,3 +6,6 @@ django-heroku
 django-taggit
 Faker
 factory-boy
+allpairspy
+coverage
+coverage-badge

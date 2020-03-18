@@ -16,5 +16,3 @@ staging:
   - dpl --provider=heroku --app=agreelance-group12 --api-key=$HEROKU_STAGING_API_KEY
   only:
   - master
-
-#https://docs.gitlab.com/ee/ci/examples/test-and-deploy-python-application-to-heroku.html
