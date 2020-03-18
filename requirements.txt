@@ -7,3 +7,4 @@ django-taggit
 coverage
 Faker
 factory-boy
+allpairspy
