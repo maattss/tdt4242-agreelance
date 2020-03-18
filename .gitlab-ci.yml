@@ -5,8 +5,15 @@ test:
   - apt-get update -qy
   - pip install -r requirements.txt
   - python manage.py test
-  - coverage run --source='.' manage.py test
-  - coverage html
+  # Remove previous data - if any
+  - coverage erase
+  # Run coverage for relevant code
+  - coverage run --source='./home/' manage.py test
+  - coverage run --source='./payment/' manage.py test
+  - coverage run --source='./projects/' manage.py test
+  - coverage run --source='./user/' manage.py test
+  # Write report
+  # - coverage report
   coverage: '/TOTAL.*\s(\d+)%/'
 
 staging:
