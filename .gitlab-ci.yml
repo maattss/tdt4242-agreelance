@@ -5,16 +5,6 @@ test:
   - apt-get update -qy
   - pip install -r requirements.txt
   - python manage.py test
-  # Remove previous data - if any
-  - coverage erase
-  # Run coverage for relevant code
-  - coverage run --source='./home/' manage.py test
-  - coverage run --source='./payment/' manage.py test
-  - coverage run --source='./projects/' manage.py test
-  - coverage run --source='./user/' manage.py test
-  # Write report
-  # - coverage report
-  coverage: '/TOTAL.*\s(\d+)%/'
 
 staging:
   type: deploy
@@ -26,5 +16,3 @@ staging:
   - dpl --provider=heroku --app=agreelance-group12 --api-key=$HEROKU_STAGING_API_KEY
   only:
   - master
-
-#https://docs.gitlab.com/ee/ci/examples/test-and-deploy-python-application-to-heroku.html
