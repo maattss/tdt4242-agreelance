@@ -190,6 +190,4 @@ class TestReviewImplementation(TestCase):
         except:
             pass
         self.assertFalse(db_review)
-
-
         

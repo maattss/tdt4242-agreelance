@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from projects.views import project_view, get_user_task_permissions
+from projects.views import project_view, get_user_task_permissions, new_project, projects_tags
 from projects.models import ProjectCategory, Project, Task, TaskOffer
 from user.models import Profile
 from faker import Faker
@@ -7,6 +7,7 @@ from factory.fuzzy import FuzzyText, FuzzyInteger
 from django.contrib.auth.models import AnonymousUser, User
 from django.test import RequestFactory, TestCase
 from .forms import TaskOfferForm
+from taggit.managers import TaggableManager
 
 # Full statement coverage test of the get_user_task_permission() function
 class TestGetUserTaskPermissions(TestCase):
@@ -167,3 +168,55 @@ class TestGiveProjectOffers(TestCase):
         }
         form = TaskOfferForm(data)
         self.assertTrue(form.is_valid())
+
+
+class TestTagsImplementation(TestCase):
+    def setUp(self):
+        fake = Faker() # Generate fake data using a faker generator
+
+        self.factory = RequestFactory()
+        self.project_category = ProjectCategory.objects.create(pk=1)
+        
+        self.first_user = User.objects.create_user(
+            pk=1,
+            username=fake.user_name(),
+            password=fake.password())
+
+        self.first_profile = Profile.objects.get(user=self.first_user)
+
+        self.project1 = Project.objects.create(
+            pk=1,
+            user=self.first_profile,
+            category=self.project_category)
+        
+        self.project2 = Project.objects.create(
+            pk=2,
+            user=self.first_profile,
+            category=self.project_category)
+
+        self.project1.tags.add('easy', 'cleaning')
+        self.project2.tags.add('garage', 'easy')
+    
+    #Tests if the project is stored in the database with the tags entered
+    def test_create_tag(self):
+        request = self.factory.post('/new_project/', {
+            'title': 'test title',
+            'description': 'test description',
+            'category_id': 1,
+            'tags': 'tag1,tag2,tag3'
+        })
+        request.user = self.first_user
+        response = new_project(request)
+        db_project = None
+        try:
+            db_project = Project.objects.get(title = 'test title')
+        except:
+            pass
+        self.assertEquals(str(db_project.tags.all()), '<QuerySet [<Tag: tag1>, <Tag: tag2>, <Tag: tag3>]>')
+    
+    def test_tag_filter(self):
+        request = self.factory.get('/projects_tags/', {'searched_tag' : 'easy'})
+        response = projects_tags(request, 1, 'easy')
+        print(response.reason_phrase)
+        self.assertEqual(response.status_code, 200)
+
