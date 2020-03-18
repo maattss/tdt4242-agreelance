@@ -5,7 +5,7 @@ test:
   - apt-get update -qy
   - pip install -r requirements.txt
   - python manage.py test
-  - coverage run --source='.' manage.py test the-app-you-want-to-test
+  - coverage run --source='.' manage.py test
   - coverage html
   coverage: '/TOTAL.*\s(\d+)%/'
 
