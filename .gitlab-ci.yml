@@ -5,6 +5,7 @@ test:
   - apt-get update -qy
   - pip install -r requirements.txt
   - python manage.py test
+  - coverage report -m
   coverage: '/TOTAL.*\s(\d+)%/'
 
 staging:
