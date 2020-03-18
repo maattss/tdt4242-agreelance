@@ -47,14 +47,6 @@ INSTALLED_APPS = [
     'taggit'
 ]
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-#Code coverage
-NOSE_ARGS = [
-    '--with-coverage',
-    '--cover-package=projects.views',
-    '--cover-erase',
-]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
