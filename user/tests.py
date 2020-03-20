@@ -2,7 +2,7 @@ from django.test import TestCase
 from projects.models import ProjectCategory
 from faker import Faker
 from factory.fuzzy import FuzzyText
-from .forms import SignUpForm
+from .forms import SignUpForm, ReviewForm
 from .models import Profile, Review
 from django.contrib.auth.models import AnonymousUser, User
 from projects.models import ProjectCategory, Project, Task, TaskOffer
@@ -315,6 +315,7 @@ class TestSignupPageDomain(TestCase):
         form = SignUpForm(data)
         self.assertTrue(form.is_valid())
     
+#Contains Implementation and System tests for reviews
 class TestReviewImplementation(TestCase):
     def setUp(self):
         fake = Faker() # Generate fake data using a faker generator
@@ -371,6 +372,9 @@ class TestReviewImplementation(TestCase):
                 reviewed=self.second_user,
                 rating=3,
                 comment='It was okay')
+        
+        self.over_valid_rating = 999
+        self.negative_rating = -999
 #first_user and third user have worked together and no review exists in the database. The request should be stored in database.
     def test_valid_review(self):
         request = self.factory.post('/user/set_review/', {
@@ -426,6 +430,77 @@ class TestReviewImplementation(TestCase):
             pass
         self.assertFalse(db_review)
     
+    def test_above_max_rating(self):
+        data = {
+            'rating': self.over_valid_rating,
+            'comment': 'Rating over 5 shouldnt be possible',
+
+        }
+        form = ReviewForm(data)
+        self.assertFalse(form.is_valid())
+
+    def test_negative_rating(self):
+        data = {
+            'rating': self.negative_rating,
+            'comment': 'Under 1 shouldnt be possible',
+
+        }
+        form = ReviewForm(data)
+        self.assertFalse(form.is_valid())
+
+    #Tests making a review with invalid reviewed_id
+    def test_invalid_reviewed_user(self):
+        request = self.factory.post('/user/set_review/', {
+            'rating': 2,
+            'comment': 'Testing'
+        })
+        request.user = None
+        response = None
+        try:    
+            request.user = self.first_user
+            response = review(request, 87678)
+        except:
+            pass
+
+        self.assertFalse(response)
+    
+    #Tests making a review with invalid reviewer_id
+    def test_invalid_reviewed_user(self):
+        request = self.factory.post('/user/set_review/', {
+            'rating': 2,
+            'comment': 'Testing'
+        })
+        request.user = None
+        response = None
+        try:    
+            request.user = Profile.objects.get(id=87678)
+            response = review(request, self.third_profile)
+        except:
+            pass
+
+        self.assertFalse(response)
+    
+    #Tests sql injection vulnerability by checking if the entire string is stored as a data
+    def test_strange_comment(self):
+        request = self.factory.post('/user/set_review/', {
+            'rating': 5,
+            'comment': '"select * from user_review where 1=1"'
+        })
+        request.user = self.first_user
+        response = review(request, self.third_user.id)
+        db_review = None
+        try:
+            db_review = Review.objects.get(reviewer=self.first_profile,
+                reviewed=self.third_user,
+                rating=5,
+                comment='"select * from user_review where 1=1"')
+        except:
+            pass
+        self.assertTrue(db_review)
+
+
+
+
 """
 # DEPRECATED - 2-way domain tests of the sign-up page - DEPRECATED
 class TestSignupPageDomainDeprecated(TestCase):

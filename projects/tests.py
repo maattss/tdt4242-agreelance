@@ -204,7 +204,7 @@ class TestGiveProjectOffers(TestCase):
         self.assertFalse(form.is_valid())
 
 
-
+#Contains Implementation and System tests for reviews
 class TestTagsImplementation(TestCase):
     def setUp(self):
         fake = Faker() # Generate fake data using a faker generator
@@ -257,11 +257,62 @@ class TestTagsImplementation(TestCase):
             with self.subTest():
                 self.assertEquals(str(object.tags.all()), '<QuerySet [<Tag: tag1>, <Tag: tag2>, <Tag: tag3>]>')
 
-        
+    #Tests sql injection vulnerability by checking if the entire string is stored as a data.
+    def test_strange_tags(self):
+        request = self.factory.post('/new_project/', {
+            'title': 'test title',
+            'description': 'test description',
+            'category_id': 2,
+            'tags': '"select * from user_review where 1=1", "DROP DATABASE"'
+        })
+        request.user = self.first_user
+        response = new_project(request)
+        db_project = None
+        try:
+            db_project = Project.objects.get(title = 'test title')
+        except:
+            pass
+        self.assertEquals(str(db_project.tags.all()), '<QuerySet [<Tag: select * from user_review where 1=1>, <Tag: DROP DATABASE>]>')
+    
     #Tests if the expected projects are filtered through with a given tag
     def test_tag_filter(self):
         all_projects = Project.objects.all()
         response = filter_tags(all_projects, self.project_category1.id, 'easy')
         self.assertEquals(response, [self.project1, self.project2])
+
+
+class TestAcceptingOffers(TestCase):
+    def setUp(self):
+        fake = Faker() # Generate fake data using a faker generator
+        self.factory = RequestFactory()
+        self.project_category = ProjectCategory.objects.create(pk=1)
+
+        self.first_user = User.objects.create_user(
+            pk=1,
+            username=fake.user_name(),
+            password=fake.password())
+        self.second_user = User.objects.create_user(
+            pk=2,
+            username=fake.user_name(),
+            password=fake.password())
+        
+        self.first_profile = Profile.objects.get(user=self.first_user)
+
+        self.project = Project.objects.create(
+            pk=1,
+            user=self.first_profile,
+            category=self.project_category)
+
+        self.task = Task.objects.create(project=self.project)
+
+        self.task_offer = TaskOffer(
+            task=self.task,
+            offerer=self.first_profile)
+        self.task_offer.save()
+    
+    def test_accepting_function(self):
+        offer = self.task.accepted_task_offer()
+        #print(offer)
+
 
     
