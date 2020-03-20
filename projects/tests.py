@@ -282,7 +282,7 @@ class TestTagsImplementation(TestCase):
         response = filter_tags(all_projects, self.project_category1.id, 'easy')
         self.assertEquals(response, [self.project1, self.project2])
 
-
+'''
 class TestAcceptingOffers(TestCase):
     def setUp(self):
         fake = Faker() # Generate fake data using a faker generator
@@ -297,8 +297,14 @@ class TestAcceptingOffers(TestCase):
             pk=2,
             username=fake.user_name(),
             password=fake.password())
+        self.third_user = User.objects.create_user(
+            pk=2,
+            username=fake.user_name(),
+            password=fake.password())
         
         self.first_profile = Profile.objects.get(user=self.first_user)
+        self.second_profile = Profile.objects.get(user=self.second_user)
+        self.third_profile = Profile.objects.get(user=self.third_user)
 
         self.project = Project.objects.create(
             pk=1,
@@ -309,12 +315,18 @@ class TestAcceptingOffers(TestCase):
 
         self.task_offer = TaskOffer(
             task=self.task,
-            offerer=self.first_profile)
+            offerer=self.first_profile,
+            status = 'a')
+        
+        self.task_offer = TaskOffer(
+            task=self.task,
+            offerer=self.third_profile,
+            status = 'a')
         self.task_offer.save()
     
     def test_accepting_function(self):
         offer = self.task.accepted_task_offer()
-        #print(offer)
-
+        print(offer.id)
+'''
 
     
