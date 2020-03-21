@@ -9,6 +9,8 @@ from django.test import RequestFactory, TestCase
 from .forms import TaskOfferForm
 from taggit.managers import TaggableManager
 from unittest import skip
+from django.http import Http404
+
 
 # Full statement coverage test of the get_user_task_permission() function
 class TestGetUserTaskPermissions(TestCase):
@@ -285,19 +287,19 @@ class TestTagsImplementation(TestCase):
 # Accept offer output coverage tests
 class TestAcceptingOffers(TestCase):
     def setUp(self):
-        fake = Faker() # Generate fake data using a faker generator
+        self.fake = Faker() # Generate fake data using a faker generator
         
         self.factory = RequestFactory()
         self.project_category = ProjectCategory.objects.create(pk=1)
 
         self.first_user = User.objects.create_user(
             pk=1,
-            username=fake.user_name(),
-            password=fake.password())
+            username=self.fake.user_name(),
+            password=self.fake.password())
         self.second_user = User.objects.create_user(
             pk=2,
-            username=fake.user_name(),
-            password=fake.password())
+            username=self.fake.user_name(),
+            password=self.fake.password())
         
         self.first_profile = Profile.objects.get(user=self.first_user)
         self.second_profile = Profile.objects.get(user=self.second_user)
@@ -308,43 +310,79 @@ class TestAcceptingOffers(TestCase):
             category=self.project_category)
 
         self.first_task = Task.objects.create(project=self.project)
-        self.second_task = Task.objects.create(project=self.project)
 
         self.first_task_offer = TaskOffer(
             task=self.first_task,
-            offerer=self.second_profile_profile,
+            offerer=self.second_profile,
             status = 'o')
         
         self.first_task_offer.save()
- 
 
     def test_accepted_output(self):
-        request = self.factory.post('/projects/' + self.first_task.pk, {
-            'status': 'a',
-            'feedback': 'Response Feedback',
+        status = "a"
+        feedback = self.fake.sentence(nb_words=6)
+        request = self.factory.post('/projects/' + str(self.first_task.pk), {
+            'status': status,
+            'feedback': feedback,
             'taskofferid': self.first_task_offer.pk,
             'offer_response': ''
         })
         request.user = self.first_user
-
-        # Accept response
+        
+        project_view(request, self.project.pk)
         offer = TaskOffer.objects.get(task_id=self.first_task.pk)
-        print("Offer" + offer)
-        assert(offer.status == 'a');
+
+        self.assertEqual(offer.status, status)
+        self.assertEqual(offer.feedback, feedback)
     
     def test_pending_output(self):
-        # Submit an offer
+        status = "p"
+        feedback = self.fake.sentence(nb_words=6)
+        request = self.factory.post('/projects/' + str(self.first_task.pk) + "/", {
+            'status': status,
+            'feedback': feedback,
+            'taskofferid': self.first_task_offer.pk,
+            'offer_response': ''
+        })
+        request.user = self.first_user
+        
+        project_view(request, self.project.pk)
+        offer = TaskOffer.objects.get(task_id=self.first_task.pk)
 
-        # Send pending response
-        pass
+        self.assertEqual(offer.status, status)
+        self.assertEqual(offer.feedback, feedback)
 
     def test_declined_output(self):
-        # Submit an offer
+        status = "d"
+        feedback = self.fake.sentence(nb_words=6)
+        request = self.factory.post('/projects/' + str(self.first_task.pk) + "/", {
+            'status': status,
+            'feedback': feedback,
+            'taskofferid': self.first_task_offer.pk,
+            'offer_response': ''
+        })
+        request.user = self.first_user
+        
+        project_view(request, self.project.pk)
+        offer = TaskOffer.objects.get(task_id=self.first_task.pk)
 
-        # Decline the offer
-        pass 
-
+        self.assertEqual(offer.status, status)
+        self.assertEqual(offer.feedback, feedback)
+   
     def test_not_existing_offer_output(self):
-        # Try to accept a non-existing offer
-        pass 
-    
+        status = "a"
+        feedback = self.fake.sentence(nb_words=6)
+        
+        request = self.factory.post('/projects/' + str(self.first_task.pk) + "/", {
+            'status': status,
+            'feedback': feedback,
+            'taskofferid': self.fake.random_int(min=100),
+            'offer_response': ''
+        })
+        request.user = self.first_user
+        success = True
+        try:
+            project_view(request, self.project.pk)
+        except Http404:
+            success = False
+        self.assertFalse(success)

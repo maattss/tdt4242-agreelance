@@ -12,6 +12,7 @@ from .views import review
 import string
 from allpairspy import AllPairs
 from collections import OrderedDict
+from unittest import skip
 
 # Boundary value tests for sign-up page
 class TestSignupPageBoundary(TestCase):
@@ -419,7 +420,7 @@ class TestReviewImplementation(TestCase):
             'rating': 2,
             'comment': 'This shouldnt be possible either'
         })
-        request.user = self.first_user
+        request.user = self.first_user # Set logged in user
         response = review(request, self.second_user.id)
         db_review = None
         try:
@@ -472,7 +473,7 @@ class TestReviewImplementation(TestCase):
             'comment': '"select * from user_review where 1=1"'
         })
         request.user = self.first_user
-        # response = review(request, self.third_user.id)
+        review(request, self.third_user.id)
         db_review = None
         try:
             db_review = Review.objects.get(reviewer=self.first_profile,
