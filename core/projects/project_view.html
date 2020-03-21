@@ -67,6 +67,9 @@
                 <div class="modal-body">
                   <h3>Offer</h3>
                     <h4 class="mt-3">{{task_accepted_offer.title}}</h4>
+                    <p>User: {{task_accepted_offer.offerer.user.username}}</p>
+                    <p>Rating: {{task_accepted_offer.offerer.user.getAvgRating}} </p>
+                    <a class="btn btn-sm btn-primary" href="/user/{{task_accepted_offer.offerer.user.id}}">See {{task_accepted_offer.offerer.user.username}}'s profile</a>
                     <p>Status: {{task_accepted_offer.get_status_display}}</p>
                     <p>Description: <br> {{task_accepted_offer.description}}</p>
                     <p>Price offered: {{task_accepted_offer.price}} </p>
@@ -106,6 +109,9 @@
                 <div class="modal-body">
                   <h3>Offer</h3>
                     <h4 class="mt-3">{{task_offer.title}}</h4>
+                    <p>User: {{task_offer.offerer.user.username}}</p>
+                    <p>Rating: {{task_offer.offerer.user.getAvgRating}}</p>
+                    <a class="btn btn-sm btn-primary" href="/user/{{task_offer.offerer.user.id}}">See {{task_offer.offerer.user.username}}'s profile</a>
                     <p>Status: {{task_offer.get_status_display}}</p>
                     <p>Description: <br> {{task_offer.description}}</p>
                     <p>Price offered: {{task_offer.price}} </p>
