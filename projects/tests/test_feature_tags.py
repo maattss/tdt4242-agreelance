@@ -1,15 +1,11 @@
 from django.test import TestCase
-from projects.views import project_view, get_user_task_permissions, new_project, projects_tags, filter_tags
-from projects.models import ProjectCategory, Project, Task, TaskOffer
+from projects.views import  new_project, filter_tags
+from projects.models import ProjectCategory, Project
 from user.models import Profile
 from faker import Faker
-from factory.fuzzy import FuzzyText, FuzzyInteger
-from django.contrib.auth.models import AnonymousUser, User
-from django.test import RequestFactory, TestCase
-from projects.forms import TaskOfferForm
-from taggit.managers import TaggableManager
+from django.contrib.auth.models import User
+from django.test import RequestFactory
 from unittest import skip
-from django.http import Http404
 
 # Integration and System tests for reviews
 class TestTagsImplementation(TestCase):

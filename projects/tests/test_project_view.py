@@ -1,15 +1,9 @@
-from django.test import TestCase
-from projects.views import project_view, get_user_task_permissions, new_project, projects_tags, filter_tags
+from django.test import TestCase, RequestFactory
+from projects.views import project_view
 from projects.models import ProjectCategory, Project, Task, TaskOffer
 from user.models import Profile
 from faker import Faker
-from factory.fuzzy import FuzzyText, FuzzyInteger
-from django.contrib.auth.models import AnonymousUser, User
-from django.test import RequestFactory, TestCase
-from projects.forms import TaskOfferForm
-from taggit.managers import TaggableManager
-from unittest import skip
-from django.http import Http404
+from django.contrib.auth.models import User
 
 # Full statement coverage test of the project_view() function
 class TestProjectView(TestCase):

@@ -1,18 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from projects.models import ProjectCategory
 from faker import Faker
-from factory.fuzzy import FuzzyText
-from user.forms import SignUpForm, ReviewForm
-from django.contrib.auth.models import AnonymousUser, User
-from projects.models import ProjectCategory, Project, Task, TaskOffer
+from user.forms import ReviewForm
+from django.contrib.auth.models import User
+from projects.models import Project, Task, TaskOffer
 from user.models import Profile, Review
-from user.review_functions import confirm_duplicate_review, confirm_work_relationship
-from django.test import RequestFactory, TestCase
 from user.views import review
-import string
-from allpairspy import AllPairs
-from collections import OrderedDict
-from unittest import skip
 
 # Contains Implementation and System tests for reviews - rating and comment features
 class TestReviewImplementation(TestCase):
