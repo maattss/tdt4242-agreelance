@@ -379,7 +379,11 @@ def task_view(request, project_id, task_id):
     if user_permissions['read'] or user_permissions['write'] or user_permissions['modify'] or user_permissions['owner'] or user_permissions['view_task']:
         deliveries = task.delivery.all()
         team_files = []
-        avg_rating = averageRating(accepted_task_offer.offerer.user_id)
+        avg_rating = None
+        try:
+            avg_rating = averageRating(accepted_task_offer.offerer.user_id)
+        except:
+            pass
         per = {}
         for f in task.files.all():
             per[f.name()] = {}

@@ -7,13 +7,14 @@ def getReviews(reviewed_id):
         reviewed = User.objects.get(id=reviewed_id))
 
 def averageRating(user_id):
+    print("JAJAJ")
     sum = 0
     reviews = getReviews(user_id)
     for review in reviews:
         sum += review.rating
     if(len(reviews) > 0):
         return round(sum/len(reviews), 2)
-    else:
+    else:   
         return 0
 
 def confirm_work_relationship(reviewer, reviewed):
@@ -41,3 +42,10 @@ def confirm_duplicate_review(reviewer, reviewed):
             duplicate = True
     
     return duplicate
+
+
+def getAvgRating(self):
+    return averageRating(self.id)
+
+
+User.add_to_class("getAvgRating", getAvgRating)
