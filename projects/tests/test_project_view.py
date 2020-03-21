@@ -15,12 +15,12 @@ class TestProjectView(TestCase):
 
         self.first_user = User.objects.create_user(
             pk=1,
-            username=fake.user_name(),
-            password=fake.password())
+            username=self.fake.user_name(),
+            password=self.fake.password())
         self.second_user = User.objects.create_user(
             pk=2,
-            username=fake.user_name(),
-            password=fake.password())
+            username=self.fake.user_name(),
+            password=self.fake.password())
         
         self.profile = Profile.objects.get(user=self.first_user)
 
@@ -61,7 +61,7 @@ class TestProjectView(TestCase):
             'offer_submit': '',
             'title': self.fake.sentence(nb_words=3),
             'description': self.fake.sentence(nb_words=5),
-            'price': self.fake.random_int(min=10, max=100000, steps=10),
+            'price': self.fake.random_int(min=10, max=100000, step=10),
             'taskvalue': 1
         })
         request.user = self.second_user
