@@ -48,17 +48,7 @@ def projects(request, category_id):
 
 def projects_tags(request, category_id, tag_name):
     all_projects = Project.objects.all()
-    relevant_projects = []
-
-    for project in all_projects: # Filter project that does is not in chosen category
-        if str(project.category.id) == str(category_id):
-            tag_included = False
-            for tag in project.tags.all(): # Filter projects that does not include relevant tag
-                if str(tag_name) == str(tag):
-                    tag_included = True
-                    break
-            if tag_included:
-                relevant_projects.append(project)
+    relevant_projects = filter_tags(all_projects, category_id, tag_name)
 
     project_categories = ProjectCategory.objects.all()
     current_category = project_categories[int(category_id)-1]
@@ -74,6 +64,21 @@ def projects_tags(request, category_id, tag_name):
             'searched_tag': tag_name,
         }
     )
+
+
+def filter_tags(all_projects, category_id, tag_name):
+    relevant_projects = []
+    for project in all_projects: # Filter project that does is not in chosen category
+        if str(project.category.id) == str(category_id):
+            tag_included = False
+            for tag in project.tags.all(): # Filter projects that does not include relevant tag
+                if str(tag_name) == str(tag):
+                    tag_included = True
+                    break
+            if tag_included:
+                relevant_projects.append(project)
+    return relevant_projects
+
 
 @login_required
 def new_project(request):
