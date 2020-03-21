@@ -1,14 +1,18 @@
+"""
+    TODO: Remove this class
+"""
+
 from django.test import TestCase
 from projects.models import ProjectCategory
 from faker import Faker
 from factory.fuzzy import FuzzyText
-from .forms import SignUpForm, ReviewForm
-from .models import Profile, Review
+from user.forms import SignUpForm, ReviewForm
 from django.contrib.auth.models import AnonymousUser, User
 from projects.models import ProjectCategory, Project, Task, TaskOffer
-from .review_functions import confirm_duplicate_review, confirm_work_relationship
+from user.models import Profile, Review
+from user.review_functions import confirm_duplicate_review, confirm_work_relationship
 from django.test import RequestFactory, TestCase
-from .views import review
+from user.views import review
 import string
 from allpairspy import AllPairs
 from collections import OrderedDict

@@ -1,3 +1,7 @@
+"""
+    TODO: Remove this class
+"""
+
 from django.test import TestCase
 from projects.views import project_view, get_user_task_permissions, new_project, projects_tags, filter_tags
 from projects.models import ProjectCategory, Project, Task, TaskOffer
@@ -6,7 +10,7 @@ from faker import Faker
 from factory.fuzzy import FuzzyText, FuzzyInteger
 from django.contrib.auth.models import AnonymousUser, User
 from django.test import RequestFactory, TestCase
-from .forms import TaskOfferForm
+from projects.forms import TaskOfferForm
 from taggit.managers import TaggableManager
 from unittest import skip
 from django.http import Http404
