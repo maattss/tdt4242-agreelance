@@ -315,7 +315,7 @@ class TestSignupPageDomain(TestCase):
         form = SignUpForm(data)
         self.assertTrue(form.is_valid())
     
-#Contains Implementation and System tests for reviews
+# Contains Implementation and System tests for reviews
 class TestReviewImplementation(TestCase):
     def setUp(self):
         fake = Faker() # Generate fake data using a faker generator
@@ -375,7 +375,8 @@ class TestReviewImplementation(TestCase):
         
         self.over_valid_rating = 999
         self.negative_rating = -999
-#first_user and third user have worked together and no review exists in the database. The request should be stored in database.
+
+    # first_user and third user have worked together and no review exists in the database. The request should be stored in database.
     def test_valid_review(self):
         request = self.factory.post('/user/set_review/', {
             'rating': 5,
@@ -393,7 +394,7 @@ class TestReviewImplementation(TestCase):
             pass
         self.assertTrue(db_review)
 
-#first_user and fourth_user haven't worked together. The request should not be stored since confirm_work_relationship returns False
+    # first_user and fourth_user haven't worked together. The request should not be stored since confirm_work_relationship returns False
     def test_no_relationship_review(self):
         request = self.factory.post('/user/set_review/', {
             'rating': 1,
@@ -412,7 +413,7 @@ class TestReviewImplementation(TestCase):
         self.assertFalse(db_review)
 
 
-#There is already a review from first_user on second_user from setUp. The request should not be stored since confirm_duplicate_review returns True
+    # There is already a review from first_user on second_user from setUp. The request should not be stored since confirm_duplicate_review returns True
     def test_duplicate_review(self):
         request = self.factory.post('/user/set_review/', {
             'rating': 2,
@@ -448,7 +449,7 @@ class TestReviewImplementation(TestCase):
         form = ReviewForm(data)
         self.assertFalse(form.is_valid())
 
-    #Tests making a review with invalid reviewed_id
+    # Test making a review with invalid reviewed_id
     def test_invalid_reviewed_user(self):
         request = self.factory.post('/user/set_review/', {
             'rating': 2,
@@ -464,30 +465,14 @@ class TestReviewImplementation(TestCase):
 
         self.assertFalse(response)
     
-    #Tests making a review with invalid reviewer_id
-    def test_invalid_reviewed_user(self):
-        request = self.factory.post('/user/set_review/', {
-            'rating': 2,
-            'comment': 'Testing'
-        })
-        request.user = None
-        response = None
-        try:    
-            request.user = Profile.objects.get(id=87678)
-            response = review(request, self.third_profile)
-        except:
-            pass
-
-        self.assertFalse(response)
-    
-    #Tests sql injection vulnerability by checking if the entire string is stored as a data
+    # Test sql injection vulnerability by checking if the entire string is stored as a data
     def test_strange_comment(self):
         request = self.factory.post('/user/set_review/', {
             'rating': 5,
             'comment': '"select * from user_review where 1=1"'
         })
         request.user = self.first_user
-        response = review(request, self.third_user.id)
+        # response = review(request, self.third_user.id)
         db_review = None
         try:
             db_review = Review.objects.get(reviewer=self.first_profile,
@@ -497,9 +482,6 @@ class TestReviewImplementation(TestCase):
         except:
             pass
         self.assertTrue(db_review)
-
-
-
 
 """
 # DEPRECATED - 2-way domain tests of the sign-up page - DEPRECATED

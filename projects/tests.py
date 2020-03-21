@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from projects.views import project_view, get_user_task_permissions, new_project, projects_tags, filter_tags
 from projects.models import ProjectCategory, Project, Task, TaskOffer
 from user.models import Profile
@@ -281,10 +281,12 @@ class TestTagsImplementation(TestCase):
         response = filter_tags(all_projects, self.project_category1.id, 'easy')
         self.assertEquals(response, [self.project1, self.project2])
 
-'''
+
+# Accept offer output coverage tests
 class TestAcceptingOffers(TestCase):
     def setUp(self):
         fake = Faker() # Generate fake data using a faker generator
+        
         self.factory = RequestFactory()
         self.project_category = ProjectCategory.objects.create(pk=1)
 
@@ -296,36 +298,53 @@ class TestAcceptingOffers(TestCase):
             pk=2,
             username=fake.user_name(),
             password=fake.password())
-        self.third_user = User.objects.create_user(
-            pk=2,
-            username=fake.user_name(),
-            password=fake.password())
         
         self.first_profile = Profile.objects.get(user=self.first_user)
         self.second_profile = Profile.objects.get(user=self.second_user)
-        self.third_profile = Profile.objects.get(user=self.third_user)
 
         self.project = Project.objects.create(
             pk=1,
             user=self.first_profile,
             category=self.project_category)
 
-        self.task = Task.objects.create(project=self.project)
+        self.first_task = Task.objects.create(project=self.project)
+        self.second_task = Task.objects.create(project=self.project)
 
-        self.task_offer = TaskOffer(
-            task=self.task,
-            offerer=self.first_profile,
-            status = 'a')
+        self.first_task_offer = TaskOffer(
+            task=self.first_task,
+            offerer=self.second_profile_profile,
+            status = 'o')
         
-        self.task_offer = TaskOffer(
-            task=self.task,
-            offerer=self.third_profile,
-            status = 'a')
-        self.task_offer.save()
-    
-    def test_accepting_function(self):
-        offer = self.task.accepted_task_offer()
-        print(offer.id)
-'''
+        self.first_task_offer.save()
+ 
 
+    def test_accepted_output(self):
+        request = self.factory.post('/projects/' + self.first_task.pk, {
+            'status': 'a',
+            'feedback': 'Response Feedback',
+            'taskofferid': self.first_task_offer.pk,
+            'offer_response': ''
+        })
+        request.user = self.first_user
+
+        # Accept response
+        offer = TaskOffer.objects.get(task_id=self.first_task.pk)
+        print("Offer" + offer)
+        assert(offer.status == 'a');
+    
+    def test_pending_output(self):
+        # Submit an offer
+
+        # Send pending response
+        pass
+
+    def test_declined_output(self):
+        # Submit an offer
+
+        # Decline the offer
+        pass 
+
+    def test_not_existing_offer_output(self):
+        # Try to accept a non-existing offer
+        pass 
     
