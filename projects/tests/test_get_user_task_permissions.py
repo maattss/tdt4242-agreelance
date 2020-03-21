@@ -3,8 +3,7 @@ from projects.views import get_user_task_permissions
 from projects.models import ProjectCategory, Project, Task, TaskOffer
 from user.models import Profile
 from faker import Faker
-from django.contrib.auth.models importUser
-from django.test import RequestFactory
+from django.contrib.auth.models import User
 
 # Full statement coverage test of the get_user_task_permission() function
 class TestGetUserTaskPermissions(TestCase):

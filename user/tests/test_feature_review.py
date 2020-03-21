@@ -7,7 +7,7 @@ from projects.models import Project, Task, TaskOffer
 from user.models import Profile, Review
 from user.views import review
 
-# Contains Implementation and System tests for reviews - rating and comment features
+# Integration and system tests for reviews - rating and comment features
 class TestReviewImplementation(TestCase):
     def setUp(self):
         fake = Faker() # Generate fake data using a faker generator
