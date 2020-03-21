@@ -9,7 +9,6 @@ class TestSignupPageBoundary(TestCase):
     def setUp(self):
         fake = Faker() # Generate fake data using a faker generator
 
-        # Boundary values for number of characters in fields
         self.above_max_username = FuzzyText(length=151)
         self.below_max_username = FuzzyText(length=150)
         self.normal_username = fake.user_name()

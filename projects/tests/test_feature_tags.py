@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.test import RequestFactory
 from unittest import skip
 
-# Integration and System tests for reviews
+# Integration and system tests for reviews
 class TestTagsImplementation(TestCase):
     def setUp(self):
         fake = Faker() # Generate fake data using a faker generator
@@ -56,6 +56,7 @@ class TestTagsImplementation(TestCase):
             test_objects.append(db_category)
         except:
             pass
+        
         for object in test_objects:
             with self.subTest():
                 self.assertEquals(str(object.tags.all()), '<QuerySet [<Tag: tag1>, <Tag: tag2>, <Tag: tag3>]>')

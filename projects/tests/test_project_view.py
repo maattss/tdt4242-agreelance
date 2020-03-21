@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 # Full statement coverage test of the project_view() function
 class TestProjectView(TestCase):
     def setUp(self):
-        fake = Faker() # Generate fake data using a faker generator
+        self.fake = Faker() # Generate fake data using a faker generator
 
         self.factory = RequestFactory()
         self.project_category = ProjectCategory.objects.create(pk=1)
@@ -41,7 +41,7 @@ class TestProjectView(TestCase):
             'offer_response': '',
             'taskofferid': 1,
             'status': 'a',
-            'feedback': 'Feedback test'
+            'feedback': self.fake.sentence(nb_words=10)
         })
         request.user = self.first_user
         response = project_view(request, 1)
@@ -59,9 +59,9 @@ class TestProjectView(TestCase):
     def test_offer_submit(self):
         request = self.factory.post('/projects_all/', {
             'offer_submit': '',
-            'title': 'Test title',
-            'description': 'Test description',
-            'price': 100,
+            'title': self.fake.sentence(nb_words=3),
+            'description': self.fake.sentence(nb_words=5),
+            'price': self.fake.random_int(min=10, max=100000, steps=10),
             'taskvalue': 1
         })
         request.user = self.second_user

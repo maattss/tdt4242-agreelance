@@ -7,11 +7,9 @@ import string
 from allpairspy import AllPairs
 from collections import OrderedDict
 
-
 # 2-way domain tests of the sign-up page
 class TestSignupPageDomain(TestCase):
     def setUp(self):
-        self.name = "tests"
         fake = Faker() # Generate fake data using a faker generator
 
         # Configure values used in the success test case

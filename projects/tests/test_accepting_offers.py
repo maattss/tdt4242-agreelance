@@ -109,3 +109,19 @@ class TestAcceptingOffers(TestCase):
         except Http404:
             success = False
         self.assertFalse(success)
+
+    """ TODO: Extract common funtionallity to helper functions
+    def post_response(self, status):
+        status = status
+        feedback = self.fake.sentence(nb_words=6)
+        request = self.factory.post('/projects/' + str(self.first_task.pk) + "/", {
+            'status': status,
+            'feedback': feedback,
+            'taskofferid': self.first_task_offer.pk,
+            'offer_response': ''
+        })
+        request.user = self.first_user
+        
+        project_view(request, self.project.pk)
+    
+    """
