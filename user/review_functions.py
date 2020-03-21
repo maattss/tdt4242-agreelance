@@ -7,7 +7,6 @@ def getReviews(reviewed_id):
         reviewed = User.objects.get(id=reviewed_id))
 
 def averageRating(user_id):
-    print("JAJAJ")
     sum = 0
     reviews = getReviews(user_id)
     for review in reviews:
