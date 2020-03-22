@@ -36,7 +36,7 @@ class TestTagsImplementation(TestCase):
 
         self.project1.tags.add('easy', 'cleaning')
         self.project2.tags.add('garage', 'easy')
-    
+    #Test if the "easy" tag from setUp is stored in the database
     def test_get_tag(self):
         tag = None
         try:
