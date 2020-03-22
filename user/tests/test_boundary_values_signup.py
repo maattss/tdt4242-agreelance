@@ -4,6 +4,7 @@ from faker import Faker
 from factory.fuzzy import FuzzyText
 from user.forms import SignUpForm
 import copy
+from unittest import skip
 
 # Boundary value tests for sign-up page
 class TestSignupPageBoundary(TestCase):
@@ -79,6 +80,7 @@ class TestSignupPageBoundary(TestCase):
                 valid_data_copy["password2"] = item[1]
                 form = SignUpForm(valid_data_copy)
                 with self.subTest(form=form):
+                    # Password has a limit on 4096 characters, i.e. this test should fail
                     self.assertTrue(form.is_valid())
             else:
                 valid_data_copy[item[0]] = item[1]
