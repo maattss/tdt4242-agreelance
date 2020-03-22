@@ -292,6 +292,7 @@ def get_user_task_permissions(user, task):
 
 @login_required
 def task_view(request, project_id, task_id):
+    # TODO: This is the method
     user = request.user
     project = Project.objects.get(pk=project_id)
     task = Task.objects.get(pk=task_id)

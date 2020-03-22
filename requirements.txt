@@ -4,8 +4,7 @@ django-icons==0.1.0
 pytz==2018.4
 django-heroku
 django-taggit
+coverage
 Faker
 factory-boy
 allpairspy
-coverage
-coverage-badge

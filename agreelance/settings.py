@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'django_icons',
     'payment.apps.PaymentConfig',
-    'taggit',
+    'taggit'
 ]
 
 MIDDLEWARE = [
