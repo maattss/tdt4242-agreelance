@@ -66,9 +66,6 @@ class TestReviewImplementation(TestCase):
             rating=self.fake.random_int(min=1, max=5),
             comment=self.fake.sentence(nb_words=10)
         )
-        
-        self.over_valid_rating = 999
-        self.negative_rating = -999
 
     # First_user and third user have worked together and no review exists in the database. 
     # The request should be stored in database.
