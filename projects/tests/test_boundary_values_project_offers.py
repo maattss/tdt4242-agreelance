@@ -1,6 +1,7 @@
 from django.test import TestCase
 from factory.fuzzy import FuzzyText, FuzzyInteger
 from projects.forms import TaskOfferForm
+import copy
 
 # Boundary value test for giving task offers
 class TestGiveProjectOffers(TestCase):
@@ -28,8 +29,15 @@ class TestGiveProjectOffers(TestCase):
             'description': self.normal_description.fuzz(),
             'price': self.above_max_price
         }
-        form = TaskOfferForm(data)
-        self.assertFalse(form.is_valid())
+        valid_data = get_valid_data(self)
+        for item in data.items():
+            if(item[0] == "description"): # No max limit for description
+                continue
+            valid_data_copy = copy.copy(valid_data)
+            valid_data_copy[item[0]] = item[1]
+            form = TaskOfferForm(valid_data_copy)
+            with self.subTest(form=form):
+                self.assertFalse(form.is_valid())
 
     def test_below_max_values(self):
         data = {
@@ -41,11 +49,7 @@ class TestGiveProjectOffers(TestCase):
         self.assertTrue(form.is_valid())
     
     def normal_values(self):
-        data = {
-            'title': self.normal_title.fuzz(),
-            'description': self.normal_description.fuzz(),
-            'price': self.normal_price.fuzz()
-        }
+        data = get_valid_data(self)
         form = TaskOfferForm(data)
         self.assertTrue(form.is_valid())
 
@@ -64,5 +68,17 @@ class TestGiveProjectOffers(TestCase):
             'description': self.below_min,
             'price': self.below_min_price
         }
-        form = TaskOfferForm(data)
-        self.assertFalse(form.is_valid())
+        valid_data = get_valid_data(self)
+        for item in data.items():
+            valid_data_copy = copy.copy(valid_data)
+            valid_data_copy[item[0]] = item[1]
+            form = TaskOfferForm(valid_data_copy)
+            with self.subTest(form=form):
+                self.assertFalse(form.is_valid())
+
+def get_valid_data(self):
+    return {
+        'title': self.normal_title.fuzz(),
+        'description': self.normal_description.fuzz(),
+        'price': self.normal_price.fuzz()
+    }

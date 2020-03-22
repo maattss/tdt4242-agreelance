@@ -64,13 +64,27 @@ class TestSignupPageBoundary(TestCase):
             'street_address': self.above_max_50.fuzz(),   
         }
         valid_data = get_valid_data(self)
-
         for item in data.items():
             valid_data_copy = copy.copy(valid_data)
-            valid_data_copy[item[0]] = item[1]
-            form = SignUpForm(data)
-            with self.subTest(form=form):
-                self.assertFalse(form.is_valid())
+            if item[0] == "categories": # No max limit for categories
+                continue
+            elif item[0] == "email" or item[0] == "email_confirmation": # Special case for email
+                valid_data_copy["email"] = item[1]
+                valid_data_copy["email_confirmation"] = item[1]
+                form = SignUpForm(valid_data_copy)
+                with self.subTest(form=form):
+                    self.assertFalse(form.is_valid())
+            elif item[0] == "password1" or item[0] == "password2": # Special case for password
+                valid_data_copy["password1"] = item[1]
+                valid_data_copy["password2"] = item[1]
+                form = SignUpForm(valid_data_copy)
+                with self.subTest(form=form):
+                    self.assertTrue(form.is_valid())
+            else:
+                valid_data_copy[item[0]] = item[1]
+                form = SignUpForm(valid_data_copy)
+                with self.subTest(form=form):
+                    self.assertFalse(form.is_valid())
     
     def test_below_max(self):
         email = self.below_max_email.fuzz()
@@ -147,13 +161,27 @@ class TestSignupPageBoundary(TestCase):
             'street_address': self.below_min,   
         }
         valid_data = get_valid_data(self)
-
         for item in data.items():
             valid_data_copy = copy.copy(valid_data)
-            valid_data_copy[item[0]] = item[1]
-            form = SignUpForm(data)
-            with self.subTest(form=form):
-                self.assertFalse(form.is_valid())
+            if item[0] == "company": # Company field can be empty
+                continue      
+            elif item[0] == "email" or item[0] == "email_confirmation": # Special case for email
+                valid_data_copy["email"] = item[1]
+                valid_data_copy["email_confirmation"] = item[1]
+                form = SignUpForm(valid_data_copy)
+                with self.subTest(form=form):
+                    self.assertFalse(form.is_valid())
+            elif item[0] == "password1" or item[0] == "password2": # Special case for password
+                valid_data_copy["password1"] = item[1]
+                valid_data_copy["password2"] = item[1]
+                form = SignUpForm(valid_data_copy)
+                with self.subTest(form=form):
+                    self.assertFalse(form.is_valid())
+            else:
+                valid_data_copy[item[0]] = item[1]
+                form = SignUpForm(valid_data_copy)
+                with self.subTest(form=form):
+                    self.assertFalse(form.is_valid())
 
 def get_valid_data(self):
     return {
