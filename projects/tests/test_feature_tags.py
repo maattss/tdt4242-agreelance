@@ -6,6 +6,7 @@ from faker import Faker
 from django.contrib.auth.models import User
 from django.test import RequestFactory
 from unittest import skip
+from taggit.models import Tag
 
 # Integration and system tests for reviews
 class TestTagsImplementation(TestCase):
@@ -36,6 +37,14 @@ class TestTagsImplementation(TestCase):
         self.project1.tags.add('easy', 'cleaning')
         self.project2.tags.add('garage', 'easy')
     
+    def test_get_tag(self):
+        tag = None
+        try:
+            tag = Tag.objects.get(name = 'easy')
+        except ObjectDoesNotExist:
+            pass
+        self.assertTrue(tag)
+
     # Test if the project is stored in the database with the tags entered, and that tags are put onto the category
     def test_create_tag(self):
         request = self.factory.post('/new_project/', {

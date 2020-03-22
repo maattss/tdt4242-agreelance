@@ -67,6 +67,12 @@ class TestReviewImplementation(TestCase):
             comment=self.fake.sentence(nb_words=10)
         )
 
+    #Test if first_review from setUp is stored in the database
+    def test_get_review(self):
+        review = Review.objects.get(pk = 1)
+        self.assertEquals(review, self.first_review)
+
+
     # First_user and third user have worked together and no review exists in the database. 
     # The request should be stored in database.
     def test_valid_review(self):
@@ -75,6 +81,7 @@ class TestReviewImplementation(TestCase):
         insert_review(self, self.first_user, self.third_user, rating, comment)
         db_review = get_review(self, self.first_profile, self.third_user, rating, comment)
         self.assertTrue(db_review)
+
 
     # First_user and fourth_user haven't worked together. 
     # The request should not be stored since confirm_work_relationship returns False
