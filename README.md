@@ -159,6 +159,6 @@ The data seed provided contains 3 users:
 
 Username | Password | Description
 ---|---|---
-Bjarte|ostekake1| Superuser status
+Bjarte|SwokT2!5LoSf| Superuser status
 Eirik|SwokT2!5LoSf|
-Seb|ostekake5|
+Seb|SwokT2!5LoSf|
