@@ -89,7 +89,7 @@ class TestSignupPageDomain(TestCase):
                 self.assertFalse(form.is_valid())
 
     # Special test case when emails are not equal
-    @skip("Form should not be valid when email and email-confimartion are different")
+    @skip("Form should not be valid when emails in form are not equal")
     def test_different_email(self):
         data = {
             'username': self.approved_username ,
