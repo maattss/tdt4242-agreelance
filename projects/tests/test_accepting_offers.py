@@ -15,6 +15,7 @@ class TestAcceptingOffers(TestCase):
         self.factory = RequestFactory()
         self.project_category = ProjectCategory.objects.create(pk=1)
 
+        # Firs user is project owner and second user creates offer
         self.first_user = User.objects.create_user(
             pk=1,
             username=self.fake.user_name(),
@@ -44,15 +45,7 @@ class TestAcceptingOffers(TestCase):
     def test_accepted_output(self):
         status = "a"
         feedback = self.fake.sentence(nb_words=6)
-        request = self.factory.post('/projects/' + str(self.first_task.pk), {
-            'status': status,
-            'feedback': feedback,
-            'taskofferid': self.first_task_offer.pk,
-            'offer_response': ''
-        })
-        request.user = self.first_user
-        
-        project_view(request, self.project.pk)
+        post_response(self, status, feedback)
         offer = TaskOffer.objects.get(task_id=self.first_task.pk)
 
         self.assertEqual(offer.status, status)
@@ -61,15 +54,7 @@ class TestAcceptingOffers(TestCase):
     def test_pending_output(self):
         status = "p"
         feedback = self.fake.sentence(nb_words=6)
-        request = self.factory.post('/projects/' + str(self.first_task.pk) + "/", {
-            'status': status,
-            'feedback': feedback,
-            'taskofferid': self.first_task_offer.pk,
-            'offer_response': ''
-        })
-        request.user = self.first_user
-        
-        project_view(request, self.project.pk)
+        post_response(self, status, feedback)
         offer = TaskOffer.objects.get(task_id=self.first_task.pk)
 
         self.assertEqual(offer.status, status)
@@ -78,15 +63,7 @@ class TestAcceptingOffers(TestCase):
     def test_declined_output(self):
         status = "d"
         feedback = self.fake.sentence(nb_words=6)
-        request = self.factory.post('/projects/' + str(self.first_task.pk) + "/", {
-            'status': status,
-            'feedback': feedback,
-            'taskofferid': self.first_task_offer.pk,
-            'offer_response': ''
-        })
-        request.user = self.first_user
-        
-        project_view(request, self.project.pk)
+        post_response(self, status, feedback)
         offer = TaskOffer.objects.get(task_id=self.first_task.pk)
 
         self.assertEqual(offer.status, status)
@@ -110,18 +87,12 @@ class TestAcceptingOffers(TestCase):
             success = False
         self.assertFalse(success)
 
-    """ TODO: Extract common funtionallity to helper functions
-    def post_response(self, status):
-        status = status
-        feedback = self.fake.sentence(nb_words=6)
-        request = self.factory.post('/projects/' + str(self.first_task.pk) + "/", {
-            'status': status,
-            'feedback': feedback,
-            'taskofferid': self.first_task_offer.pk,
-            'offer_response': ''
-        })
-        request.user = self.first_user
-        
-        project_view(request, self.project.pk)
-    
-    """
+def post_response(self, status, feedback):
+    request = self.factory.post('/projects/' + str(self.first_task.pk) + "/", {
+        'status': status,
+        'feedback': feedback,
+        'taskofferid': self.first_task_offer.pk,
+        'offer_response': ''
+    })
+    request.user = self.first_user
+    project_view(request, self.project.pk)
