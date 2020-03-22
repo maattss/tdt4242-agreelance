@@ -3,6 +3,7 @@ from projects.models import ProjectCategory
 from faker import Faker
 from factory.fuzzy import FuzzyText
 from user.forms import SignUpForm
+import copy
 
 # Boundary value tests for sign-up page
 class TestSignupPageBoundary(TestCase):
@@ -62,8 +63,14 @@ class TestSignupPageBoundary(TestCase):
             'postal_code': self.above_max_50.fuzz(),
             'street_address': self.above_max_50.fuzz(),   
         }
-        form = SignUpForm(data)
-        self.assertFalse(form.is_valid())
+        valid_data = get_valid_data(self)
+
+        for item in data.items():
+            valid_data_copy = copy.copy(valid_data)
+            valid_data_copy[item[0]] = item[1]
+            form = SignUpForm(data)
+            with self.subTest(form=form):
+                self.assertFalse(form.is_valid())
     
     def test_below_max(self):
         email = self.below_max_email.fuzz()
@@ -90,23 +97,7 @@ class TestSignupPageBoundary(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_normal_values(self):
-        data = {
-            'username': self.normal_username,
-            'first_name': self.normal.fuzz(),
-            'last_name': self.normal.fuzz(),
-            'categories': self.categories,
-            'company': self.normal.fuzz(),
-            'email': self.normal_email,
-            'email_confirmation': self.normal_email,
-            'password1': self.normal_password,
-            'password2': self.normal_password,
-            'phone_number': self.normal.fuzz(),
-            'country': self.normal.fuzz(),
-            'state': self.normal.fuzz(),
-            'city': self.normal.fuzz(),
-            'postal_code': self.normal.fuzz(),
-            'street_address': self.normal.fuzz(),   
-        }
+        data = get_valid_data(self)
         form = SignUpForm(data)
         self.assertTrue(form.is_valid())
     
@@ -155,5 +146,30 @@ class TestSignupPageBoundary(TestCase):
             'postal_code': self.below_min,
             'street_address': self.below_min,   
         }
-        form = SignUpForm(data)
-        self.assertFalse(form.is_valid())
+        valid_data = get_valid_data(self)
+
+        for item in data.items():
+            valid_data_copy = copy.copy(valid_data)
+            valid_data_copy[item[0]] = item[1]
+            form = SignUpForm(data)
+            with self.subTest(form=form):
+                self.assertFalse(form.is_valid())
+
+def get_valid_data(self):
+    return {
+            'username': self.normal_username,
+            'first_name': self.normal.fuzz(),
+            'last_name': self.normal.fuzz(),
+            'categories': self.categories,
+            'company': self.normal.fuzz(),
+            'email': self.normal_email,
+            'email_confirmation': self.normal_email,
+            'password1': self.normal_password,
+            'password2': self.normal_password,
+            'phone_number': self.normal.fuzz(),
+            'country': self.normal.fuzz(),
+            'state': self.normal.fuzz(),
+            'city': self.normal.fuzz(),
+            'postal_code': self.normal.fuzz(),
+            'street_address': self.normal.fuzz(),   
+    }
