@@ -33,9 +33,8 @@ class TestSignupPageDomain(TestCase):
         textfield_50_2 = FuzzyText(length=60).fuzz()
         email_1 = FuzzyText(length=245, suffix="@gmail.com").fuzz()
         email_2 = FuzzyText(length=20).fuzz()
-        password_1 = FuzzyText(length=5000).fuzz()
-        password_2 = FuzzyText(length=4).fuzz()
-        password_3 = FuzzyText(length=16, chars=string.digits).fuzz()
+        password_1 = FuzzyText(length=4).fuzz()
+        password_2 = FuzzyText(length=16, chars=string.digits).fuzz()
         categories = []
 
         declined_parameters = [
@@ -44,8 +43,8 @@ class TestSignupPageDomain(TestCase):
             [textfield_50_1, textfield_50_2],
             [email_1, email_2],
             [email_1, email_2],
-            [password_1, password_2, password_3],
-            [password_1, password_2, password_3],
+            [password_1, password_2],
+            [password_1, password_2],
             [categories]
         ]
 
@@ -57,7 +56,7 @@ class TestSignupPageDomain(TestCase):
             "textfield_30": [textfield_30_1, textfield_30_2],
             "textfield_50": [textfield_50_1, textfield_50_2],
             "email": [email_1, email_2],
-            "password": [password_1, password_2, password_3],
+            "password": [password_1, password_2],
             "categories": [categories]
         })
 

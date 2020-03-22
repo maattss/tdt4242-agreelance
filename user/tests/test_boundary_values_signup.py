@@ -21,8 +21,6 @@ class TestSignupPageBoundary(TestCase):
         self.below_min_email = FuzzyText(length=1)
         self.normal_email = fake.email()
 
-        self.above_max_password = FuzzyText(length=4097)
-        self.below_max_password = FuzzyText(length=4096)
         self.above_min_password = FuzzyText(length=8)
         self.below_min_password = FuzzyText(length=7)
         self.normal_password = fake.password()
@@ -45,7 +43,7 @@ class TestSignupPageBoundary(TestCase):
     
     def test_above_max(self):
         email = self.above_max_email.fuzz()
-        password = self.above_max_password.fuzz()
+        password = self.normal_password
         
         data = {
             'username': self.above_max_username.fuzz(),
@@ -90,7 +88,7 @@ class TestSignupPageBoundary(TestCase):
     
     def test_below_max(self):
         email = self.below_max_email.fuzz()
-        password = self.below_max_password.fuzz()
+        password = self.normal_password
         
         data = {
             'username': self.below_max_username.fuzz(),
