@@ -1,7 +1,6 @@
 image: python:3
 include:
   - template: Code-Quality.gitlab-ci.yml
-
 code_quality:
   artifacts:
     paths: [gl-code-quality-report.json]
