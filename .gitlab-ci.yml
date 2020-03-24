@@ -1,6 +1,9 @@
 image: python:3
 include:
   - template: Code-Quality.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/Test.gitlab-ci.yml
+
 test:
   script:
   # this configures Django application to use attached postgres database that is run on `postgres` host
