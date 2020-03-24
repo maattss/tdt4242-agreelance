@@ -5,13 +5,22 @@
 
 The best way to agree on the price of your freelancing jobs!
 
+Application available at: https://agreelance-group12.herokuapp.com
+
+## Users
+Username | Password | Description
+---|---|---
+Bjarte|SwokT2!5LoSf| Superuser status
+Eirik|SwokT2!5LoSf|
+Seb|SwokT2!5LoSf|
+
 ## Git flow
 We use the following branching strategy in this project
 ### Master Branch: `master`
 
 We consider `master` to be the main branch where the source code of `HEAD` **always reflects a stable application**. This is the branch from which all `feature` branches are forked, and into which all `feature` branches are merged.
 
-Changes to `master` should always come through a **pull request**!.
+Changes to `master` should always come through a **pull request**!
 
 ### Feature Branches: `feature-*`
 
@@ -155,10 +164,4 @@ Continuous integration will build the code pushed to master and push it to your 
 `heroku pg:reset DATABASE_URL -a <heroku-app-name>`
 
 ## Data seeding
-The data seed provided contains 3 users:
-
-Username | Password | Description
----|---|---
-Bjarte|SwokT2!5LoSf| Superuser status
-Eirik|SwokT2!5LoSf|
-Seb|SwokT2!5LoSf|
+The data seed provided contains 3 users, described in Users section above
