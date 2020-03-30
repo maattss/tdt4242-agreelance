@@ -8,6 +8,9 @@ from django.contrib.auth.models import User
 from user.review_functions import averageRating
 from projects.models import Task
 
+# Constants
+USER_LOGIN = "/user/login"
+
 def projects_all(request):
     projects = Project.objects.all()
     project_categories = ProjectCategory.objects.all()
@@ -252,7 +255,7 @@ def upload_file_to_task(request, project_id, task_id):
                 'task_file_form': task_file_form,
             }
         )
-    return redirect('/user/login') # Redirects to /user/login
+    return redirect(USER_LOGIN) # Redirects to /user/login
 
 def get_user_task_permissions(user, task):
     if user == task.project.user.user:
