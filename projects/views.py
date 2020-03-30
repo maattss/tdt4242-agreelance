@@ -10,6 +10,7 @@ from projects.models import Task
 
 # Constants
 USER_LOGIN = "/user/login"
+PROJECTS_TEMPLATE = "projects/projects.html"
 
 def projects_all(request):
     projects = Project.objects.all()
@@ -18,7 +19,7 @@ def projects_all(request):
     common_tags = current_category.tags.most_common()[:6]
 
     return render(request,
-        'projects/projects.html',
+        PROJECTS_TEMPLATE,
         {
             'projects': projects,
             'project_categories': project_categories,
@@ -40,7 +41,7 @@ def projects(request, category_id):
     common_tags = current_category.tags.most_common()[:6]
 
     return render(request,
-        'projects/projects.html',
+        PROJECTS_TEMPLATE,
         {
             'projects': relevant_projects,
             'project_categories': project_categories,
@@ -58,7 +59,7 @@ def projects_tags(request, category_id, tag_name):
     common_tags = current_category.tags.most_common()[:6]
 
     return render(request,
-        'projects/projects.html',
+        PROJECTS_TEMPLATE,
         {
             'projects': relevant_projects,
             'project_categories': project_categories,

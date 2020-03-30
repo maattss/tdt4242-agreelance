@@ -73,10 +73,11 @@ class Task(models.Model):
     def __str__(self):
         return  str(self.id) + " " + self.title
 
-    def accepted_task_offer(task):
+    # Method to return accepted task offer for a task
+    def accepted_task_offer(self):
         task_offer = None
         try:
-            task_offer = task.taskoffer_set.get(status='a')
+            task_offer = self.taskoffer_set.get(status='a')
         except TaskOffer.DoesNotExist:
             pass
         return task_offer
