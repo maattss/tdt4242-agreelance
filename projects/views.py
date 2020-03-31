@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from user.review_functions import averageRating
 from projects.models import Task
+from django.core.exceptions import ObjectDoesNotExist
 
 # Constants
 USER_LOGIN = "/user/login"
@@ -347,23 +348,11 @@ def task_view(request, project_id, task_id):
             team.members.add(*team_add_form.cleaned_data['members'])
             team.save()
 
-    if request.method == 'POST' and 'permissions' in request.POST and accepted_task_offer and accepted_task_offer.offerer == user.profile:
+    if request.method == 'POST' and 'permissions' in request.POST and \
+        accepted_task_offer and accepted_task_offer.offerer == user.profile:
         for t in task.teams.all():
             for f in task.files.all():
-                try:
-                    tft_string = 'permission-perobj-' + str(f.id) + '-' + str(t.id)
-                    tft_id=request.POST.get(tft_string)
-                    instance = TaskFileTeam.objects.get(id=tft_id)
-                except Exception as e:
-                    print("#except")
-                    instance = TaskFileTeam(
-                        file = f,
-                        team = t,
-                    )
-                instance.read = request.POST.get('permission-read-' + str(f.id) + '-' + str(t.id))  or False
-                instance.write = request.POST.get('permission-write-' + str(f.id) + '-' + str(t.id)) or False
-                instance.modify = request.POST.get('permission-modify-' + str(f.id) + '-' + str(t.id))  or False
-                instance.save()
+                permission_helper(request, current_team = t, current_file = f)
             t.write = request.POST.get('permission-upload-' + str(t.id)) or False
             t.save()
 
@@ -403,6 +392,23 @@ def task_view(request, project_id, task_id):
                 })
 
     return redirect(USER_LOGIN)
+
+def permission_helper(request, current_team, current_file):
+    try:
+        task_file_team_string = 'permission-perobj-' + str(current_file.id) + '-' + str(current_team.id)
+        task_file_team_id = request.POST.get(task_file_team_string)
+        instance = TaskFileTeam.objects.get(id=task_file_team_id)
+    except ObjectDoesNotExist:
+        # Create new instance if it does not exist
+        instance = TaskFileTeam(file = current_file, team = current_team)
+    
+    instance.read = request.POST.get('permission-read-' 
+        + str(current_file.id) + '-' + str(current_team.id)) or False
+    instance.write = request.POST.get('permission-write-' 
+        + str(current_file.id) + '-' + str(current_team.id)) or False
+    instance.modify = request.POST.get('permission-modify-' 
+        + str(current_file.id) + '-' + str(current_team.id))  or False
+    instance.save()
 
 @login_required
 def task_permissions(request, project_id, task_id):

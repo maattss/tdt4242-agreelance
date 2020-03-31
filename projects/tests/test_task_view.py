@@ -105,7 +105,6 @@ class TestTaskView(TestCase):
             self.fake.file_name(extension="md"), 
             self.fake.binary(length=64), 'text/markdown')
         task_file = TaskFile.objects.create(task=self.task, file=test_file)
-        print("taskfile_id", task_file.id)
         self.task.files.add(task_file)
 
         # Create task file team
@@ -114,9 +113,9 @@ class TestTaskView(TestCase):
             team = self.team,
             name = self.fake.name()
         )
-        tft_string = 'permission-perobj-' + str(task_file.id) + '-' + str(self.team.id)
+        task_file_team_string = 'permission-perobj-' + str(task_file.id) + '-' + str(self.team.id)
         request = self.factory.post(self.request_str, {
-                tft_string: 1,
+                task_file_team_string: 1,
                 "permissions": ""
             })
         request.user = self.user
