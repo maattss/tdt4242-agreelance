@@ -305,16 +305,15 @@ def task_view(request, project_id, task_id):
     if not user_permissions['read'] and not user_permissions['write'] and not user_permissions['modify'] and not user_permissions['owner'] and not user_permissions['view_task']:
         return redirect(USER_LOGIN)
 
-    if request.method == 'POST' and 'delivery' in request.POST and accepted_task_offer:
-        if accepted_task_offer and accepted_task_offer.offerer == user.profile:
-            deliver_form = DeliveryForm(request.POST, request.FILES)
-            if deliver_form.is_valid():
-                delivery = deliver_form.save(commit=False)
-                delivery.task = task
-                delivery.delivery_user = user.profile
-                delivery.save()
-                task.status = "pa"
-                task.save()
+    if request.method == 'POST' and 'delivery' in request.POST and accepted_task_offer and accepted_task_offer and accepted_task_offer.offerer == user.profile:
+        deliver_form = DeliveryForm(request.POST, request.FILES)
+        if deliver_form.is_valid():
+            delivery = deliver_form.save(commit=False)
+            delivery.task = task
+            delivery.delivery_user = user.profile
+            delivery.save()
+            task.status = "pa"
+            task.save()
 
     if request.method == 'POST' and 'delivery-response' in request.POST:
         instance = get_object_or_404(Delivery, id=request.POST.get('delivery-id'))
@@ -333,43 +332,40 @@ def task_view(request, project_id, task_id):
                 task.status = "dd"
                 task.save()
 
-    if request.method == 'POST' and 'team' in request.POST:
-        if accepted_task_offer and accepted_task_offer.offerer == user.profile:
-            team_form = TeamForm(request.POST)
-            if (team_form.is_valid()):
-                team = team_form.save(False)
-                team.task = task
-                team.save()
+    if request.method == 'POST' and 'team' in request.POST and accepted_task_offer and accepted_task_offer.offerer == user.profile:
+        team_form = TeamForm(request.POST)
+        if (team_form.is_valid()):
+            team = team_form.save(False)
+            team.task = task
+            team.save()
 
-    if request.method == 'POST' and 'team-add' in request.POST:
-        if accepted_task_offer and accepted_task_offer.offerer == user.profile:
-            instance = get_object_or_404(Team, id=request.POST.get('team-id'))
-            team_add_form = TeamAddForm(request.POST, instance=instance)
-            if team_add_form.is_valid():
-                team = team_add_form.save(False)
-                team.members.add(*team_add_form.cleaned_data['members'])
-                team.save()
+    if request.method == 'POST' and 'team-add' in request.POST and accepted_task_offer and accepted_task_offer.offerer == user.profile:
+        instance = get_object_or_404(Team, id=request.POST.get('team-id'))
+        team_add_form = TeamAddForm(request.POST, instance=instance)
+        if team_add_form.is_valid():
+            team = team_add_form.save(False)
+            team.members.add(*team_add_form.cleaned_data['members'])
+            team.save()
 
-    if request.method == 'POST' and 'permissions' in request.POST:
-        if accepted_task_offer and accepted_task_offer.offerer == user.profile:
-            for t in task.teams.all():
-                for f in task.files.all():
-                    try:
-                        tft_string = 'permission-perobj-' + str(f.id) + '-' + str(t.id)
-                        tft_id=request.POST.get(tft_string)
-                        instance = TaskFileTeam.objects.get(id=tft_id)
-                    except Exception as e:
-                        instance = TaskFileTeam(
-                            file = f,
-                            team = t,
-                        )
+    if request.method == 'POST' and 'permissions' in request.POST and accepted_task_offer and accepted_task_offer.offerer == user.profile:
+        for t in task.teams.all():
+            for f in task.files.all():
+                try:
+                    tft_string = 'permission-perobj-' + str(f.id) + '-' + str(t.id)
+                    tft_id=request.POST.get(tft_string)
+                    instance = TaskFileTeam.objects.get(id=tft_id)
+                except Exception as e:
+                    instance = TaskFileTeam(
+                        file = f,
+                        team = t,
+                    )
 
-                    instance.read = request.POST.get('permission-read-' + str(f.id) + '-' + str(t.id))  or False
-                    instance.write = request.POST.get('permission-write-' + str(f.id) + '-' + str(t.id)) or False
-                    instance.modify = request.POST.get('permission-modify-' + str(f.id) + '-' + str(t.id))  or False
-                    instance.save()
-                t.write = request.POST.get('permission-upload-' + str(t.id)) or False
-                t.save()
+                instance.read = request.POST.get('permission-read-' + str(f.id) + '-' + str(t.id))  or False
+                instance.write = request.POST.get('permission-write-' + str(f.id) + '-' + str(t.id)) or False
+                instance.modify = request.POST.get('permission-modify-' + str(f.id) + '-' + str(t.id))  or False
+                instance.save()
+            t.write = request.POST.get('permission-upload-' + str(t.id)) or False
+            t.save()
 
     deliver_form = DeliveryForm()
     deliver_response_form = TaskDeliveryResponseForm()
