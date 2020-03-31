@@ -53,6 +53,22 @@ Feature branches should not exist in `origin` for very long. They should be merg
   - **manage.py** - entry point for running the project.
   - **seed.json** - contains seed data for the project to get it up and running quickly
 
+## Testing
+To run the relevant tests for this project (user and projects module), run the following command from the root folder:
+
+`python manage.py test projects/tests user/tests`
+
+### Coverage
+You can run coverage.py to get code coverage reports. To run the tests related to the users and projects modules, run the following commands from the root folder:
+
+```
+coverage run --source="./projects" manage.py test projects/tests
+coverage run --source="./user" manage.py test user/tests
+coverage html
+```
+
+A nicely presented coverage report (HTML files) will then be available in the htmlcov folder in the root of your directory. NB: The htmlcov folder is gitignored (as it should be). So you will not find these find int the GitLab repository.
+
 ## Get started
 It's reccomended to have a look at: https://www.djangoproject.com/start/
 
