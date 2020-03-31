@@ -1,5 +1,5 @@
 from django.test import TestCase, RequestFactory
-from projects.models import Task, ProjectCategory, Project, TaskOffer, Team
+from projects.models import Task, ProjectCategory, Project, TaskOffer, Team, TaskFile, TaskFileTeam
 from projects.views import task_view
 from user.models import Profile, User
 from faker import Faker
@@ -53,9 +53,11 @@ class TestTaskView(TestCase):
 
     # Task view 'delivery'
     def test_task_view_delivery(self):
-        test_file = SimpleUploadedFile('TESTFILE.md', b"Delivered mock file", 'text/markdown')
+        test_file = SimpleUploadedFile(
+            self.fake.file_name(extension="md"), 
+            self.fake.binary(length=64), 'text/markdown')
         request = self.factory.post(self.request_str, {
-                "comment": "test comment",
+                "comment": self.fake.sentence(),
                 "file": test_file,
                 "delivery": ""
             })
@@ -92,7 +94,29 @@ class TestTaskView(TestCase):
     
     # Task view 'permissions'
     def test_task_view_permissions(self):
+        # Add team to task
+        self.team = Team.objects.create(
+            id=1,
+            name=self.fake.name(),
+            task=self.task
+        )
+        # Add file to task
+        test_file = SimpleUploadedFile(
+            self.fake.file_name(extension="md"), 
+            self.fake.binary(length=64), 'text/markdown')
+        task_file = TaskFile.objects.create(task=self.task, file=test_file)
+        print("taskfile_id", task_file.id)
+        self.task.files.add(task_file)
+
+        # Create task file team
+        TaskFileTeam.objects.create(
+            file = task_file,
+            team = self.team,
+            name = self.fake.name()
+        )
+        tft_string = 'permission-perobj-' + str(task_file.id) + '-' + str(self.team.id)
         request = self.factory.post(self.request_str, {
+                tft_string: 1,
                 "permissions": ""
             })
         request.user = self.user

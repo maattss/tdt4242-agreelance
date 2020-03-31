@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from user.models import Profile
 from .models import Project, Task, TaskFile, TaskOffer, Delivery, ProjectCategory, Team, TaskFileTeam, directory_path
 from .forms import ProjectForm, TaskFileForm, ProjectStatusForm, TaskOfferForm, TaskOfferResponseForm, TaskPermissionForm, DeliveryForm, TaskDeliveryResponseForm, TeamForm, TeamAddForm
@@ -355,11 +355,11 @@ def task_view(request, project_id, task_id):
                     tft_id=request.POST.get(tft_string)
                     instance = TaskFileTeam.objects.get(id=tft_id)
                 except Exception as e:
+                    print("#except")
                     instance = TaskFileTeam(
                         file = f,
                         team = t,
                     )
-
                 instance.read = request.POST.get('permission-read-' + str(f.id) + '-' + str(t.id))  or False
                 instance.write = request.POST.get('permission-write-' + str(f.id) + '-' + str(t.id)) or False
                 instance.modify = request.POST.get('permission-modify-' + str(f.id) + '-' + str(t.id))  or False
