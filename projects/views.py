@@ -303,10 +303,9 @@ def task_view(request, project_id, task_id):
 
     user_permissions = get_user_task_permissions(request.user, task)
     if not user_permissions['read'] and not user_permissions['write'] and not user_permissions['modify'] and not user_permissions['owner'] and not user_permissions['view_task']:
-        return redirect('/user/login')
+        return redirect(USER_LOGIN)
 
-
-    if request.method == 'POST' and 'delivery' in request.POST:
+    if request.method == 'POST' and 'delivery' in request.POST and accepted_task_offer:
         if accepted_task_offer and accepted_task_offer.offerer == user.profile:
             deliver_form = DeliveryForm(request.POST, request.FILES)
             if deliver_form.is_valid():
@@ -330,7 +329,7 @@ def task_view(request, project_id, task_id):
             if delivery.status == 'a': # Accepted
                 task.status = "pp"
                 task.save()
-            elif delivery.status == 'd':
+            elif delivery.status == 'd': # Declined
                 task.status = "dd"
                 task.save()
 
@@ -341,7 +340,6 @@ def task_view(request, project_id, task_id):
                 team = team_form.save(False)
                 team.task = task
                 team.save()
-
 
     if request.method == 'POST' and 'team-add' in request.POST:
         if accepted_task_offer and accepted_task_offer.offerer == user.profile:
@@ -372,7 +370,6 @@ def task_view(request, project_id, task_id):
                     instance.save()
                 t.write = request.POST.get('permission-upload-' + str(t.id)) or False
                 t.save()
-
 
     deliver_form = DeliveryForm()
     deliver_response_form = TaskDeliveryResponseForm()
@@ -409,7 +406,7 @@ def task_view(request, project_id, task_id):
                 'avg_rating': avg_rating
                 })
 
-    return redirect('/user/login')
+    return redirect(USER_LOGIN)
 
 @login_required
 def task_permissions(request, project_id, task_id):

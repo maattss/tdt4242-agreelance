@@ -16,7 +16,7 @@ class TestAcceptingOffers(TestCase):
         self.factory = RequestFactory()
         self.project_category = ProjectCategory.objects.create(pk=1)
 
-        # Firs user is project owner and second user creates offer
+        # First user is project owner and second user creates offer
         self.first_user = User.objects.create_user(
             pk=1,
             username=self.fake.user_name(),

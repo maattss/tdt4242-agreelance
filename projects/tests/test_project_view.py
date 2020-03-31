@@ -5,6 +5,8 @@ from user.models import Profile
 from faker import Faker
 from django.contrib.auth.models import User
 
+PROJECTS_ALL = "/projects_all/"
+
 # Full statement coverage test of the project_view() function
 class TestProjectView(TestCase):
     def setUp(self):
@@ -37,7 +39,7 @@ class TestProjectView(TestCase):
         self.task_offer.save()
 
     def test_offer_response(self):
-        request = self.factory.post('/projects_all/', {
+        request = self.factory.post(PROJECTS_ALL, {
             'offer_response': '',
             'taskofferid': 1,
             'status': 'a',
@@ -48,7 +50,7 @@ class TestProjectView(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_status_change(self):
-        request = self.factory.post('/projects_all/', {
+        request = self.factory.post(PROJECTS_ALL, {
             'status_change': '',
             'status': self.project.status
         })
@@ -57,7 +59,7 @@ class TestProjectView(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_offer_submit(self):
-        request = self.factory.post('/projects_all/', {
+        request = self.factory.post(PROJECTS_ALL, {
             'offer_submit': '',
             'title': self.fake.sentence(nb_words=3),
             'description': self.fake.sentence(nb_words=5),

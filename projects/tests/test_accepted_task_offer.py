@@ -4,7 +4,7 @@ from user.models import Profile, User
 from faker import Faker
 
 # Accept offer output coverage tests
-class TestAcceptingOffers(TestCase):
+class TestAcceptedTaskOffer(TestCase):
     def setUp(self):
         self.fake = Faker() # Generate fake data using a faker generator
         
@@ -28,7 +28,7 @@ class TestAcceptingOffers(TestCase):
             offerer=self.profile,
             status='a')
 
-    # Check that accepted offer returned from accepted_task_offer
+    # Check that accepted offer returned from accepted_task_offer is equal to task created in set up
     def test_accepted_task_offer(self):
         accepted_offer = self.task.accepted_task_offer()
         self.assertEqual(accepted_offer, self.accepted_offer)

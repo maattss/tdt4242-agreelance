@@ -116,7 +116,7 @@ class TaskFileTeam(models.Model):
 
 class Delivery(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="delivery")
-    file = models.FileField(upload_to=directory_path)
+    file = models.FileField(upload_to=directory_path, blank=True)
     comment = models.TextField(max_length=500)
     delivery_user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="deliveries")
     delivery_time = models.DateTimeField(auto_now=True)
