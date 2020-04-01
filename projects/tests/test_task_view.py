@@ -48,7 +48,7 @@ class TestTaskView(TestCase):
     def test_task_view(self):
         request = self.factory.post(self.request_str)
         request.user = self.user
-        response = task_view(request, self.project.pk, self.task.id)
+        response = task_view.task_view(request, self.project.pk, self.task.id)
         self.assertEqual(response.status_code, 200)
 
     # Task view 'delivery'
@@ -63,7 +63,7 @@ class TestTaskView(TestCase):
             })
         
         request.user = self.user
-        response = task_view(request, self.project.pk, self.task.id)
+        response = task_view.task_view(request, self.project.pk, self.task.id)
         self.assertEqual(response.status_code, 200)
     
     # Task view 'team'
@@ -72,7 +72,7 @@ class TestTaskView(TestCase):
                 "team": ""
             })
         request.user = self.user
-        response = task_view(request, self.project.pk, self.task.id)
+        response = task_view.task_view(request, self.project.pk, self.task.id)
         self.assertEqual(response.status_code, 200)
     
     # Task view 'team-add'
@@ -89,7 +89,7 @@ class TestTaskView(TestCase):
                 "team-add": ""
             })
         request.user = self.user
-        response = task_view(request, self.project.pk, self.task.id)
+        response = task_view.task_view(request, self.project.pk, self.task.id)
         self.assertEqual(response.status_code, 200)
     
     # Task view 'permissions'
@@ -119,5 +119,5 @@ class TestTaskView(TestCase):
                 "permissions": ""
             })
         request.user = self.user
-        response = task_view(request, self.project.pk, self.task.id)
+        response = task_view.task_view(request, self.project.pk, self.task.id)
         self.assertEqual(response.status_code, 200)

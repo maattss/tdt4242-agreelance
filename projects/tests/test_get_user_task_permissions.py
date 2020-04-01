@@ -1,5 +1,5 @@
 from django.test import TestCase
-from projects.views import get_user_task_permissions
+from projects.views import task_view
 from projects.models import ProjectCategory, Project, Task, TaskOffer
 from user.models import Profile
 from faker import Faker
@@ -39,7 +39,7 @@ class TestGetUserTaskPermissions(TestCase):
 
     # Test owner permissions - All permissions
     def test_user_owner(self):
-        self.assertEquals(get_user_task_permissions(self.first_user, self.first_task),
+        self.assertEquals(task_view.get_user_task_permissions(self.first_user, self.first_task),
             {
                 'write': True,
                 'read': True,
@@ -50,7 +50,7 @@ class TestGetUserTaskPermissions(TestCase):
 
     # Test accepted offer permissions - Some permissions
     def test_user_accepted(self):
-        self.assertEquals(get_user_task_permissions(self.second_user, self.second_task),
+        self.assertEquals(task_view.get_user_task_permissions(self.second_user, self.second_task),
             {
                 'write': True,
                 'read': True,
@@ -61,7 +61,7 @@ class TestGetUserTaskPermissions(TestCase):
 
     # Test regular user permissions - No permissions
     def test_no_owner(self):
-        self.assertEquals(get_user_task_permissions(self.second_user, self.first_task),
+        self.assertEquals(task_view.get_user_task_permissions(self.second_user, self.first_task),
             {
                 'write': False,
                 'read': False,

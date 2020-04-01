@@ -84,7 +84,7 @@ class TestAcceptingOffers(TestCase):
         request.user = self.first_user
         success = True
         try:
-            project_view(request, self.project.pk)
+            project_view.project_view(request, self.project.pk)
         except Http404:
             success = False
         self.assertFalse(success)
@@ -97,4 +97,4 @@ def post_response(self, status, feedback):
         'offer_response': ''
     })
     request.user = self.first_user
-    project_view(request, self.project.pk)
+    project_view.project_view(request, self.project.pk)

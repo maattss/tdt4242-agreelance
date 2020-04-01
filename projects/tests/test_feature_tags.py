@@ -1,5 +1,5 @@
 from django.test import TestCase
-from projects.views import  new_project, filter_tags
+from projects.views import new_project, project_view
 from projects.models import ProjectCategory, Project
 from user.models import Profile
 from faker import Faker
@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.test import RequestFactory
 from unittest import skip
 from taggit.models import Tag
+from django.core.exceptions import ObjectDoesNotExist
 
 # Integration and system tests for reviews
 class TestTagsImplementation(TestCase):
@@ -54,7 +55,7 @@ class TestTagsImplementation(TestCase):
             'tags': 'tag1,tag2,tag3'
         })
         request.user = self.first_user
-        response = new_project(request)
+        new_project.new_project(request)
         db_project = None
         db_category = None
         test_objects = []
@@ -80,7 +81,7 @@ class TestTagsImplementation(TestCase):
             'tags': '"select * from user_review where 1=1", "DROP DATABASE"'
         })
         request.user = self.first_user
-        response = new_project(request)
+        new_project.new_project(request)
         db_project = None
         try:
             db_project = Project.objects.get(title = 'test title')
@@ -91,5 +92,5 @@ class TestTagsImplementation(TestCase):
     # Test if the expected projects are filtered through with a given tag
     def test_tag_filter(self):
         all_projects = Project.objects.all()
-        response = filter_tags(all_projects, self.project_category1.id, 'easy')
+        response = project_view.filter_tags(all_projects, self.project_category1.id, 'easy')
         self.assertEquals(response, [self.project1, self.project2])

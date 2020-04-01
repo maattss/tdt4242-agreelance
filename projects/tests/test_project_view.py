@@ -46,7 +46,7 @@ class TestProjectView(TestCase):
             'feedback': self.fake.sentence(nb_words=10)
         })
         request.user = self.first_user
-        response = project_view(request, 1)
+        response = project_view.project_view(request, 1)
         self.assertEqual(response.status_code, 200)
 
     def test_status_change(self):
@@ -55,7 +55,7 @@ class TestProjectView(TestCase):
             'status': self.project.status
         })
         request.user = self.first_user
-        response = project_view(request, 1)
+        response = project_view.project_view(request, 1)
         self.assertEqual(response.status_code, 200)
 
     def test_offer_submit(self):
@@ -67,5 +67,5 @@ class TestProjectView(TestCase):
             'taskvalue': 1
         })
         request.user = self.second_user
-        response = project_view(request, 1)
+        response = project_view.project_view(request, 1)
         self.assertEqual(response.status_code, 200)
