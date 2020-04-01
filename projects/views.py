@@ -1,3 +1,8 @@
+"""
+    TODO: DELETE THIS FILE
+    ----- DEPRECATED -----
+"""
+
 from django.http import HttpResponseRedirect
 from user.models import Profile
 from .models import Project, Task, TaskFile, TaskOffer, Delivery, ProjectCategory, Team, TaskFileTeam, directory_path
@@ -84,7 +89,7 @@ def filter_tags(all_projects, category_id, tag_name):
                 relevant_projects.append(project)
     return relevant_projects
 
-
+# OK
 @login_required
 def new_project(request):
     from django.contrib.sites.shortcuts import get_current_site
@@ -207,7 +212,6 @@ def project_view(request, project_id):
 def isProjectOwner(user, project):
     return user == project.user.user
 
-
 @login_required
 def upload_file_to_task(request, project_id, task_id):
     project = Project.objects.get(pk=project_id)
@@ -259,6 +263,7 @@ def upload_file_to_task(request, project_id, task_id):
         )
     return redirect(USER_LOGIN) # Redirects to /user/login
 
+# OK
 def get_user_task_permissions(user, task):
     if user == task.project.user.user:
         return {
@@ -295,6 +300,7 @@ def get_user_task_permissions(user, task):
 
     return user_permissions
 
+# OK
 @login_required
 def task_view(request, project_id, task_id):
     user = request.user
