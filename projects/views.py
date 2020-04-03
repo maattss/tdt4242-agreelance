@@ -207,6 +207,28 @@ def project_view(request, project_id):
 def is_project_owner(user, project):
     return user == project.user.user
 
+def handle_valid_file_form(task_file_form, task, request, user_permissions, project):
+    task_file = task_file_form.save(commit=False)
+    task_file.task = task
+    existing_file = task.files.filter(file=directory_path(task_file, task_file.file.file)).first()
+    access = user_permissions['modify'] or user_permissions['owner']
+    for team in request.user.profile.teams.all():
+        file_modify_access  = TaskFileTeam.objects.filter(team=team, file=existing_file, modify=True).exists()
+        access = access or file_modify_access
+    access = access or user_permissions['modify']
+    if (access):
+        if existing_file:
+            existing_file.delete()
+        task_file.save()
+
+        if request.user.profile != project.user and request.user.profile != accepted_task_offer.offerer:
+            teams = request.user.profile.teams.filter(task__id=task.id)
+            for team in teams:
+                tft = TaskFileTeam()
+                tft.team = team
+                tft.file = task_file
+                tft.read = True
+                tft.save()
 
 @login_required
 def upload_file_to_task(request, project_id, task_id):
@@ -219,32 +241,12 @@ def upload_file_to_task(request, project_id, task_id):
         if request.method == 'POST':
             task_file_form = TaskFileForm(request.POST, request.FILES)
             if task_file_form.is_valid():
-                task_file = task_file_form.save(commit=False)
-                task_file.task = task
-                existing_file = task.files.filter(file=directory_path(task_file, task_file.file.file)).first()
-                access = user_permissions['modify'] or user_permissions['owner']
-                for team in request.user.profile.teams.all():
-                    file_modify_access  = TaskFileTeam.objects.filter(team=team, file=existing_file, modify=True).exists()
-                    access = access or file_modify_access
-                access = access or user_permissions['modify']
-                if (access):
-                    if existing_file:
-                        existing_file.delete()
-                    task_file.save()
+                handle_valid_file_form(task_file_form, task, request, user_permissions, project)
+            else:
+                from django.contrib import messages
+                messages.warning(request, "You do not have access to modify this file")
 
-                    if request.user.profile != project.user and request.user.profile != accepted_task_offer.offerer:
-                        teams = request.user.profile.teams.filter(task__id=task.id)
-                        for team in teams:
-                            tft = TaskFileTeam()
-                            tft.team = team
-                            tft.file = task_file
-                            tft.read = True
-                            tft.save()
-                else:
-                    from django.contrib import messages
-                    messages.warning(request, "You do not have access to modify this file")
-
-                return redirect('task_view', project_id=project_id, task_id=task_id)
+            return redirect('task_view', project_id=project_id, task_id=task_id)
 
         task_file_form = TaskFileForm()
         return render(
