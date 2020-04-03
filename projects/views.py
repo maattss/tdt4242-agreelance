@@ -65,22 +65,27 @@ def projects_tags(request, category_id, tag_name):
         }
     )
 
+def project_has_relevant_category(project, category_id):
+    if str(project.category.id) == str(category_id):
+        return True
+    else:
+        return False
+
+def project_with_relevant_tag(project, tag_name):
+    for tag in project.tags.all(): # Filter projects that does not include relevant tag
+        if str(tag_name) == str(tag):
+            return project
 
 def filter_tags(all_projects, category_id, tag_name):
     relevant_projects = []
-    for project in all_projects: # Filter project that does is not in chosen category
-        if str(project.category.id) == str(category_id):
-            tag_included = False
-            for tag in project.tags.all(): # Filter projects that does not include relevant tag
-                if str(tag_name) == str(tag):
-                    tag_included = True
-                    break
-            if tag_included:
-                relevant_projects.append(project)
+    for project in all_projects:
+        if project_has_relevant_category(project, category_id):
+            relevant_project = project_with_relevant_tag(project, tag_name)
+            relevant_projects.append(relevant_project)
     return relevant_projects
 
 
-@login_required
+@login_required 
 def new_project(request):
     from django.contrib.sites.shortcuts import get_current_site
     current_site = get_current_site(request)
@@ -199,7 +204,7 @@ def project_view(request, project_id):
         })
 
 
-def isProjectOwner(user, project):
+def is_project_owner(user, project):
     return user == project.user.user
 
 
@@ -210,7 +215,7 @@ def upload_file_to_task(request, project_id, task_id):
     user_permissions = get_user_task_permissions(request.user, task)
     accepted_task_offer = task.accepted_task_offer()
 
-    if user_permissions['modify'] or user_permissions['write'] or user_permissions['upload'] or isProjectOwner(request.user, project):
+    if user_permissions['modify'] or user_permissions['write'] or user_permissions['upload'] or is_project_owner(request.user, project):
         if request.method == 'POST':
             task_file_form = TaskFileForm(request.POST, request.FILES)
             if task_file_form.is_valid():
@@ -218,7 +223,6 @@ def upload_file_to_task(request, project_id, task_id):
                 task_file.task = task
                 existing_file = task.files.filter(file=directory_path(task_file, task_file.file.file)).first()
                 access = user_permissions['modify'] or user_permissions['owner']
-                access_to_file = False # Initialize access_to_file to false
                 for team in request.user.profile.teams.all():
                     file_modify_access  = TaskFileTeam.objects.filter(team=team, file=existing_file, modify=True).exists()
                     access = access or file_modify_access

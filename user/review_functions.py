@@ -13,7 +13,7 @@ def averageRating(user_id):
         sum += review.rating
     if(len(reviews) > 0):
         return round(sum/len(reviews), 2)
-    else:   
+    else:  
         return 0
 
 def confirm_work_relationship(reviewer, reviewed):
