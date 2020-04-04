@@ -57,7 +57,7 @@ class TestUploadFile(TestCase):
         })
         request.user = self.first_user
         response = upload_file_to_task(request, self.project.id, self.first_task.id)
-        db_delivery = "heiei"
+        db_delivery = None
         try:
             db_delivery = TaskFile.objects.get(task = self.first_task)
         except:
