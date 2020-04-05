@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 
 from .forms import SignUpForm, ReviewForm
-from .review_functions import getReviews, averageRating, confirm_work_relationship, confirm_duplicate_review
+from .review_functions import get_reviews, average_rating, confirm_work_relationship, confirm_duplicate_review
 
 def index(request):
     return render(request, 'base.html')
@@ -62,13 +62,13 @@ def review(request, reviewed_id):
 def user_page(request, user_id):
     user = User.objects.get(id=user_id)
     username = user.username
-    avg_rating = averageRating(user_id)
+    avg_rating = average_rating(user_id)
     if (avg_rating == 0):
         avg_rating = "-"
     
     reviews = []
     ratings = []
-    for review in getReviews(user_id): 
+    for review in get_reviews(user_id): 
         splitted = str(review).split("-")
         ratings.append(splitted[0])
         reviews.append(splitted[1])

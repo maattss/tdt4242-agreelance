@@ -5,8 +5,9 @@ from .forms import ProjectForm, TaskFileForm, ProjectStatusForm, TaskOfferForm, 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from user.review_functions import averageRating
+from user.review_functions import average_rating
 from projects.models import Task
+from django.core.exceptions import ObjectDoesNotExist
 
 def projects_all(request):
     projects = Project.objects.all()
@@ -140,7 +141,7 @@ def project_view(request, project_id):
     
     publisher = project.user.user.username
     publisher_id = project.user.user.id
-    publisher_rating = averageRating(publisher_id)
+    publisher_rating = average_rating(publisher_id)
     if (publisher_rating == 0):
         publisher_rating = "No reviews"
 
@@ -387,7 +388,7 @@ def task_view(request, project_id, task_id):
         team_files = []
         avg_rating = None
         try:
-            avg_rating = averageRating(accepted_task_offer.offerer.user_id)
+            avg_rating = average_rating(accepted_task_offer.offerer.user_id)
         except:
             pass
         per = {}
@@ -435,7 +436,7 @@ def task_permissions(request, project_id, task_id):
                             task.write.add(user.profile)
                         elif permission_type == 'Modify':
                             task.modify.add(user.profile)
-                    except (Exception):
+                    except ObjectDoesNotExist:
                         print("user not found")
                     return redirect('task_view', project_id=project_id, task_id=task_id)
 

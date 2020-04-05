@@ -56,12 +56,13 @@ class TestUploadFile(TestCase):
             'file': f
         })
         request.user = self.first_user
-        response = upload_file_to_task(request, self.project.id, self.first_task.id)
-        db_delivery = None
+        upload_file_to_task(request, self.project.id, self.first_task.id)
+        db_file = None
         try:
             db_delivery = TaskFile.objects.get(task = self.first_task)
+            db_file = db_delivery.file
         except:
             pass
-        self.assertEquals(db_delivery.file, "static/uploads/tasks/" + str(self.first_task.id) + "/demofile.txt")
+        self.assertEquals(db_file, "static/uploads/tasks/" + str(self.first_task.id) + "/demofile.txt")
     
     
