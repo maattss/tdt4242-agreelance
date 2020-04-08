@@ -213,6 +213,7 @@ def handle_valid_file_form(task_file_form, task, request, user_permissions, proj
     task_file.task = task
     existing_file = task.files.filter(file=directory_path(task_file, task_file.file.file)).first()
     access = user_permissions['modify'] or user_permissions['owner']
+    accepted_task_offer = task.accepted_task_offer()
     for team in request.user.profile.teams.all():
         file_modify_access  = TaskFileTeam.objects.filter(team=team, file=existing_file, modify=True).exists()
         access = access or file_modify_access
@@ -236,7 +237,6 @@ def upload_file_to_task(request, project_id, task_id):
     project = Project.objects.get(pk=project_id)
     task = Task.objects.get(pk=task_id)
     user_permissions = get_user_task_permissions(request.user, task)
-    accepted_task_offer = task.accepted_task_offer()
 
     if user_permissions['modify'] or user_permissions['write'] or user_permissions['upload'] or is_project_owner(request.user, project):
         if request.method == 'POST':
