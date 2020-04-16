@@ -39,7 +39,6 @@ def task_view(request, project_id, task_id):
             delivery.responding_time = timezone.now()
             delivery.responding_user = user.profile
             delivery.save()
-
             if delivery.status == 'a': # Accepted
                 task.status = "pp"
                 task.save()
@@ -75,7 +74,6 @@ def task_view(request, project_id, task_id):
     team_form = TeamForm()
     team_add_form = TeamAddForm()
 
-
     if user_permissions['read'] or user_permissions['write'] or user_permissions['modify'] or user_permissions['owner'] or user_permissions['view_task']:
         deliveries = task.delivery.all()
         team_files = []
@@ -104,7 +102,6 @@ def task_view(request, project_id, task_id):
                 'per': per,
                 'avg_rating': avg_rating
                 })
-
     return redirect(USER_LOGIN)
 
 @login_required
@@ -169,30 +166,6 @@ def handle_valid_file_form(task_file_form, task, request, user_permissions, proj
                 tft.read = True
                 tft.save()
 
-def handle_valid_file_form(task_file_form, task, request, user_permissions, project):
-    task_file = task_file_form.save(commit=False)
-    task_file.task = task
-    existing_file = task.files.filter(file=directory_path(task_file, task_file.file.file)).first()
-    access = user_permissions['modify'] or user_permissions['owner']
-    accepted_task_offer = task.accepted_task_offer()
-    for team in request.user.profile.teams.all():
-        file_modify_access  = TaskFileTeam.objects.filter(team=team, file=existing_file, modify=True).exists()
-        access = access or file_modify_access
-    access = access or user_permissions['modify']
-    if (access):
-        if existing_file:
-            existing_file.delete()
-        task_file.save()
-
-        if request.user.profile != project.user and request.user.profile != accepted_task_offer.offerer:
-            teams = request.user.profile.teams.filter(task__id=task.id)
-            for team in teams:
-                tft = TaskFileTeam()
-                tft.team = team
-                tft.file = task_file
-                tft.read = True
-                tft.save()
-
 @login_required
 def upload_file_to_task(request, project_id, task_id):
     project = Project.objects.get(pk=project_id)
@@ -207,7 +180,6 @@ def upload_file_to_task(request, project_id, task_id):
             else:
                 from django.contrib import messages
                 messages.warning(request, "You do not have access to modify this file")
-
             return redirect('task_view', project_id=project_id, task_id=task_id)
 
         task_file_form = TaskFileForm()
@@ -234,7 +206,6 @@ def permission_helper(request, current_team, current_file):
     except ObjectDoesNotExist:
         # Create new instance if it does not exist
         instance = TaskFileTeam(file = current_file, team = current_team)
-
     instance.read = request.POST.get('permission-read-' 
         + str(current_file.id) + '-' + str(current_team.id)) or False
     instance.write = request.POST.get('permission-write-' 
@@ -273,7 +244,6 @@ def get_user_task_permissions(user, task):
     # Team members can view its teams tasks
     user_permissions['upload'] = user_permissions['upload'] or user.profile.teams.filter(task__id=task.id, write=True).exists()
     user_permissions['view_task'] = user_permissions['view_task'] or user.profile.teams.filter(task__id=task.id).exists()
-
     user_permissions['write'] = user_permissions['write'] or user.profile.task_participants_write.filter(id=task.id).exists()
     user_permissions['modify'] = user_permissions['modify'] or user.profile.task_participants_modify.filter(id=task.id).exists()
 
