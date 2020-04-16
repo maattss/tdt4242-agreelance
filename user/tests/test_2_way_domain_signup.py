@@ -82,7 +82,7 @@ class TestSignupPageDomain(TestCase):
             }
             form = SignUpForm(data)
 
-            # Using subtest to prevent return of test failure immediately,
+            # Using sub test to prevent return of test failure immediately,
             # possibly before all combinations are tested!
             with self.subTest(form=form):
                 self.assertFalse(form.is_valid())

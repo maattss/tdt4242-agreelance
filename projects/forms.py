@@ -57,7 +57,7 @@ PERMISSION_CHOICES = (
 
 class TaskPermissionForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
-    permission = forms.ChoiceField( choices=PERMISSION_CHOICES)
+    permission = forms.ChoiceField(choices=PERMISSION_CHOICES)
 
 class DeliveryForm(forms.ModelForm):
     comment = forms.Textarea()
