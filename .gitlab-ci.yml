@@ -7,7 +7,7 @@ test:
   # this configures Django application to use attached postgres database that is run on `postgres` host
   - apt-get update -qy
   - pip install -r requirements.txt
-  - python manage.py test projects/tests user/tests
+  - python manage.py test
 
 staging:
   type: deploy

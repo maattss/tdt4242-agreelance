@@ -18,7 +18,7 @@ def average_rating(user_id):
 
 def confirm_work_relationship(reviewer, reviewed):
     reviewer_profile = reviewer
-    #Convert from User to profile, Reviewed is stored as a User
+    # Convert from User to profile, Reviewed is stored as a User
     reviewed_profile = Profile.objects.get(user=reviewed)
     relationship = False
     finished_statuses= ['ps', 'dd']

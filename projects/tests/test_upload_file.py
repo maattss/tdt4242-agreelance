@@ -1,5 +1,6 @@
 from django.test import TestCase
-from projects.views import project_view, upload_file_to_task
+from projects.views import project_view
+from projects.views.task_view import upload_file_to_task
 from projects.models import ProjectCategory, Project, Task, TaskOffer, Delivery, TaskFile
 from user.models import Profile
 from faker import Faker

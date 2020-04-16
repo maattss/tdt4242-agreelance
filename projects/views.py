@@ -1,4 +1,9 @@
-from django.http import HttpResponse, HttpResponseRedirect
+"""
+    TODO: DELETE THIS FILE
+    ----- DEPRECATED -----
+"""
+
+from django.http import HttpResponseRedirect
 from user.models import Profile
 from .models import Project, Task, TaskFile, TaskOffer, Delivery, ProjectCategory, Team, TaskFileTeam, directory_path
 from .forms import ProjectForm, TaskFileForm, ProjectStatusForm, TaskOfferForm, TaskOfferResponseForm, TaskPermissionForm, DeliveryForm, TaskDeliveryResponseForm, TeamForm, TeamAddForm
@@ -9,6 +14,10 @@ from user.review_functions import average_rating
 from projects.models import Task
 from django.core.exceptions import ObjectDoesNotExist
 
+# Constants
+USER_LOGIN = "/user/login"
+PROJECTS_TEMPLATE = "projects/projects.html"
+
 def projects_all(request):
     projects = Project.objects.all()
     project_categories = ProjectCategory.objects.all()
@@ -16,7 +25,7 @@ def projects_all(request):
     common_tags = current_category.tags.most_common()[:6]
 
     return render(request,
-        'projects/projects.html',
+        PROJECTS_TEMPLATE,
         {
             'projects': projects,
             'project_categories': project_categories,
@@ -38,7 +47,7 @@ def projects(request, category_id):
     common_tags = current_category.tags.most_common()[:6]
 
     return render(request,
-        'projects/projects.html',
+        PROJECTS_TEMPLATE,
         {
             'projects': relevant_projects,
             'project_categories': project_categories,
@@ -56,7 +65,7 @@ def projects_tags(request, category_id, tag_name):
     common_tags = current_category.tags.most_common()[:6]
 
     return render(request,
-        'projects/projects.html',
+        PROJECTS_TEMPLATE,
         {
             'projects': relevant_projects,
             'project_categories': project_categories,
@@ -85,8 +94,7 @@ def filter_tags(all_projects, category_id, tag_name):
             relevant_projects.append(relevant_project)
     return relevant_projects
 
-
-@login_required 
+@login_required
 def new_project(request):
     from django.contrib.sites.shortcuts import get_current_site
     current_site = get_current_site(request)
@@ -208,59 +216,7 @@ def project_view(request, project_id):
 def is_project_owner(user, project):
     return user == project.user.user
 
-def handle_valid_file_form(task_file_form, task, request, user_permissions, project):
-    task_file = task_file_form.save(commit=False)
-    task_file.task = task
-    existing_file = task.files.filter(file=directory_path(task_file, task_file.file.file)).first()
-    access = user_permissions['modify'] or user_permissions['owner']
-    accepted_task_offer = task.accepted_task_offer()
-    for team in request.user.profile.teams.all():
-        file_modify_access  = TaskFileTeam.objects.filter(team=team, file=existing_file, modify=True).exists()
-        access = access or file_modify_access
-    access = access or user_permissions['modify']
-    if (access):
-        if existing_file:
-            existing_file.delete()
-        task_file.save()
-
-        if request.user.profile != project.user and request.user.profile != accepted_task_offer.offerer:
-            teams = request.user.profile.teams.filter(task__id=task.id)
-            for team in teams:
-                tft = TaskFileTeam()
-                tft.team = team
-                tft.file = task_file
-                tft.read = True
-                tft.save()
-
-@login_required
-def upload_file_to_task(request, project_id, task_id):
-    project = Project.objects.get(pk=project_id)
-    task = Task.objects.get(pk=task_id)
-    user_permissions = get_user_task_permissions(request.user, task)
-
-    if user_permissions['modify'] or user_permissions['write'] or user_permissions['upload'] or is_project_owner(request.user, project):
-        if request.method == 'POST':
-            task_file_form = TaskFileForm(request.POST, request.FILES)
-            if task_file_form.is_valid():
-                handle_valid_file_form(task_file_form, task, request, user_permissions, project)
-            else:
-                from django.contrib import messages
-                messages.warning(request, "You do not have access to modify this file")
-
-            return redirect('task_view', project_id=project_id, task_id=task_id)
-
-        task_file_form = TaskFileForm()
-        return render(
-            request,
-            'projects/upload_file_to_task.html',
-            {
-                'project': project,
-                'task': task,
-                'task_file_form': task_file_form,
-            }
-        )
-    return redirect('/user/login') # Redirects to /user/login
-
+# OK
 def get_user_task_permissions(user, task):
     if user == task.project.user.user:
         return {
@@ -297,6 +253,7 @@ def get_user_task_permissions(user, task):
 
     return user_permissions
 
+# OK
 @login_required
 def task_view(request, project_id, task_id):
     user = request.user
@@ -306,19 +263,17 @@ def task_view(request, project_id, task_id):
 
     user_permissions = get_user_task_permissions(request.user, task)
     if not user_permissions['read'] and not user_permissions['write'] and not user_permissions['modify'] and not user_permissions['owner'] and not user_permissions['view_task']:
-        return redirect('/user/login')
+        return redirect(USER_LOGIN)
 
-
-    if request.method == 'POST' and 'delivery' in request.POST:
-        if accepted_task_offer and accepted_task_offer.offerer == user.profile:
-            deliver_form = DeliveryForm(request.POST, request.FILES)
-            if deliver_form.is_valid():
-                delivery = deliver_form.save(commit=False)
-                delivery.task = task
-                delivery.delivery_user = user.profile
-                delivery.save()
-                task.status = "pa"
-                task.save()
+    if request.method == 'POST' and 'delivery' in request.POST and accepted_task_offer and accepted_task_offer and accepted_task_offer.offerer == user.profile:
+        deliver_form = DeliveryForm(request.POST, request.FILES)
+        if deliver_form.is_valid():
+            delivery = deliver_form.save(commit=False)
+            delivery.task = task
+            delivery.delivery_user = user.profile
+            delivery.save()
+            task.status = "pa"
+            task.save()
 
     if request.method == 'POST' and 'delivery-response' in request.POST:
         instance = get_object_or_404(Delivery, id=request.POST.get('delivery-id'))
@@ -333,49 +288,32 @@ def task_view(request, project_id, task_id):
             if delivery.status == 'a': # Accepted
                 task.status = "pp"
                 task.save()
-            elif delivery.status == 'd':
+            elif delivery.status == 'd': # Declined
                 task.status = "dd"
                 task.save()
 
-    if request.method == 'POST' and 'team' in request.POST:
-        if accepted_task_offer and accepted_task_offer.offerer == user.profile:
-            team_form = TeamForm(request.POST)
-            if (team_form.is_valid()):
-                team = team_form.save(False)
-                team.task = task
-                team.save()
+    if request.method == 'POST' and 'team' in request.POST and accepted_task_offer and accepted_task_offer.offerer == user.profile:
+        team_form = TeamForm(request.POST)
+        if (team_form.is_valid()):
+            team = team_form.save(False)
+            team.task = task
+            team.save()
 
+    if request.method == 'POST' and 'team-add' in request.POST and accepted_task_offer and accepted_task_offer.offerer == user.profile:
+        instance = get_object_or_404(Team, id=request.POST.get('team-id'))
+        team_add_form = TeamAddForm(request.POST, instance=instance)
+        if team_add_form.is_valid():
+            team = team_add_form.save(False)
+            team.members.add(*team_add_form.cleaned_data['members'])
+            team.save()
 
-    if request.method == 'POST' and 'team-add' in request.POST:
-        if accepted_task_offer and accepted_task_offer.offerer == user.profile:
-            instance = get_object_or_404(Team, id=request.POST.get('team-id'))
-            team_add_form = TeamAddForm(request.POST, instance=instance)
-            if team_add_form.is_valid():
-                team = team_add_form.save(False)
-                team.members.add(*team_add_form.cleaned_data['members'])
-                team.save()
-
-    if request.method == 'POST' and 'permissions' in request.POST:
-        if accepted_task_offer and accepted_task_offer.offerer == user.profile:
-            for t in task.teams.all():
-                for f in task.files.all():
-                    try:
-                        tft_string = 'permission-perobj-' + str(f.id) + '-' + str(t.id)
-                        tft_id=request.POST.get(tft_string)
-                        instance = TaskFileTeam.objects.get(id=tft_id)
-                    except Exception as e:
-                        instance = TaskFileTeam(
-                            file = f,
-                            team = t,
-                        )
-
-                    instance.read = request.POST.get('permission-read-' + str(f.id) + '-' + str(t.id))  or False
-                    instance.write = request.POST.get('permission-write-' + str(f.id) + '-' + str(t.id)) or False
-                    instance.modify = request.POST.get('permission-modify-' + str(f.id) + '-' + str(t.id))  or False
-                    instance.save()
-                t.write = request.POST.get('permission-upload-' + str(t.id)) or False
-                t.save()
-
+    if request.method == 'POST' and 'permissions' in request.POST and \
+        accepted_task_offer and accepted_task_offer.offerer == user.profile:
+        for t in task.teams.all():
+            for f in task.files.all():
+                permission_helper(request, current_team = t, current_file = f)
+            t.write = request.POST.get('permission-upload-' + str(t.id)) or False
+            t.save()
 
     deliver_form = DeliveryForm()
     deliver_response_form = TaskDeliveryResponseForm()
@@ -412,7 +350,24 @@ def task_view(request, project_id, task_id):
                 'avg_rating': avg_rating
                 })
 
-    return redirect('/user/login')
+    return redirect(USER_LOGIN)
+
+def permission_helper(request, current_team, current_file):
+    try:
+        task_file_team_string = 'permission-perobj-' + str(current_file.id) + '-' + str(current_team.id)
+        task_file_team_id = request.POST.get(task_file_team_string)
+        instance = TaskFileTeam.objects.get(id=task_file_team_id)
+    except ObjectDoesNotExist:
+        # Create new instance if it does not exist
+        instance = TaskFileTeam(file = current_file, team = current_team)
+    
+    instance.read = request.POST.get('permission-read-' 
+        + str(current_file.id) + '-' + str(current_team.id)) or False
+    instance.write = request.POST.get('permission-write-' 
+        + str(current_file.id) + '-' + str(current_team.id)) or False
+    instance.modify = request.POST.get('permission-modify-' 
+        + str(current_file.id) + '-' + str(current_team.id))  or False
+    instance.save()
 
 @login_required
 def task_permissions(request, project_id, task_id):
