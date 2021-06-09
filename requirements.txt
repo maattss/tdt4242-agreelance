@@ -1,4 +1,4 @@
-Django==2.2.18
+Django==2.2.22
 django-bootstrap4==0.0.6
 django-icons==0.1.0
 pytz==2018.4
